@@ -2,6 +2,9 @@
 
 This project is a high-performance, responsive web application ready for instant deployment to any cloud hosting provider or server.
 
+- **GitHub Repository**: [https://github.com/himanshudxin/onewaycabs](https://github.com/himanshudxin/onewaycabs)
+- **Production Domain**: `https://onewaytaxibihar.com`
+
 ---
 
 ## 1. Zero-Configuration Cloud Deployments
