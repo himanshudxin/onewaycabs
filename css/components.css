@@ -4667,27 +4667,11 @@
   }
 }
 
-/* Floating Mobile Quick Action Bar (Single Big Blue "BOOK NOW" Button) */
+/* Floating Mobile Quick Action Bar (Disabled per Requirement 129) */
 .mobile-bottom-quick-bar {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1.5px solid var(--owc-border);
-  box-shadow: 0 -6px 25px rgba(0, 154, 244, 0.15);
-  padding: 10px 16px;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom, 12px));
-}
-
-[data-theme="dark"] .mobile-bottom-quick-bar {
-  background: rgba(9, 13, 22, 0.95);
-  border-top-color: var(--owc-border);
-  box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.6);
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .mobile-big-book-btn {
@@ -5578,12 +5562,171 @@ body.modal-open .mobile-call-bar {
 }
 
 /* ==========================================================================
-   PRODUCTION MOBILE PAYMENT & CHECKOUT REDESIGN (Req 95 - 114)
+   PRODUCTION MOBILE PAYMENT & CHECKOUT REDESIGN (Req 95 - 143)
    ========================================================================== */
+
+/* Progress Stepper for Booking Flow (Req 136) */
+.checkout-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--owc-slate-100);
+  border: 1px solid var(--owc-border);
+  border-radius: 10px;
+  margin-bottom: 2px;
+}
+
+.stepper-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--owc-text-muted);
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.stepper-step.active {
+  color: var(--owc-primary);
+  background: rgba(0, 154, 244, 0.1);
+}
+
+.stepper-step.completed {
+  color: #059669;
+}
+
+.stepper-num {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--owc-border);
+  color: var(--owc-text);
+  font-size: 10.5px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepper-step.active .stepper-num {
+  background: var(--owc-primary);
+  color: #ffffff;
+}
+
+.stepper-step.completed .stepper-num {
+  background: #059669;
+  color: #ffffff;
+}
+
+.stepper-line {
+  flex: 1;
+  max-width: 36px;
+  height: 2px;
+  background: var(--owc-border);
+  border-radius: 2px;
+}
+
+/* 12-Item Booking Summary Card (Req 140 - 143) */
+.checkout-summary-card {
+  background: var(--owc-card-bg);
+  border: 1.5px solid var(--owc-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.summary-card-head {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+
+.summary-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--owc-border-light, rgba(226, 232, 240, 0.6));
+  gap: 8px;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-row-label {
+  color: var(--owc-text-muted);
+  font-weight: 600;
+  min-width: 95px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.summary-row-val {
+  color: var(--owc-text);
+  font-weight: 700;
+  text-align: right;
+  flex: 1;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn-edit-field {
+  background: transparent;
+  border: 1px solid var(--owc-border);
+  color: var(--owc-primary);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-edit-field:hover {
+  background: var(--owc-primary);
+  color: #ffffff;
+  border-color: var(--owc-primary);
+}
+
+.checkout-notice-card {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1.5px solid #059669;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #065f46;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 .checkout-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
   box-sizing: border-box;
 }

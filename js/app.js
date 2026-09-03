@@ -1352,24 +1352,6 @@ function setupGlobalModalEvents() {
       window.closeMobileDrawer();
     }
   });
-
-  // Mobile Bottom Quick Bar Scroll Visibility
-  const bar = document.getElementById("mobile-quick-bar");
-  const hero = document.getElementById("booking-hero");
-  if (bar && hero) {
-    window.addEventListener("scroll", () => {
-      if (document.body.classList.contains("modal-open")) {
-        bar.style.display = "none";
-        return;
-      }
-      const heroBottom = hero.offsetTop + hero.offsetHeight - 80;
-      if (window.scrollY > heroBottom && window.innerWidth <= 768) {
-        bar.style.display = "block";
-      } else {
-        bar.style.display = "none";
-      }
-    }, { passive: true });
-  }
 }
 
 window.showToast = (msg, type = "info") => {

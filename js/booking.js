@@ -1712,12 +1712,37 @@ class BookingManager {
     const allowance = (this.tripType === "roundtrip" || km > 200) ? 350 : 0;
     const isAirport = (this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport"));
     const parking = isAirport ? 100 : 0;
+    this.currentCheckoutPrice = price;
+    this.currentCheckoutFleet = fleet;
+    this.tempBookingId = "OTB-2026-" + Math.floor(1000 + Math.random() * 9000);
+
+    const km = this.calculatedDistanceKm || 104;
+    const baseKm = (this.tripType === "local") ? 80 : 15;
+    const extraKm = Math.max(0, km - baseKm);
+    const distanceCharge = Math.round(extraKm * (fleet.perKmRate || 25));
+    const toll = Math.round((km / 70) * 55);
+    const allowance = (this.tripType === "roundtrip" || km > 200) ? 350 : 0;
+    const isAirport = (this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport"));
+    const parking = isAirport ? 100 : 0;
     const finalPayableInit = Math.max(0, price - 100);
 
     checkoutBody.innerHTML = `
       <div class="checkout-wrapper">
 
-        <!-- 1. COMPACT RIDE SUMMARY STRIP (Top Banner) -->
+        <!-- Progress Stepper (Req 136) -->
+        <div class="checkout-stepper">
+          <div class="stepper-step active" id="stepper-step-1" onclick="window.bookingManager.goToCheckoutStep(1)">
+            <span class="stepper-num">1</span>
+            <span>Passenger Details</span>
+          </div>
+          <div class="stepper-line"></div>
+          <div class="stepper-step" id="stepper-step-2" onclick="window.bookingManager.goToCheckoutStep(2)">
+            <span class="stepper-num">2</span>
+            <span>Summary &amp; Payment</span>
+          </div>
+        </div>
+
+        <!-- Top Route Banner -->
         <div class="checkout-summary-strip">
           <div class="checkout-summary-top">
             <div class="checkout-route-badge">
@@ -1747,7 +1772,7 @@ class BookingManager {
               <strong style="color: #ffffff;">₹${distanceCharge.toLocaleString('en-IN')}</strong>
             </div>
             <div class="checkout-breakdown-row">
-              <span>Highway Tolls & Fastag:</span>
+              <span>Highway Tolls &amp; Fastag:</span>
               <span style="color: #4ade80; font-weight: 700;">Included (₹${toll})</span>
             </div>
             <div class="checkout-breakdown-row">
@@ -1759,21 +1784,21 @@ class BookingManager {
               <span style="color: #4ade80; font-weight: 700;">${allowance > 0 ? `Included (₹${allowance})` : "₹0 (Day Ride)"}</span>
             </div>
             <div class="checkout-breakdown-row">
-              <span>Taxes & 5% GST:</span>
+              <span>Taxes &amp; 5% GST:</span>
               <span style="color: #4ade80; font-weight: 700;">Included</span>
             </div>
             <div class="checkout-breakdown-row" style="border-top: 1px dashed rgba(255,255,255,0.2); margin-top: 4px; padding-top: 4px; font-weight: 800; color: #ffffff;">
-              <span>Standard Cab Fare:</span>
+              <span>Total Calculated Cab Fare:</span>
               <span>₹${price.toLocaleString('en-IN')}</span>
             </div>
           </div>
         </div>
 
-        <!-- 2. PASSENGER INFORMATION (Compact Touch Form) -->
-        <div>
+        <!-- ================= STEP 1: PASSENGER DETAILS ================= -->
+        <div id="checkout-step-1" class="checkout-step-panel">
           <div class="checkout-section-title">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Passenger Details</span>
+            <span>Step 1: Enter Passenger Information</span>
           </div>
 
           <div class="checkout-form-grid">
@@ -1782,8 +1807,8 @@ class BookingManager {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </span>
               <div class="input-content">
-                <label>PASSENGER NAME</label>
-                <input type="text" id="chk-name" value="${this.passengerDetails.name || window.currentUser?.name || ''}" placeholder="Enter full name" autocomplete="name">
+                <label>PASSENGER FULL NAME *</label>
+                <input type="text" id="chk-name" value="${this.passengerDetails.name || window.currentUser?.name || ''}" placeholder="Enter passenger name" autocomplete="name">
               </div>
             </div>
 
@@ -1792,8 +1817,8 @@ class BookingManager {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </span>
               <div class="input-content">
-                <label>MOBILE NUMBER (FOR DRIVER SMS/WHATSAPP)</label>
-                <input type="tel" id="chk-phone" value="${this.passengerDetails.phone || window.currentUser?.phone || ''}" placeholder="10-digit mobile number" autocomplete="tel">
+                <label>10-DIGIT MOBILE NUMBER *</label>
+                <input type="tel" id="chk-phone" value="${this.passengerDetails.phone || window.currentUser?.phone || ''}" placeholder="e.g. 8002141816" autocomplete="tel">
               </div>
             </div>
           </div>
@@ -1804,8 +1829,8 @@ class BookingManager {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </span>
             <div class="input-content" style="position: relative;">
-              <label>EXACT PICKUP ADDRESS / TERMINAL / LANDMARK</label>
-              <input type="text" id="chk-pickup-addr" value="${this.passengerDetails.pickupAddress}" placeholder="Terminal, railway gate, hospital, or street address" autocomplete="off">
+              <label>EXACT PICKUP DOORSTEP ADDRESS / LANDMARK</label>
+              <input type="text" id="chk-pickup-addr" value="${this.passengerDetails.pickupAddress || ''}" placeholder="e.g. Near Patna Junction, Frazer Road" autocomplete="off">
               <div class="checkout-loc-dropdown" id="chk-pickup-dropdown" style="display: none;"></div>
             </div>
           </div>
@@ -1820,39 +1845,159 @@ class BookingManager {
             </span>
             <div class="input-content" style="position: relative;">
               <label>EXACT DROP DESTINATION ADDRESS / HOTEL / VILLAGE</label>
-              <input type="text" id="chk-drop-addr" value="${this.passengerDetails.dropAddress}" placeholder="Hotel, temple, town, or locality address" autocomplete="off">
+              <input type="text" id="chk-drop-addr" value="${this.passengerDetails.dropAddress || ''}" placeholder="e.g. Bodh Gaya Temple Road, Hotel Lotus" autocomplete="off">
               <div class="checkout-loc-dropdown" id="chk-drop-dropdown" style="display: none;"></div>
             </div>
           </div>
           <div class="auto-type-chips-wrapper" id="drop-auto-chips">
             <div class="auto-type-loading"><span>Loading popular drop locations...</span></div>
           </div>
+
+          <!-- Step 1 CTA Button -->
+          <div style="margin-top: 14px;">
+            <button type="button" class="check-fare-primary-btn" style="width: 100%; min-height: 48px; font-size: 15px; font-weight: 800;" onclick="window.bookingManager.goToCheckoutStep(2)">
+              Review Booking Summary &amp; Pay →
+            </button>
+          </div>
         </div>
 
-        <!-- 3. WALLET SAVINGS CARD -->
-        <label class="checkout-wallet-box">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <input type="checkbox" id="chk-use-wallet" checked onchange="window.bookingManager.updateCheckoutPayable(${price})" style="accent-color: #059669; width: 19px; height: 19px; cursor: pointer;">
-            <div>
-              <strong style="color: #0f172a; font-size: 13.5px; display: block;">Apply Wallet Bonus (-₹100)</strong>
-              <span style="font-size: 11.5px; color: #15803d; font-weight: 600;">
-                ${window.currentUser ? `Available Wallet: ₹${window.currentUser.walletBalance || 100}` : '₹100 Welcome Discount Applied'}
-              </span>
+        <!-- ================= STEP 2: BOOKING SUMMARY & PAYMENT (Req 138, 140-143) ================= -->
+        <div id="checkout-step-2" class="checkout-step-panel" style="display: none;">
+          
+          <div class="checkout-section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Step 2: Review Booking Summary &amp; Select Payment</span>
+          </div>
+
+          <!-- 12-Item Clean & Professional Booking Summary Card (Req 140 - 143) -->
+          <div class="checkout-summary-card">
+            <div class="summary-card-head">
+              <span>PREVIEW BOOKING SUMMARY</span>
+              <span id="sum-ref-badge" style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px; font-family: monospace;">${this.tempBookingId}</span>
+            </div>
+            <div class="summary-table">
+              
+              <!-- 1. Booking Reference -->
+              <div class="summary-row">
+                <span class="summary-row-label">Booking ID</span>
+                <span class="summary-row-val"><strong style="color: var(--owc-primary); font-family: monospace;" id="sum-booking-id">${this.tempBookingId}</strong></span>
+              </div>
+
+              <!-- 2. Pickup Location -->
+              <div class="summary-row">
+                <span class="summary-row-label">Pickup</span>
+                <span class="summary-row-val">
+                  <span id="sum-pickup-val">${this.originCity.name}</span>
+                  <button type="button" class="btn-edit-field" onclick="window.bookingManager.editField('pickup')">✏️ Edit</button>
+                </span>
+              </div>
+
+              <!-- 3. Drop Location -->
+              <div class="summary-row">
+                <span class="summary-row-label">Drop</span>
+                <span class="summary-row-val">
+                  <span id="sum-drop-val">${this.destCity.name}</span>
+                  <button type="button" class="btn-edit-field" onclick="window.bookingManager.editField('drop')">✏️ Edit</button>
+                </span>
+              </div>
+
+              <!-- 4. Travel Date -->
+              <div class="summary-row">
+                <span class="summary-row-label">Travel Date</span>
+                <span class="summary-row-val">
+                  <span id="sum-date-val">${this.pickupDate}</span>
+                  <button type="button" class="btn-edit-field" onclick="window.bookingManager.editField('date')">✏️ Edit</button>
+                </span>
+              </div>
+
+              <!-- 5. Pickup Time -->
+              <div class="summary-row">
+                <span class="summary-row-label">Pickup Time</span>
+                <span class="summary-row-val">
+                  <span id="sum-time-val">${this.pickupTime}</span>
+                  <button type="button" class="btn-edit-field" onclick="window.bookingManager.editField('time')">✏️ Edit</button>
+                </span>
+              </div>
+
+              <!-- 6. Passenger Name -->
+              <div class="summary-row">
+                <span class="summary-row-label">Passenger</span>
+                <span class="summary-row-val">
+                  <span id="sum-name-val">${this.passengerDetails.name || 'Passenger'}</span>
+                  <button type="button" class="btn-edit-field" onclick="window.bookingManager.editField('name')">✏️ Edit</button>
+                </span>
+              </div>
+
+              <!-- 7. Passenger Phone -->
+              <div class="summary-row">
+                <span class="summary-row-label">Phone</span>
+                <span class="summary-row-val">
+                  <span id="sum-phone-val">${this.passengerDetails.phone || ''}</span>
+                  <button type="button" class="btn-edit-field" onclick="window.bookingManager.editField('phone')">✏️ Edit</button>
+                </span>
+              </div>
+
+              <!-- 8. Cab Fleet -->
+              <div class="summary-row">
+                <span class="summary-row-label">Cab Model</span>
+                <span class="summary-row-val">
+                  <span>${fleet.category} (${fleet.models})</span>
+                </span>
+              </div>
+
+              <!-- 9. Calculated Fare -->
+              <div class="summary-row">
+                <span class="summary-row-label">Total Fare</span>
+                <span class="summary-row-val">
+                  <span>₹${price.toLocaleString('en-IN')} (All-inclusive)</span>
+                </span>
+              </div>
+
+              <!-- 10. Wallet Used -->
+              <div class="summary-row">
+                <span class="summary-row-label">Wallet Used</span>
+                <span class="summary-row-val">
+                  <span style="color: #059669; font-weight: 800;" id="sum-wallet-used">-₹100</span>
+                </span>
+              </div>
+
+              <!-- 11. Remaining Payment -->
+              <div class="summary-row" style="background: rgba(0, 154, 244, 0.05);">
+                <span class="summary-row-label" style="color: var(--owc-primary); font-weight: 800;">Remaining Payment</span>
+                <span class="summary-row-val">
+                  <strong style="color: var(--owc-primary); font-size: 15px;" id="sum-final-payable">₹${finalPayableInit.toLocaleString('en-IN')}</strong>
+                </span>
+              </div>
+
+              <!-- 12. Payment Method -->
+              <div class="summary-row">
+                <span class="summary-row-label">Payment Mode</span>
+                <span class="summary-row-val">
+                  <span id="sum-method-val" style="color: #5f259f; font-weight: 800;">UPI / PhonePe QR Code</span>
+                </span>
+              </div>
+
             </div>
           </div>
-          <span style="color: #15803d; font-weight: 800; font-size: 15px;" id="chk-wallet-deduct-label">-₹100</span>
-        </label>
 
-        <!-- 4. PAYMENT METHOD SELECTOR -->
-        <div>
-          <div class="checkout-section-title">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-            <span>Select Payment Method</span>
-          </div>
+          <!-- Wallet Savings Box -->
+          <label class="checkout-wallet-box" style="margin-top: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" id="chk-use-wallet" checked onchange="window.bookingManager.updateCheckoutPayable(${price})" style="accent-color: #059669; width: 19px; height: 19px; cursor: pointer;">
+              <div>
+                <strong style="color: #0f172a; font-size: 13.5px; display: block;">Apply Wallet Bonus (-₹100)</strong>
+                <span style="font-size: 11.5px; color: #15803d; font-weight: 600;">
+                  ${window.currentUser ? `Available Wallet: ₹${window.currentUser.walletBalance || 100}` : '₹100 Welcome Discount Applied'}
+                </span>
+              </div>
+            </div>
+            <span style="color: #15803d; font-weight: 800; font-size: 15px;" id="chk-wallet-deduct-label">-₹100</span>
+          </label>
 
-          <div class="checkout-methods-list">
+          <!-- Payment Options -->
+          <div class="checkout-methods-list" style="margin-top: 10px;">
             
-            <!-- Method 1: PhonePe UPI QR Code -->
+            <!-- Method 1: PhonePe UPI QR -->
             <label class="checkout-method-item active" id="pay-card-upi">
               <div class="checkout-method-header">
                 <input type="radio" name="pay-method" value="UPI / PhonePe QR Code" checked onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
@@ -1862,7 +2007,6 @@ class BookingManager {
                 </div>
               </div>
 
-              <!-- PhonePe Responsive QR Card -->
               <div class="checkout-qr-wrapper" id="checkout-qr-box">
                 <div style="font-size: 11px; font-weight: 800; color: #5f259f; letter-spacing: 0.6px; margin-bottom: 6px;">PHONEPE • BHIM UPI • GPAY • PAYTM</div>
                 <img src="images/phonepe-qr.png" alt="PhonePe QR Code - Himanshu Kumar Dubey" class="checkout-qr-img">
@@ -1902,22 +2046,31 @@ class BookingManager {
             </label>
 
           </div>
-        </div>
 
-        <!-- 5. STICKY MOBILE ACTION BAR (Payable Total & Confirm CTA) -->
-        <div class="checkout-action-bar">
-          <div>
-            <div style="font-size: 11px; font-weight: 700; color: var(--owc-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">TOTAL PAYABLE</div>
-            <div style="display: flex; align-items: baseline; gap: 6px;">
-              <span style="font-size: 24px; font-weight: 900; color: var(--owc-primary);" id="chk-total-payable">₹${finalPayableInit.toLocaleString('en-IN')}</span>
-              <span style="font-size: 12.5px; color: #94a3b8; text-decoration: line-through;" id="chk-original-payable">₹${price.toLocaleString('en-IN')}</span>
+          <!-- Official 5-Minute Agent Confirmation & Zero Fake Driver Notice (Req 135, 143) -->
+          <div class="checkout-notice-card" style="margin-top: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink: 0; margin-top: 1px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div>
+              <strong>Dispatch Guarantee:</strong> Our partner or agent will call you within 5 minutes to confirm booking. Real driver and vehicle details are assigned and shared upon confirmation. (Zero fake drivers).
             </div>
-            <div style="font-size: 10.5px; color: #059669; font-weight: 700;">Tolls, Driver Allowance & GST Included</div>
           </div>
 
-          <button type="button" class="check-fare-primary-btn" style="flex: 1; max-width: 240px; margin: 0; min-height: 48px; font-size: 14.5px; font-weight: 800;" onclick="window.bookingManager.confirmBooking(${price})">
-            Confirm Booking →
-          </button>
+          <!-- Sticky Action Bar in Step 2 -->
+          <div class="checkout-action-bar">
+            <button type="button" class="btn-nav-outline" style="padding: 10px 14px; font-size: 12.5px; font-weight: 700;" onclick="window.bookingManager.goToCheckoutStep(1)">
+              ← Edit Details
+            </button>
+
+            <div style="text-align: right;">
+              <div style="font-size: 10px; font-weight: 700; color: var(--owc-text-muted); text-transform: uppercase;">PAYABLE NOW</div>
+              <div style="font-size: 20px; font-weight: 900; color: var(--owc-primary);" id="chk-total-payable">₹${finalPayableInit.toLocaleString('en-IN')}</div>
+            </div>
+
+            <button type="button" class="check-fare-primary-btn" style="flex: 1; max-width: 220px; margin: 0; min-height: 48px; font-size: 14px; font-weight: 800;" onclick="window.bookingManager.confirmBooking(${price})">
+              Confirm &amp; Request Cab →
+            </button>
+          </div>
+
         </div>
 
       </div>
@@ -1929,6 +2082,100 @@ class BookingManager {
     this.saveState();
     this.setupCheckoutLocationAutocomplete();
     this.setupCheckoutFormPersistence();
+  }
+
+  goToCheckoutStep(step) {
+    const step1 = document.getElementById("checkout-step-1");
+    const step2 = document.getElementById("checkout-step-2");
+    const pill1 = document.getElementById("stepper-step-1");
+    const pill2 = document.getElementById("stepper-step-2");
+
+    if (step === 2) {
+      // Validate Step 1 Inputs
+      const nameInput = document.getElementById("chk-name");
+      const phoneInput = document.getElementById("chk-phone");
+      const name = nameInput?.value.trim() || "";
+      const phone = (phoneInput?.value || "").replace(/\D/g, "").slice(-10);
+
+      if (!name || name.length < 2) {
+        window.showToast("Please enter passenger full name", "warning");
+        nameInput?.focus();
+        return;
+      }
+      if (!phone || phone.length !== 10 || !/^[6-9]\d{9}$/.test(phone)) {
+        window.showToast("Please enter a valid 10-digit Indian mobile number", "warning");
+        phoneInput?.focus();
+        return;
+      }
+
+      this.saveState();
+
+      // Update Summary Values (Req 140)
+      const pickupAddr = document.getElementById("chk-pickup-addr")?.value.trim();
+      const dropAddr = document.getElementById("chk-drop-addr")?.value.trim();
+      const pVal = document.getElementById("sum-pickup-val");
+      const dVal = document.getElementById("sum-drop-val");
+      const nVal = document.getElementById("sum-name-val");
+      const phVal = document.getElementById("sum-phone-val");
+
+      if (pVal) pVal.textContent = `${this.originCity.name}${pickupAddr ? ' (' + pickupAddr + ')' : ''}`;
+      if (dVal) dVal.textContent = `${this.destCity.name}${dropAddr ? ' (' + dropAddr + ')' : ''}`;
+      if (nVal) nVal.textContent = name;
+      if (phVal) phVal.textContent = `+91 ${phone}`;
+
+      if (step1) step1.style.display = "none";
+      if (step2) step2.style.display = "block";
+
+      if (pill1) {
+        pill1.classList.remove("active");
+        pill1.classList.add("completed");
+        const numEl = pill1.querySelector(".stepper-num");
+        if (numEl) numEl.textContent = "✓";
+      }
+      if (pill2) {
+        pill2.classList.add("active");
+      }
+    } else {
+      if (step1) step1.style.display = "block";
+      if (step2) step2.style.display = "none";
+
+      if (pill1) {
+        pill1.classList.add("active");
+        pill1.classList.remove("completed");
+        const numEl = pill1.querySelector(".stepper-num");
+        if (numEl) numEl.textContent = "1";
+      }
+      if (pill2) {
+        pill2.classList.remove("active");
+      }
+    }
+
+    const modalBody = document.getElementById("modal-checkout-body");
+    if (modalBody) modalBody.scrollTop = 0;
+  }
+
+  editField(field) {
+    if (field === "name") {
+      this.goToCheckoutStep(1);
+      setTimeout(() => document.getElementById("chk-name")?.focus(), 100);
+    } else if (field === "phone") {
+      this.goToCheckoutStep(1);
+      setTimeout(() => document.getElementById("chk-phone")?.focus(), 100);
+    } else if (field === "pickup") {
+      this.goToCheckoutStep(1);
+      setTimeout(() => document.getElementById("chk-pickup-addr")?.focus(), 100);
+    } else if (field === "drop") {
+      this.goToCheckoutStep(1);
+      setTimeout(() => document.getElementById("chk-drop-addr")?.focus(), 100);
+    } else if (field === "date" || field === "time") {
+      window.closeAllModals(false);
+      const hero = document.getElementById("booking-hero");
+      if (hero) hero.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        if (field === "date") window.ExecDateTimePicker?.openCalendar();
+        else window.ExecDateTimePicker?.openClock();
+      }, 300);
+    }
   }
 
   setupCheckoutFormPersistence() {
@@ -1985,11 +2232,18 @@ class BookingManager {
     if (qrBox) {
       qrBox.style.display = (method === "Cash / UPI to Driver") ? "none" : "block";
     }
+
+    const sumMethodVal = document.getElementById("sum-method-val");
+    if (sumMethodVal) {
+      sumMethodVal.textContent = method;
+    }
   }
 
   updateCheckoutPayable(basePrice) {
     const chk = document.getElementById("chk-use-wallet");
     const totalEl = document.getElementById("chk-total-payable");
+    const sumTotalEl = document.getElementById("sum-final-payable");
+    const sumWalletUsed = document.getElementById("sum-wallet-used");
     const origEl = document.getElementById("chk-original-payable");
     const deductLabel = document.getElementById("chk-wallet-deduct-label");
     const isUsing = chk && chk.checked;
@@ -2004,6 +2258,13 @@ class BookingManager {
     }
     if (totalEl) {
       totalEl.textContent = `₹${finalAmt.toLocaleString('en-IN')}`;
+    }
+    if (sumTotalEl) {
+      sumTotalEl.textContent = `₹${finalAmt.toLocaleString('en-IN')}`;
+    }
+    if (sumWalletUsed) {
+      sumWalletUsed.textContent = isUsing ? "-₹100" : "₹0";
+      sumWalletUsed.style.color = isUsing ? "#059669" : "#94a3b8";
     }
   }
 
