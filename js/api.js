@@ -82,11 +82,15 @@ class ApiClient {
     return null;
   }
 
-  // Logout Current User
-  static logout() {
+  // Logout Current User (Server session invalidation)
+  static async logout() {
+    try {
+      await this.request("/api/auth/logout", { method: "POST" });
+    } catch (e) {}
     localStorage.removeItem("otb_auth_token");
     localStorage.removeItem("otb_current_user");
     localStorage.removeItem("owc_auth_token");
+    return { success: true };
   }
 
   // Server-Side Fare & Distance Calculation Engine
@@ -205,9 +209,6 @@ class ApiClient {
     });
   }
 
-  // Legacy compat aliases (safely redirected)
-  static async sendOTP(phone) { return { success: true }; }
-  static async verifyOTP(phone, otp, name) { return this.directLogin(name, phone); }
 }
 
 if (typeof window !== "undefined") {

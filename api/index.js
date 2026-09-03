@@ -293,11 +293,11 @@ module.exports = async (req, res) => {
       const cleanPhone = (body.phone || '').replace(/\D/g, '').slice(-10);
       const cleanName = (body.name || '').trim();
 
-      if (!cleanPhone || cleanPhone.length < 10) {
-        return sendJson(400, { success: false, message: 'Valid 10-digit mobile number is required' });
+      if (!cleanPhone || cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+        return sendJson(400, { success: false, message: 'Invalid phone number. Please provide a valid 10-digit Indian mobile number starting with 6-9.' });
       }
-      if (!cleanName || cleanName.length < 2) {
-        return sendJson(400, { success: false, message: 'Passenger name is required (min 2 characters)' });
+      if (!cleanName || cleanName.length < 2 || cleanName.length > 60) {
+        return sendJson(400, { success: false, message: 'Passenger name is required (2 to 60 characters).' });
       }
 
       let user = (db.users || []).find(u => u.phone.replace(/\D/g, '').slice(-10) === cleanPhone);
@@ -308,7 +308,7 @@ module.exports = async (req, res) => {
           id: `usr_${cleanPhone}`,
           name: cleanName,
           phone: `+91 ${cleanPhone}`,
-          email: body.email || '',
+          email: (body.email || '').trim().toLowerCase(),
           walletBalance: 100,
           memberSince: new Date().getFullYear().toString(),
           createdAt: new Date().toISOString()
@@ -327,13 +327,13 @@ module.exports = async (req, res) => {
           createdAt: new Date().toISOString()
         });
       } else {
-        // Update name if supplied
+        // Update name if supplied and valid
         if (cleanName && cleanName !== 'Valued Passenger') {
           user.name = cleanName;
         }
       }
 
-      // Create Session Token
+      // Create Secure Session Token
       const token = generateToken('otb_sess');
       if (!db.sessions) db.sessions = [];
       db.sessions.push({
@@ -357,6 +357,19 @@ module.exports = async (req, res) => {
           walletBalance: user.walletBalance
         }
       });
+    }
+
+    // -------------------------------------------------------------
+    // 2B. PASSENGER LOGOUT (Session Invalidation)
+    // -------------------------------------------------------------
+    if (pathname === '/auth/logout' && method === 'POST') {
+      const authHeader = req.headers['authorization'] || '';
+      const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+      if (token && db.sessions) {
+        db.sessions = db.sessions.filter(s => s.token !== token);
+        saveDb(db);
+      }
+      return sendJson(200, { success: true, message: 'Logged out successfully' });
     }
 
     // -------------------------------------------------------------

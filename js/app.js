@@ -159,7 +159,7 @@ function renderNavAuth() {
     `;
     const htmlMobile = `
       <button type="button" class="drawer-login-btn" onclick="window.closeMobileDrawer(); window.openAuthModal();">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Login with OTP & Claim ₹100
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Login & Claim ₹100 Bonus
       </button>
     `;
     if (navSlot) navSlot.innerHTML = htmlDesktop;
@@ -168,15 +168,14 @@ function renderNavAuth() {
 }
 
 // Global Logout Handler
-window.handleLogout = () => {
-  ApiClient.logout();
+window.handleLogout = async () => {
+  await ApiClient.logout();
   currentUser = null;
   renderNavAuth();
   window.closeAllModals();
   window.showToast("Logged out successfully.", "info");
 };
 
-// Open Auth Modal (Always Fresh Inputs)
 // Open Auth Modal (Direct Login - Name + 10-Digit Mobile, Zero OTP)
 window.openAuthModal = () => {
   window.closeAllModals(false);
@@ -201,16 +200,16 @@ window.handleDirectLogin = async () => {
   const nameInput = document.getElementById("auth-name-input");
   const phoneInput = document.getElementById("auth-mobile-input");
   const name = nameInput ? nameInput.value.trim() : "";
-  const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, "") : "";
+  const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, "").slice(-10) : "";
 
-  if (!name || name.length < 2) {
-    window.showToast("Please enter your full name", "warning");
+  if (!name || name.length < 2 || name.length > 60) {
+    window.showToast("Please enter your full name (2 to 60 characters)", "warning");
     if (nameInput) nameInput.focus();
     return;
   }
 
-  if (!phone || phone.length < 10) {
-    window.showToast("Please enter a valid 10-digit mobile number", "warning");
+  if (!phone || phone.length !== 10 || !/^[6-9]\d{9}$/.test(phone)) {
+    window.showToast("Please enter a valid 10-digit Indian mobile number starting with 6-9", "warning");
     if (phoneInput) phoneInput.focus();
     return;
   }
@@ -221,14 +220,10 @@ window.handleDirectLogin = async () => {
     renderNavAuth();
     window.closeAllModals();
     window.showToast(`Welcome, ${currentUser.name}! Logged in successfully. ₹100 Welcome Bonus added to your wallet.`, "success");
+  } else {
+    window.showToast(res?.message || "Login failed. Please check your credentials.", "warning");
   }
 };
-
-// Aliases for compatibility
-window.handleSendRealOTP = window.handleDirectLogin;
-window.handleSendOTP = window.handleDirectLogin;
-window.handleVerifyOTP = window.handleDirectLogin;
-window.resetAuthToPhoneStep = () => {};
 
 /* ==========================================================================
    REFER & EARN ₹150 CONTROLLER

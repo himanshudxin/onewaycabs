@@ -244,12 +244,12 @@ try {
                     if ($cleanPhone.Length -gt 10) { $cleanPhone = $cleanPhone.Substring($cleanPhone.Length - 10) }
                     $name = if ($body.name) { $body.name.Trim() } else { "" }
 
-                    if ($cleanPhone.Length -lt 10) {
-                        Send-JsonResponse $response 400 @{ success = $false; message = "Valid 10-digit mobile number required" }
+                    if ($cleanPhone.Length -ne 10 -or $cleanPhone -notmatch '^[6-9]\d{9}$') {
+                        Send-JsonResponse $response 400 @{ success = $false; message = "Invalid phone number. Please provide a valid 10-digit Indian mobile number starting with 6-9." }
                         continue
                     }
-                    if ($name.Length -lt 2) {
-                        Send-JsonResponse $response 400 @{ success = $false; message = "Passenger name required" }
+                    if ($name.Length -lt 2 -or $name.Length -gt 60) {
+                        Send-JsonResponse $response 400 @{ success = $false; message = "Passenger name is required (2 to 60 characters)." }
                         continue
                     }
 
@@ -259,7 +259,7 @@ try {
                             id = "usr_" + $cleanPhone
                             name = $name
                             phone = "+91 $cleanPhone"
-                            email = if ($body.email) { $body.email } else { "" }
+                            email = if ($body.email) { $body.email.Trim().ToLower() } else { "" }
                             walletBalance = 100
                             memberSince = (Get-Date).Year.ToString()
                             createdAt = (Get-Date).ToString("o")
@@ -306,6 +306,18 @@ try {
                             walletBalance = $user.walletBalance
                         }
                     }
+                    continue
+                }
+
+                # 2B. Passenger Logout
+                if ($urlPath -eq "/api/auth/logout" -and $httpMethod -eq "POST") {
+                    $header = $request.Headers["Authorization"]
+                    $token = if ($header) { $header -replace '^Bearer\s+', '' } else { "" }
+                    if ($token) {
+                        $db.sessions = @($db.sessions | Where-Object { $_.token -ne $token })
+                        Save-Db $db
+                    }
+                    Send-JsonResponse $response 200 @{ success = $true; message = "Logged out successfully" }
                     continue
                 }
 
@@ -661,7 +673,9 @@ try {
                 $response.ContentLength64 = $bytes.Length
                 $response.StatusCode = 200
                 $response.AddHeader("Access-Control-Allow-Origin", "*")
-                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                if ($httpMethod -ne "HEAD") {
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                }
                 $response.Close()
             } else {
                 $response.StatusCode = 404
