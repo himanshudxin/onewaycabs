@@ -5524,3 +5524,102 @@
   font-size: 11.5px;
   color: var(--owc-text-muted);
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS OVERHAUL: MODALS, CHECKOUT & BOTTOM BARS
+   ========================================================================== */
+
+/* Prevent body scroll when modal is active */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* Hide all floating bars when any modal (checkout, auth, tracking, trips) is open */
+body.modal-open .mobile-bottom-quick-bar,
+body.modal-open #mobile-quick-bar,
+body.modal-open .route-fare-bar-container,
+body.modal-open #route-fare-bar,
+body.modal-open .mobile-call-bar {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+/* Modal Back Button */
+.modal-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--owc-slate-100);
+  border: 1px solid var(--owc-border);
+  color: var(--owc-text);
+  font-size: 12.5px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.modal-back-btn:hover,
+.modal-back-btn:active {
+  background: var(--owc-primary);
+  color: #ffffff;
+  border-color: var(--owc-primary);
+}
+
+[data-theme="dark"] .modal-back-btn {
+  background: var(--owc-slate-800);
+  color: var(--owc-text);
+  border-color: var(--owc-border);
+}
+
+/* Payment Method Cards */
+.pay-method-card {
+  user-select: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+
+.pay-method-card:active {
+  transform: scale(0.99);
+}
+
+/* Phone / Mobile Screen Optimizations (<= 768px) */
+@media (max-width: 768px) {
+  /* Ensure checkout modal body stacks vertically instead of squishing columns */
+  #modal-checkout-body > div {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+  }
+
+  .modal-dialog-box {
+    max-height: 92vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .modal-body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: calc(92vh - 65px) !important;
+    padding-bottom: 24px !important;
+  }
+
+  /* Full touch targets for phone inputs */
+  .input-field-group {
+    min-height: 48px;
+  }
+
+  .check-fare-primary-btn {
+    min-height: 48px;
+    font-size: 15px;
+  }
+
+  #checkout-qr-box img {
+    max-width: 200px !important;
+  }
+}

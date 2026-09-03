@@ -40,60 +40,36 @@ class ApiClient {
     return await this.request("/api/health");
   }
 
-  // Send OTP (Dynamic generation with zero telecom charges)
-  static async sendOTP(phone) {
-    const res = await this.request("/api/auth/send-otp", {
-      method: "POST",
-      body: JSON.stringify({ phone })
-    });
+  // Direct Login (No OTP verification - Instant access & ₹100 Welcome Bonus)
+  static async directLogin(name, phone) {
+    const cleanPhone = (phone || "").replace(/\D/g, "").slice(-10);
+    const cleanName = (name || "").trim() || "Valued Passenger";
 
-    if (res && res.success) return res;
-
-    // Free Client-Side Dynamic OTP Generation
-    const dynamicOtp = String(Math.floor(1000 + Math.random() * 9000));
-    window._currentSessionOtp = dynamicOtp;
-    return {
-      success: true,
-      message: `OTP sent to ${phone}`,
-      otp: dynamicOtp
-    };
-  }
-
-  // Verify OTP
-  static async verifyOTP(phone, otp, name = "Passenger") {
-    const res = await this.request("/api/auth/verify-otp", {
-      method: "POST",
-      body: JSON.stringify({ phone, otp, name })
-    });
-
-    if (res && res.success) {
-      if (res.token) localStorage.setItem("otb_auth_token", res.token);
-      if (res.user) localStorage.setItem("otb_current_user", JSON.stringify(res.user));
-      return res;
-    }
-
-    const expectedOtp = window._currentSessionOtp || "4829";
-    if (otp !== expectedOtp && otp !== "4829") {
-      return { success: false, message: "Invalid OTP. Please enter the correct 4-digit verification code." };
-    }
-
-    // Dynamic session user with real entered phone
-    const cleanPhone = phone.replace(/\D/g, "").slice(-10);
-    const fallbackUser = {
+    const user = {
       id: "usr_otb_" + Date.now().toString().slice(-6),
-      name: name || "Passenger",
+      name: cleanName,
       phone: `+91 ${cleanPhone}`,
-      email: `passenger_${cleanPhone.slice(-4)}@onewaytaxibihar.com`,
+      email: `${cleanName.toLowerCase().replace(/[^a-z0-9]/g, "")}_${cleanPhone.slice(-4)}@onewaytaxibihar.com`,
       city: "Patna",
-      avatar: "PS",
+      avatar: cleanName.substring(0, 2).toUpperCase(),
       memberSince: new Date().getFullYear().toString(),
-      totalTrips: 1,
+      totalTrips: 0,
       rating: 5.0,
       walletBalance: 100
     };
+
     localStorage.setItem("otb_auth_token", "otb_tok_" + Date.now());
-    localStorage.setItem("otb_current_user", JSON.stringify(fallbackUser));
-    return { success: true, token: "otb_tok_" + Date.now(), user: fallbackUser };
+    localStorage.setItem("otb_current_user", JSON.stringify(user));
+    return { success: true, token: "otb_tok_" + Date.now(), user: user };
+  }
+
+  // Legacy compat aliases redirecting cleanly to direct login
+  static async sendOTP(phone) {
+    return { success: true, message: `Direct authentication enabled for ${phone}` };
+  }
+
+  static async verifyOTP(phone, otp, name = "Passenger") {
+    return this.directLogin(name, phone);
   }
 
   // Get Current User Profile (Returns null if logged out)
@@ -119,46 +95,15 @@ class ApiClient {
     localStorage.removeItem("owc_auth_token");
   }
 
-  // Get Rides (Past and Active)
+  // Get Rides (Past and Active - Only genuine user bookings, 0 mock data)
   static async getRides() {
     const res = await this.request("/api/rides");
     if (res && res.success && Array.isArray(res.rides)) {
       return res.rides;
     }
 
-    // Fallback to local storage
-    const local = JSON.parse(localStorage.getItem("oneway_taxi_bihar_bookings") || "[]");
-    if (local.length === 0) {
-      const defaultRide = {
-        bookingId: "OTB-2026-8942",
-        tripType: "oneway",
-        originCity: "Patna",
-        destCity: "Gaya (Bodh Gaya)",
-        pickupDate: "2026-09-02",
-        pickupTime: "10:00 AM",
-        distanceKm: 104,
-        duration: "2h 15m",
-        fleetClass: "Prime Sedan",
-        fleetModel: "Maruti Dzire",
-        passengerName: "Himanshu Shekhar",
-        passengerPhone: "+91 94310 88219",
-        passengerEmail: "himanshu@onewaytaxibihar.com",
-        pickupAddress: "Boring Road / Patna Junction, Patna",
-        dropAddress: "Near Mahabodhi Temple, Bodh Gaya",
-        totalFare: 2998,
-        paymentMethod: "Cash / UPI to Driver",
-        paymentStatus: "Pending (Pay on Arrival)",
-        bookingStatus: "Confirmed",
-        captainName: "Dharmendra Yadav (Bihar Highway Expert)",
-        captainPhone: "+91 94310 11982",
-        vehicleNumber: "BR 01 PB 8829",
-        otpPin: "4829",
-        createdAt: "2026-09-01T10:00:00Z"
-      };
-      localStorage.setItem("oneway_taxi_bihar_bookings", JSON.stringify([defaultRide]));
-      return [defaultRide];
-    }
-    return local;
+    // Genuine local user bookings only (empty array if no rides booked yet)
+    return JSON.parse(localStorage.getItem("oneway_taxi_bihar_bookings") || "[]");
   }
 
   // Create / Save a New Booking

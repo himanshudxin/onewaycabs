@@ -177,42 +177,37 @@ window.handleLogout = () => {
 };
 
 // Open Auth Modal (Always Fresh Inputs)
+// Open Auth Modal (Direct Login - Name + 10-Digit Mobile, Zero OTP)
 window.openAuthModal = () => {
-  window.closeAllModals();
+  window.closeAllModals(false);
   const modal = document.getElementById("modal-auth");
-  const phoneStep = document.getElementById("auth-phone-step");
-  const otpStep = document.getElementById("auth-otp-step");
+  const nameInput = document.getElementById("auth-name-input");
   const phoneInput = document.getElementById("auth-mobile-input");
 
-  if (phoneStep && otpStep) {
-    phoneStep.style.display = "block";
-    otpStep.style.display = "none";
-  }
-  if (phoneInput) {
-    phoneInput.value = "";
-    phoneInput.placeholder = "Enter 10-digit mobile number";
-  }
-  // Clear OTP digits
-  document.querySelectorAll(".otp-box-digit").forEach(i => i.value = "");
+  if (nameInput) nameInput.value = "";
+  if (phoneInput) phoneInput.value = "";
 
-  if (modal) modal.classList.add("open");
+  if (modal) {
+    modal.classList.add("open");
+    document.body.classList.add("modal-open");
+    history.pushState({ modal: "modal-auth" }, "", "#modal-auth");
+    setTimeout(() => {
+      if (nameInput) nameInput.focus();
+    }, 150);
+  }
 };
 
-let _authResendTimerInterval = null;
-
-window.resetAuthToPhoneStep = () => {
-  if (_authResendTimerInterval) clearInterval(_authResendTimerInterval);
-  const phoneStep = document.getElementById("auth-phone-step");
-  const otpStep = document.getElementById("auth-otp-step");
-  if (phoneStep) phoneStep.style.display = "block";
-  if (otpStep) otpStep.style.display = "none";
+window.handleDirectLogin = async () => {
+  const nameInput = document.getElementById("auth-name-input");
   const phoneInput = document.getElementById("auth-mobile-input");
-  if (phoneInput) phoneInput.focus();
-};
-
-window.handleSendRealOTP = async (channel = 'whatsapp') => {
-  const phoneInput = document.getElementById("auth-mobile-input");
+  const name = nameInput ? nameInput.value.trim() : "";
   const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, "") : "";
+
+  if (!name || name.length < 2) {
+    window.showToast("Please enter your full name", "warning");
+    if (nameInput) nameInput.focus();
+    return;
+  }
 
   if (!phone || phone.length < 10) {
     window.showToast("Please enter a valid 10-digit mobile number", "warning");
@@ -220,125 +215,20 @@ window.handleSendRealOTP = async (channel = 'whatsapp') => {
     return;
   }
 
-  // Generate real dynamic 4-digit code
-  const otpCode = String(Math.floor(1000 + Math.random() * 9000));
-  window._currentSessionOtp = otpCode;
-  window._currentAuthPhone = phone;
-
-  // Masked phone display for customer trust (e.g. +91 94310 ••••19)
-  const maskedPhone = `+91 ${phone.slice(0, 5)} ••••${phone.slice(-2)}`;
-  const displayEl = document.getElementById("auth-sent-number-display");
-  if (displayEl) displayEl.textContent = maskedPhone;
-
-  if (channel === 'whatsapp') {
-    // 1. Direct Real WhatsApp OTP Delivery
-    const waText = 
-      `*OneWayTaxiBihar Login Verification*\n\n` +
-      `Your real 4-digit OTP is: *${otpCode}*\n` +
-      `Mobile: +91 ${phone}\n\n` +
-      `Valid for 10 minutes. Do not share this OTP with anyone.\n` +
-      `OneWayTaxiBihar Mobility Pvt Ltd (24x7 Patna Helpdesk)`;
-
-    const waUrl = `https://wa.me/917281851011?text=${encodeURIComponent(waText)}`;
-    window.open(waUrl, "_blank");
-    window.showToast(`Real OTP [ ${otpCode} ] prepared on WhatsApp for +91 ${phone}!`, "success");
-  } else {
-    // 2. Real SMS Channel
-    await ApiClient.sendOTP(phone);
-    window.showToast(`Real SMS OTP [ ${otpCode} ] dispatched to +91 ${phone}!`, "success");
-  }
-
-  // Switch to Step 2
-  const phoneStep = document.getElementById("auth-phone-step");
-  const otpStep = document.getElementById("auth-otp-step");
-  if (phoneStep && otpStep) {
-    phoneStep.style.display = "none";
-    otpStep.style.display = "block";
-
-    // Setup auto-advance and instant auto-submit once 4 digits filled
-    const digitBoxes = otpStep.querySelectorAll(".otp-box-digit");
-    if (digitBoxes.length > 0) {
-      digitBoxes.forEach((b, idx) => {
-        b.value = "";
-        b.oninput = () => {
-          if (b.value.length >= 1) {
-            b.value = b.value.slice(0, 1);
-            if (idx < digitBoxes.length - 1) {
-              digitBoxes[idx + 1].focus();
-            } else {
-              // 4th digit entered: Auto submit!
-              let fullOtp = "";
-              digitBoxes.forEach(box => fullOtp += box.value.trim());
-              if (fullOtp.length === 4) {
-                window.handleVerifyOTP();
-              }
-            }
-          }
-        };
-        b.onkeydown = (e) => {
-          if (e.key === "Backspace" && !b.value && idx > 0) {
-            digitBoxes[idx - 1].focus();
-          }
-        };
-      });
-      setTimeout(() => digitBoxes[0].focus(), 150);
-    }
-
-    // Start 30s resend timer
-    const timerWrap = document.getElementById("auth-resend-timer-wrap");
-    const actionsWrap = document.getElementById("auth-resend-actions");
-    const countEl = document.getElementById("auth-resend-countdown");
-    if (timerWrap && actionsWrap && countEl) {
-      timerWrap.style.display = "inline";
-      actionsWrap.style.display = "none";
-      let secondsLeft = 30;
-      countEl.textContent = secondsLeft;
-
-      if (_authResendTimerInterval) clearInterval(_authResendTimerInterval);
-      _authResendTimerInterval = setInterval(() => {
-        secondsLeft--;
-        countEl.textContent = secondsLeft;
-        if (secondsLeft <= 0) {
-          clearInterval(_authResendTimerInterval);
-          timerWrap.style.display = "none";
-          actionsWrap.style.display = "inline-flex";
-        }
-      }, 1000);
-    }
-  }
-};
-
-window.handleSendOTP = () => {
-  window.handleSendRealOTP('whatsapp');
-};
-
-window.handleVerifyOTP = async () => {
-  const phone = window._currentAuthPhone || (document.getElementById("auth-mobile-input") ? document.getElementById("auth-mobile-input").value.trim() : "");
-  const digitBoxes = document.querySelectorAll("#auth-otp-step .otp-box-digit");
-  let enteredOtp = "";
-  digitBoxes.forEach(b => enteredOtp += b.value.trim());
-
-  if (!enteredOtp || enteredOtp.length < 4) {
-    window.showToast("Please enter the complete 4-digit verification code", "warning");
-    return;
-  }
-
-  const res = await ApiClient.verifyOTP(phone, enteredOtp, "Passenger");
+  const res = await ApiClient.directLogin(name, phone);
   if (res && res.success) {
     currentUser = res.user;
-    if (currentUser.walletBalance === undefined) {
-      currentUser.walletBalance = 100;
-    }
     renderNavAuth();
     window.closeAllModals();
-    if (_authResendTimerInterval) clearInterval(_authResendTimerInterval);
-    window.showToast(`Verified! Logged in as ${currentUser.name} (${currentUser.phone}). ₹100 credited.`, "success");
-  } else {
-    window.showToast(res?.message || "Invalid OTP code. Please enter the correct code.", "error");
-    digitBoxes.forEach(b => b.value = "");
-    if (digitBoxes[0]) digitBoxes[0].focus();
+    window.showToast(`Welcome, ${currentUser.name}! Logged in successfully. ₹100 Welcome Bonus added to your wallet.`, "success");
   }
 };
+
+// Aliases for compatibility
+window.handleSendRealOTP = window.handleDirectLogin;
+window.handleSendOTP = window.handleDirectLogin;
+window.handleVerifyOTP = window.handleDirectLogin;
+window.resetAuthToPhoneStep = () => {};
 
 /* ==========================================================================
    REFER & EARN ₹150 CONTROLLER
@@ -604,7 +494,7 @@ window.openPrivacyModal = () => {
    3. MY TRIPS & INVOICE DASHBOARD
    ========================================================================== */
 window.openMyTripsModal = async () => {
-  window.closeAllModals();
+  window.closeAllModals(false);
   const modal = document.getElementById("modal-my-trips");
   const body = document.getElementById("modal-my-trips-body");
   if (!modal || !body) return;
@@ -614,7 +504,7 @@ window.openMyTripsModal = async () => {
   body.innerHTML = `
     <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--owc-border); padding-bottom: 14px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 800; color: var(--owc-text);">Your Outstation Trips & Account</h3>
+        <h3 style="font-size: 18px; font-weight: 800; color: var(--owc-text);">Your Outstation Trips &amp; Account</h3>
         <p style="font-size: 13px; color: var(--owc-text-muted);">
           ${currentUser ? `<strong>${currentUser.name || 'Passenger'}</strong> (${currentUser.phone || ''}) • Wallet: <strong>₹${currentUser.walletBalance || 0}</strong>` : 'Manage your upcoming Bihar cab bookings & invoices'}
         </p>
@@ -662,7 +552,7 @@ window.openMyTripsModal = async () => {
             <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--owc-text-muted); margin-bottom: 14px;">
               <span>Time: ${r.pickupDate} at ${r.pickupTime}</span>
               <span>Vehicle: ${r.fleetClass} (${r.fleetModel})</span>
-              <span>Captain: ${r.captainName} (${r.vehicleNumber})</span>
+              <span>Driver: ${r.captainName || 'Assigning (5-Min Confirmation Call)'}</span>
             </div>
 
             <div style="display: flex; gap: 10px; border-top: 1px dashed var(--owc-border); padding-top: 12px;">
@@ -683,6 +573,8 @@ window.openMyTripsModal = async () => {
   `;
 
   modal.classList.add("open");
+  document.body.classList.add("modal-open");
+  history.pushState({ modal: "modal-my-trips" }, "", "#modal-my-trips");
 };
 
 window.cancelRideWithRefund = async (bookingId) => {
@@ -1205,72 +1097,113 @@ window.startLiveTrackingSimulation = async (bookingId) => {
   if (!modal || !body) return;
 
   const rides = await ApiClient.getRides();
-  const ride = rides.find(r => r.bookingId === bookingId) || rides[0] || {
-    bookingId: "OTB-2026-8942",
-    originCity: "Patna",
-    destCity: "Gaya (Bodh Gaya)",
-    captainName: "Dharmendra Yadav (Bihar Highway Expert)",
-    captainPhone: "+91 94310 11982",
-    vehicleNumber: "BR 01 PB 8829",
-    otpPin: "4829"
-  };
+  const ride = rides.find(r => r.bookingId === bookingId) || rides[0];
+
+  if (!ride) {
+    window.showToast("No active ride found to track. Book a cab to start tracking!", "info");
+    return;
+  }
+
+  const driverName = ride.captainName || "Executive Partner Driver (Assigning)";
+  const driverPhone = ride.captainPhone || "+91 80021 41816";
+  const driverVehicle = ride.vehicleNumber || "Verified Executive Fleet";
+  const statusNotice = ride.partnerNotice || "Our partner/driver or agent will call you in 5 minutes to confirm booking.";
 
   body.innerHTML = `
     <div>
       <div style="background: var(--owc-slate-900); color: white; border-radius: var(--radius-lg); padding: 20px; text-align: center; margin-bottom: 20px; position: relative; overflow: hidden;">
-        <div style="font-size: 12px; color: var(--owc-yellow); font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">CAB EN ROUTE (LIVE GPS RADAR)</div>
-        <h3 style="font-size: 20px; font-weight: 800;">Estimated Arrival in <span id="tracking-eta" style="color: var(--owc-primary);">12 Mins</span></h3>
-        <p style="font-size: 12px; color: #94a3b8;">Captain Dharmendra is approaching your pickup point</p>
+        <div style="font-size: 12px; color: var(--owc-yellow); font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">CAB DISPATCH RADAR</div>
+        <h3 style="font-size: 18px; font-weight: 800;">Booking ID: <span style="color: var(--owc-primary);">${ride.bookingId}</span></h3>
+        <p style="font-size: 12.5px; color: #94a3b8; margin-top: 6px;">${statusNotice}</p>
       </div>
 
-      <!-- Driver Details -->
+      <!-- Partner Dispatch Notice Card -->
       <div style="background: var(--owc-slate-50); border: 1px solid var(--owc-border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--owc-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--owc-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             <div>
-              <strong style="font-size: 15px; color: var(--owc-text);">${ride.captainName}</strong>
-              <div style="font-size: 12px; color: var(--owc-text-muted);">Vehicle: <strong>${ride.vehicleNumber}</strong> (${ride.fleetClass || 'Prime Sedan'})</div>
+              <strong style="font-size: 15px; color: var(--owc-text);">${driverName}</strong>
+              <div style="font-size: 12px; color: var(--owc-text-muted);">${driverVehicle} • ${ride.fleetClass || 'Prime Sedan'}</div>
             </div>
           </div>
-          <div style="text-align: right;">
-            <div style="font-size: 11px; color: var(--owc-text-dim);">START OTP</div>
-            <strong style="font-size: 20px; color: var(--owc-primary);">${ride.otpPin}</strong>
-          </div>
+        </div>
+
+        <div style="font-size: 13px; color: var(--owc-text-muted); line-height: 1.6; border-top: 1px dashed var(--owc-border); padding-top: 10px;">
+          Route: <strong>${ride.originCity} → ${ride.destCity}</strong><br>
+          Pickup Date & Time: <strong>${ride.pickupDate} at ${ride.pickupTime}</strong><br>
+          Payable: <strong>₹${ride.totalFare ? ride.totalFare.toLocaleString('en-IN') : '0'}</strong> (${ride.paymentMethod || 'Cash / UPI'})
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div style="display: flex; gap: 10px;">
-        <a href="tel:${ride.captainPhone}" class="btn-select-cab" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; background: #0095f6; flex: 1;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="tel:+918002141816" class="btn-select-cab" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; background: #0095f6; flex: 1; min-width: 180px;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call Captain (${ride.captainPhone})
+          Call Helpdesk (+91 80021 41816)
         </a>
-        <button type="button" class="btn-nav-outline" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;" onclick="window.showToast('24x7 Bihar SOS Desk alerted (+91 80021 41816). Support team is monitoring your ride.', 'danger')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          SOS Safety Desk
-        </button>
+        <a href="https://wa.me/917281851011?text=Hello%20OneWayTaxiBihar%2C%20checking%20status%20for%20booking%20${ride.bookingId}" target="_blank" rel="noopener noreferrer" class="btn-nav-outline" style="flex: 1; min-width: 180px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+          WhatsApp Desk
+        </a>
       </div>
     </div>
   `;
 
   modal.classList.add("open");
+  document.body.classList.add("modal-open");
+  history.pushState({ modal: "modal-tracking" }, "", "#modal-tracking");
 };
 
 /* ==========================================================================
-   6. GLOBAL UI HELPERS, TOASTS & MODAL DISMISSAL
+   6. GLOBAL UI HELPERS, TOASTS & MODAL DISMISSAL WITH BROWSER BACK BUTTON
    ========================================================================== */
-window.closeAllModals = () => {
+window.closeAllModals = (updateHistory = true) => {
   document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("open"));
+  document.body.classList.remove("modal-open");
+  if (updateHistory && window.location.hash) {
+    try {
+      history.pushState(null, "", window.location.pathname + window.location.search);
+    } catch (e) {}
+  }
+};
+
+// Copy UPI ID Helper
+window.copyUpiId = (upiId) => {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(upiId).then(() => {
+      window.showToast(`UPI ID copied: ${upiId}`, "success");
+    }).catch(() => {
+      window.showToast(`UPI ID: ${upiId}`, "info");
+    });
+  } else {
+    window.showToast(`UPI ID: ${upiId}`, "info");
+  }
 };
 
 window.openHelpModal = () => {
-  window.closeAllModals();
+  window.closeAllModals(false);
   const modal = document.getElementById("modal-help-support");
-  if (modal) modal.classList.add("open");
+  if (modal) {
+    modal.classList.add("open");
+    document.body.classList.add("modal-open");
+    history.pushState({ modal: "modal-help-support" }, "", "#modal-help-support");
+  }
 };
+
+// Phone/Browser Back Button & Gesture Slide Handler (Preserves all form data)
+window.addEventListener("popstate", () => {
+  const openModal = document.querySelector(".modal-overlay.open");
+  if (openModal) {
+    window.closeAllModals(false);
+  }
+  const drawer = document.getElementById("mobile-drawer");
+  if (drawer && drawer.classList.contains("open")) {
+    drawer.classList.remove("open");
+  }
+});
 
 window.closeMobileDrawer = () => {
   const d = document.getElementById("mobile-drawer");
@@ -1302,6 +1235,24 @@ function setupGlobalModalEvents() {
       window.closeMobileDrawer();
     }
   });
+
+  // Mobile Bottom Quick Bar Scroll Visibility
+  const bar = document.getElementById("mobile-quick-bar");
+  const hero = document.getElementById("booking-hero");
+  if (bar && hero) {
+    window.addEventListener("scroll", () => {
+      if (document.body.classList.contains("modal-open")) {
+        bar.style.display = "none";
+        return;
+      }
+      const heroBottom = hero.offsetTop + hero.offsetHeight - 80;
+      if (window.scrollY > heroBottom && window.innerWidth <= 768) {
+        bar.style.display = "block";
+      } else {
+        bar.style.display = "none";
+      }
+    }, { passive: true });
+  }
 }
 
 window.showToast = (msg, type = "info") => {
