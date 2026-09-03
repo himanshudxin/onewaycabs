@@ -1199,11 +1199,21 @@ window.closeAllModals = (updateHistory = true) => {
   }
 };
 
-// Copy UPI ID Helper
-window.copyUpiId = (upiId) => {
+// Copy UPI ID Helper with Visual Button Feedback
+window.copyUpiId = (upiId, btnEl) => {
+  const targetBtn = btnEl || document.querySelector(".checkout-btn-copy");
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(upiId).then(() => {
       window.showToast(`UPI ID copied: ${upiId}`, "success");
+      if (targetBtn) {
+        const origText = targetBtn.innerHTML;
+        targetBtn.innerHTML = `✓ Copied!`;
+        targetBtn.style.background = "#059669";
+        setTimeout(() => {
+          targetBtn.innerHTML = origText;
+          targetBtn.style.background = "#009af4";
+        }, 2200);
+      }
     }).catch(() => {
       window.showToast(`UPI ID: ${upiId}`, "info");
     });

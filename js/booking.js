@@ -1621,223 +1621,219 @@ class BookingManager {
 
     if (!checkoutModal || !checkoutBody) return;
 
+    const km = this.calculatedDistanceKm || 104;
+    const baseKm = fleet.baseKm || 15;
+    const extraKm = Math.max(0, km - baseKm);
+    const distanceCharge = Math.round(extraKm * (fleet.perKmRate || 25));
+    const toll = Math.round((km / 70) * 55);
+    const allowance = (this.tripType === "roundtrip" || km > 200) ? 350 : 0;
+    const isAirport = (this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport"));
+    const parking = isAirport ? 100 : 0;
+    const finalPayableInit = Math.max(0, price - 100);
+
     checkoutBody.innerHTML = `
-      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
-        
-        <!-- Left: Passenger Form -->
+      <div class="checkout-wrapper">
+
+        <!-- 1. COMPACT RIDE SUMMARY STRIP (Top Banner) -->
+        <div class="checkout-summary-strip">
+          <div class="checkout-summary-top">
+            <div class="checkout-route-badge">
+              <span>${this.originCity.name}</span>
+              <span style="color: #38bdf8;">➔</span>
+              <span>${this.destCity.name}</span>
+            </div>
+            <span class="checkout-cab-tag">${fleet.category} (${fleet.models})</span>
+          </div>
+
+          <div class="checkout-meta-row">
+            <span>📅 ${this.pickupDate} at ${this.pickupTime} • 🛣️ ${km} KM</span>
+            <button type="button" class="checkout-breakdown-btn" id="checkout-breakdown-toggle-btn" onclick="window.bookingManager.toggleFareBreakdown()">
+              <span>Fare Breakdown</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+
+          <!-- Expandable Detailed Itemized Fare Breakdown -->
+          <div class="checkout-breakdown-content" id="checkout-breakdown-box">
+            <div class="checkout-breakdown-row">
+              <span>Base Fare (First ${baseKm} KM):</span>
+              <strong style="color: #ffffff;">₹${fleet.baseFare.toLocaleString('en-IN')}</strong>
+            </div>
+            <div class="checkout-breakdown-row">
+              <span>Distance Charge (${extraKm} KM @ ₹${fleet.perKmRate}/KM):</span>
+              <strong style="color: #ffffff;">₹${distanceCharge.toLocaleString('en-IN')}</strong>
+            </div>
+            <div class="checkout-breakdown-row">
+              <span>Highway Tolls & Fastag:</span>
+              <span style="color: #4ade80; font-weight: 700;">Included (₹${toll})</span>
+            </div>
+            <div class="checkout-breakdown-row">
+              <span>Parking Charges:</span>
+              <span style="color: #4ade80; font-weight: 700;">${parking > 0 ? `Included (₹${parking})` : "₹0 (Free)"}</span>
+            </div>
+            <div class="checkout-breakdown-row">
+              <span>Driver Allowance:</span>
+              <span style="color: #4ade80; font-weight: 700;">${allowance > 0 ? `Included (₹${allowance})` : "₹0 (Day Ride)"}</span>
+            </div>
+            <div class="checkout-breakdown-row">
+              <span>Taxes & 5% GST:</span>
+              <span style="color: #4ade80; font-weight: 700;">Included</span>
+            </div>
+            <div class="checkout-breakdown-row" style="border-top: 1px dashed rgba(255,255,255,0.2); margin-top: 4px; padding-top: 4px; font-weight: 800; color: #ffffff;">
+              <span>Standard Cab Fare:</span>
+              <span>₹${price.toLocaleString('en-IN')}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. PASSENGER INFORMATION (Compact Touch Form) -->
         <div>
-          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px; color: var(--owc-text);">1. Passenger Information</h3>
-          
-          <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+          <div class="checkout-section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Passenger Details</span>
+          </div>
+
+          <div class="checkout-form-grid">
             <div class="input-field-group">
               <span class="input-icon-clean">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               </span>
               <div class="input-content">
-                <label>FULL NAME</label>
-                <input type="text" id="chk-name" value="${this.passengerDetails.name}" placeholder="Enter full name">
+                <label>PASSENGER NAME</label>
+                <input type="text" id="chk-name" value="${this.passengerDetails.name || window.currentUser?.name || ''}" placeholder="Enter full name" autocomplete="name">
               </div>
             </div>
 
             <div class="input-field-group">
               <span class="input-icon-clean">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
               </span>
               <div class="input-content">
                 <label>MOBILE NUMBER (FOR DRIVER SMS/WHATSAPP)</label>
-                <input type="tel" id="chk-phone" value="${this.passengerDetails.phone}" placeholder="10-digit mobile number">
+                <input type="tel" id="chk-phone" value="${this.passengerDetails.phone || window.currentUser?.phone || ''}" placeholder="10-digit mobile number" autocomplete="tel">
               </div>
-            </div>
-
-            <div class="input-field-group">
-              <span class="input-icon-clean">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </span>
-              <div class="input-content">
-                <label>EMAIL (FOR GST TAX INVOICE)</label>
-                <input type="email" id="chk-email" value="${this.passengerDetails.email}" placeholder="your.name@example.com">
-              </div>
-            </div>
-
-            <!-- Exact Pickup Address with Auto-Type Chips & Recommendations -->
-            <div class="input-field-group">
-              <span class="input-icon-clean">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-              </span>
-              <div class="input-content" style="position: relative;">
-                <label>EXACT PICKUP ADDRESS / TERMINAL / LANDMARK</label>
-                <input type="text" id="chk-pickup-addr" value="${this.passengerDetails.pickupAddress}" placeholder="Terminal, platform, hospital, or street address" autocomplete="off">
-                <div class="checkout-loc-dropdown" id="chk-pickup-dropdown" style="display: none;"></div>
-              </div>
-            </div>
-            <!-- Quick Auto-Type Chips for Pickup -->
-            <div class="auto-type-chips-wrapper" id="pickup-auto-chips">
-              <div class="auto-type-loading"><span>Loading popular pickup hubs...</span></div>
-            </div>
-
-            <!-- Exact Drop Address with Auto-Type Chips & Recommendations -->
-            <div class="input-field-group" style="margin-top: 6px;">
-              <span class="input-icon-clean">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              </span>
-              <div class="input-content" style="position: relative;">
-                <label>EXACT DROP DESTINATION ADDRESS / HOTEL / VILLAGE</label>
-                <input type="text" id="chk-drop-addr" value="${this.passengerDetails.dropAddress}" placeholder="Hotel, temple, hospital, station, or locality address" autocomplete="off">
-                <div class="checkout-loc-dropdown" id="chk-drop-dropdown" style="display: none;"></div>
-              </div>
-            </div>
-            <!-- Quick Auto-Type Chips for Drop -->
-            <div class="auto-type-chips-wrapper" id="drop-auto-chips">
-              <div class="auto-type-loading"><span>Loading popular drop locations...</span></div>
             </div>
           </div>
 
-          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px; color: var(--owc-text);">2. Payment Method</h3>
-          
-          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+          <!-- Exact Pickup Address -->
+          <div class="input-field-group" style="margin-top: 8px;">
+            <span class="input-icon-clean">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            <div class="input-content" style="position: relative;">
+              <label>EXACT PICKUP ADDRESS / TERMINAL / LANDMARK</label>
+              <input type="text" id="chk-pickup-addr" value="${this.passengerDetails.pickupAddress}" placeholder="Terminal, railway gate, hospital, or street address" autocomplete="off">
+              <div class="checkout-loc-dropdown" id="chk-pickup-dropdown" style="display: none;"></div>
+            </div>
+          </div>
+          <div class="auto-type-chips-wrapper" id="pickup-auto-chips">
+            <div class="auto-type-loading"><span>Loading popular pickup hubs...</span></div>
+          </div>
+
+          <!-- Exact Drop Address -->
+          <div class="input-field-group" style="margin-top: 4px;">
+            <span class="input-icon-clean">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            </span>
+            <div class="input-content" style="position: relative;">
+              <label>EXACT DROP DESTINATION ADDRESS / HOTEL / VILLAGE</label>
+              <input type="text" id="chk-drop-addr" value="${this.passengerDetails.dropAddress}" placeholder="Hotel, temple, town, or locality address" autocomplete="off">
+              <div class="checkout-loc-dropdown" id="chk-drop-dropdown" style="display: none;"></div>
+            </div>
+          </div>
+          <div class="auto-type-chips-wrapper" id="drop-auto-chips">
+            <div class="auto-type-loading"><span>Loading popular drop locations...</span></div>
+          </div>
+        </div>
+
+        <!-- 3. WALLET SAVINGS CARD -->
+        <label class="checkout-wallet-box">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input type="checkbox" id="chk-use-wallet" checked onchange="window.bookingManager.updateCheckoutPayable(${price})" style="accent-color: #059669; width: 19px; height: 19px; cursor: pointer;">
+            <div>
+              <strong style="color: #0f172a; font-size: 13.5px; display: block;">Apply Wallet Bonus (-₹100)</strong>
+              <span style="font-size: 11.5px; color: #15803d; font-weight: 600;">
+                ${window.currentUser ? `Available Wallet: ₹${window.currentUser.walletBalance || 100}` : '₹100 Welcome Discount Applied'}
+              </span>
+            </div>
+          </div>
+          <span style="color: #15803d; font-weight: 800; font-size: 15px;" id="chk-wallet-deduct-label">-₹100</span>
+        </label>
+
+        <!-- 4. PAYMENT METHOD SELECTOR -->
+        <div>
+          <div class="checkout-section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <span>Select Payment Method</span>
+          </div>
+
+          <div class="checkout-methods-list">
             
             <!-- Method 1: PhonePe UPI QR Code -->
-            <label class="pay-method-card" id="pay-card-upi" style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border: 2px solid var(--owc-primary); border-radius: var(--radius-md); background: var(--owc-primary-subtle); cursor: pointer; transition: all 0.2s ease;">
-              <div style="display: flex; align-items: center; gap: 10px;">
+            <label class="checkout-method-item active" id="pay-card-upi">
+              <div class="checkout-method-header">
                 <input type="radio" name="pay-method" value="UPI / PhonePe QR Code" checked onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
                 <div style="flex: 1;">
-                  <strong style="color: var(--owc-text); font-size: 14px;">Pay via PhonePe / UPI QR Code (Instant Confirmation)</strong>
-                  <div style="font-size: 12px; color: var(--owc-text-muted);">Scan QR using PhonePe, Google Pay, Paytm or any BHIM UPI app.</div>
+                  <strong style="color: var(--owc-text); font-size: 13.5px; display: block;">Pay via PhonePe / UPI QR Code (Instant Confirmation)</strong>
+                  <div style="font-size: 11.5px; color: var(--owc-text-muted);">Scan QR using PhonePe, Google Pay, Paytm, or BHIM.</div>
                 </div>
               </div>
 
-              <!-- Embedded PhonePe QR Card Container -->
-              <div id="checkout-qr-box" style="margin-top: 10px; background: #ffffff; border: 2px solid #5f259f; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 6px 20px rgba(95, 37, 159, 0.12);">
-                <div style="font-size: 11px; font-weight: 800; color: #5f259f; letter-spacing: 0.6px; margin-bottom: 6px;">PHONEPE • ACCEPTED HERE</div>
-                <img src="images/phonepe-qr.png" alt="PhonePe QR Code - Himanshu Kumar Dubey" style="max-width: 220px; width: 100%; height: auto; border-radius: 10px; display: block; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                <div style="margin-top: 10px; font-size: 13px; font-weight: 800; color: #0f172a;">HIMANSHU KUMAR DUBEY</div>
+              <!-- PhonePe Responsive QR Card -->
+              <div class="checkout-qr-wrapper" id="checkout-qr-box">
+                <div style="font-size: 11px; font-weight: 800; color: #5f259f; letter-spacing: 0.6px; margin-bottom: 6px;">PHONEPE • BHIM UPI • GPAY • PAYTM</div>
+                <img src="images/phonepe-qr.png" alt="PhonePe QR Code - Himanshu Kumar Dubey" class="checkout-qr-img">
+                <div style="margin-top: 8px; font-size: 13px; font-weight: 800; color: #0f172a;">HIMANSHU KUMAR DUBEY</div>
                 
-                <div style="margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; background: #f8fafc; border: 1px solid #e2e8f0; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-family: monospace;">
-                  <span style="font-weight: 700; color: #334155;">8002141816@ybl</span>
-                  <button type="button" onclick="window.copyUpiId('8002141816@ybl')" style="border: none; background: #009af4; color: white; border-radius: 4px; padding: 3px 8px; cursor: pointer; font-size: 11px; font-weight: 700;">Copy UPI ID</button>
+                <div class="checkout-upi-pill">
+                  <span style="font-weight: 700; color: #334155; font-size: 12.5px; font-family: monospace;">8002141816@ybl</span>
+                  <button type="button" class="checkout-btn-copy" onclick="window.copyUpiId('8002141816@ybl', this)">📋 Copy UPI ID</button>
                 </div>
 
-                <div style="margin-top: 10px;">
-                  <a href="upi://pay?pa=8002141816@ybl&pn=Himanshu%20Kumar%20Dubey&cu=INR" class="btn-upi-intent-pay" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; max-width: 260px; background: linear-gradient(135deg, #5f259f 0%, #4b1d7f 100%); color: #ffffff; text-decoration: none; padding: 9px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; box-shadow: 0 4px 12px rgba(95, 37, 159, 0.3);">
-                    <span>Pay with PhonePe / GPay App</span>
-                  </a>
-                </div>
+                <a href="upi://pay?pa=8002141816@ybl&pn=Himanshu%20Kumar%20Dubey&cu=INR" class="checkout-upi-intent-btn">
+                  <span>Pay with PhonePe / GPay App ➔</span>
+                </a>
               </div>
             </label>
 
             <!-- Method 2: Cash / UPI to Driver -->
-            <label class="pay-method-card" id="pay-card-cash" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--owc-border); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;">
-              <input type="radio" name="pay-method" value="Cash / UPI to Driver" onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
-              <div>
-                <strong style="color: var(--owc-text); font-size: 14px;">Pay 100% Cash / UPI to Driver (Zero Advance)</strong>
-                <div style="font-size: 12px; color: var(--owc-text-muted);">Pay securely to your captain only upon arriving safely at your destination.</div>
+            <label class="checkout-method-item" id="pay-card-cash">
+              <div class="checkout-method-header">
+                <input type="radio" name="pay-method" value="Cash / UPI to Driver" onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
+                <div style="flex: 1;">
+                  <strong style="color: var(--owc-text); font-size: 13.5px; display: block;">Pay 100% Cash / UPI to Driver (Zero Advance)</strong>
+                  <div style="font-size: 11.5px; color: var(--owc-text-muted);">Pay securely to your captain upon arriving safely at destination.</div>
+                </div>
               </div>
             </label>
 
             <!-- Method 3: Token Advance -->
-            <label class="pay-method-card" id="pay-card-token" style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid var(--owc-border); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease;">
-              <input type="radio" name="pay-method" value="Token Advance (₹200)" onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
-              <div>
-                <strong style="color: var(--owc-text); font-size: 14px;">Pay ₹200 Token Advance (Confirm Cab)</strong>
-                <div style="font-size: 12px; color: var(--owc-text-muted);">Pay ₹200 via QR code to confirm vehicle; balance to driver at drop.</div>
+            <label class="checkout-method-item" id="pay-card-token">
+              <div class="checkout-method-header">
+                <input type="radio" name="pay-method" value="Token Advance (₹200)" onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
+                <div style="flex: 1;">
+                  <strong style="color: var(--owc-text); font-size: 13.5px; display: block;">Pay ₹200 Token Advance (Confirm Cab)</strong>
+                  <div style="font-size: 11.5px; color: var(--owc-text-muted);">Pay ₹200 via UPI QR; balance payable to driver at destination.</div>
+                </div>
               </div>
             </label>
 
           </div>
         </div>
 
-        <!-- Right: Ride Summary Card -->
-        <div style="background: var(--owc-slate-50); border: 1px solid var(--owc-border); border-radius: var(--radius-lg); padding: 20px;">
-          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px; color: var(--owc-text);">Ride Summary</h3>
-          
-          <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Trip Type:</span>
-            <strong>${this.tripType.toUpperCase()}</strong>
-          </div>
-
-          <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Route:</span>
-            <strong>${this.originCity.name} → ${this.destCity.name}</strong>
-          </div>
-
-          <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Vehicle Class:</span>
-            <strong>${fleet.category} (${fleet.models})</strong>
-          </div>
-
-          <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Date & Time:</span>
-            <strong>${this.pickupDate} at ${this.pickupTime}</strong>
-          </div>
-
-          <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Est. Distance:</span>
-            <strong>${this.calculatedDistanceKm} KM (~${this.calculatedDuration})</strong>
-          </div>
-
-          <hr style="border: none; border-top: 1px dashed var(--owc-border); margin: 16px 0;">
-
-          <!-- Detailed Itemized Fare Breakdown -->
-          <div style="background: var(--owc-card-bg); border: 1px solid var(--owc-border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 14px; font-size: 12.5px;">
-            <div style="font-weight: 800; color: var(--owc-text); margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Itemized Fare Breakdown</div>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="color: var(--owc-text-muted);">Base Fare (First ${fleet.baseKm || 15} KM):</span>
-              <span>₹${fleet.baseFare.toLocaleString('en-IN')}</span>
+        <!-- 5. STICKY MOBILE ACTION BAR (Payable Total & Confirm CTA) -->
+        <div class="checkout-action-bar">
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--owc-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">TOTAL PAYABLE</div>
+            <div style="display: flex; align-items: baseline; gap: 6px;">
+              <span style="font-size: 24px; font-weight: 900; color: var(--owc-primary);" id="chk-total-payable">₹${finalPayableInit.toLocaleString('en-IN')}</span>
+              <span style="font-size: 12.5px; color: #94a3b8; text-decoration: line-through;" id="chk-original-payable">₹${price.toLocaleString('en-IN')}</span>
             </div>
-            
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="color: var(--owc-text-muted);">Distance Charge (${Math.max(0, (this.calculatedDistanceKm || 104) - (fleet.baseKm || 15))} KM @ ₹${fleet.perKmRate}/KM):</span>
-              <span>₹${Math.round(Math.max(0, (this.calculatedDistanceKm || 104) - (fleet.baseKm || 15)) * (fleet.perKmRate || 25)).toLocaleString('en-IN')}</span>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="color: var(--owc-text-muted);">Toll / Fastag:</span>
-              <span style="color: #059669; font-weight: 700;">Included (₹${Math.round(((this.calculatedDistanceKm || 104) / 70) * 55)})</span>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="color: var(--owc-text-muted);">Parking Charges:</span>
-              <span style="color: #059669; font-weight: 700;">${(this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport")) ? "Included (₹100)" : "₹0 (Free)"}</span>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="color: var(--owc-text-muted);">Driver Allowance:</span>
-              <span style="color: #059669; font-weight: 700;">${((this.calculatedDistanceKm || 104) > 200 || this.tripType === "roundtrip") ? "Included (₹350)" : "₹0 (Day Ride)"}</span>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-              <span style="color: var(--owc-text-muted);">Taxes / GST (5%):</span>
-              <span style="color: #059669; font-weight: 700;">Included</span>
-            </div>
-
-            <div style="border-top: 1px dashed var(--owc-border); padding-top: 6px; margin-top: 6px; display: flex; justify-content: space-between; font-weight: 800; color: var(--owc-text);">
-              <span>Standard Cab Fare:</span>
-              <span>₹${price.toLocaleString('en-IN')}</span>
-            </div>
+            <div style="font-size: 10.5px; color: #059669; font-weight: 700;">Tolls, Driver Allowance & GST Included</div>
           </div>
 
-          <!-- Wallet Balance Deduction Card -->
-          <div style="background: rgba(5, 163, 87, 0.08); border: 1.5px dashed #059669; border-radius: var(--radius-md); padding: 12px 14px; margin: 14px 0; display: flex; align-items: center; justify-content: space-between;">
-            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none;">
-              <input type="checkbox" id="chk-use-wallet" checked onchange="window.bookingManager.updateCheckoutPayable(${price})" style="accent-color: var(--owc-primary); width: 19px; height: 19px;">
-              <div>
-                <strong style="color: var(--owc-text); font-size: 13.5px;">Apply Wallet Bonus (-₹100)</strong>
-                <div style="font-size: 11.5px; color: var(--owc-text-muted);">
-                  ${window.currentUser ? `Available Wallet: ₹${window.currentUser.walletBalance || 100}` : 'Instant ₹100 Welcome Discount applied'}
-                </div>
-              </div>
-            </label>
-            <span style="color: #059669; font-weight: 800; font-size: 15px;" id="chk-wallet-deduct-label">-₹100</span>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; padding-top: 12px; border-top: 2px solid var(--owc-border);">
-            <span style="font-size: 16px; font-weight: 800;">Total Payable:</span>
-            <span style="font-size: 26px; font-weight: 900; color: var(--owc-primary);" id="chk-total-payable">₹${Math.max(0, price - 100).toLocaleString('en-IN')}</span>
-          </div>
-
-          <button type="button" class="check-fare-primary-btn" style="margin-top: 20px; margin-bottom: 0; width: 100%; height: 50px; font-size: 16px; font-weight: 800;" onclick="window.bookingManager.confirmBooking(${price})">
-            Confirm &amp; Book OneWay Cab →
+          <button type="button" class="check-fare-primary-btn" style="flex: 1; max-width: 240px; margin: 0; min-height: 48px; font-size: 14.5px; font-weight: 800;" onclick="window.bookingManager.confirmBooking(${price})">
+            Confirm Booking →
           </button>
         </div>
 
@@ -1850,6 +1846,19 @@ class BookingManager {
     this.setupCheckoutLocationAutocomplete();
   }
 
+  toggleFareBreakdown() {
+    const el = document.getElementById("checkout-breakdown-box");
+    const btn = document.getElementById("checkout-breakdown-toggle-btn");
+    if (!el) return;
+    if (el.classList.contains("show")) {
+      el.classList.remove("show");
+      if (btn) btn.innerHTML = `<span>Fare Breakdown</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+    } else {
+      el.classList.add("show");
+      if (btn) btn.innerHTML = `<span>Hide Breakdown</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>`;
+    }
+  }
+
   handlePaymentMethodChange(method) {
     const qrBox = document.getElementById("checkout-qr-box");
     const cardUpi = document.getElementById("pay-card-upi");
@@ -1857,16 +1866,25 @@ class BookingManager {
     const cardToken = document.getElementById("pay-card-token");
 
     if (cardUpi) {
-      cardUpi.style.borderColor = (method === "UPI / PhonePe QR Code" || method === "Token Advance (₹200)") ? "var(--owc-primary)" : "var(--owc-border)";
-      cardUpi.style.background = (method === "UPI / PhonePe QR Code" || method === "Token Advance (₹200)") ? "var(--owc-primary-subtle)" : "transparent";
+      if (method === "UPI / PhonePe QR Code") {
+        cardUpi.classList.add("active");
+      } else {
+        cardUpi.classList.remove("active");
+      }
     }
     if (cardCash) {
-      cardCash.style.borderColor = (method === "Cash / UPI to Driver") ? "var(--owc-primary)" : "var(--owc-border)";
-      cardCash.style.background = (method === "Cash / UPI to Driver") ? "var(--owc-primary-subtle)" : "transparent";
+      if (method === "Cash / UPI to Driver") {
+        cardCash.classList.add("active");
+      } else {
+        cardCash.classList.remove("active");
+      }
     }
     if (cardToken) {
-      cardToken.style.borderColor = (method === "Token Advance (₹200)") ? "var(--owc-primary)" : "var(--owc-border)";
-      cardToken.style.background = (method === "Token Advance (₹200)") ? "var(--owc-primary-subtle)" : "transparent";
+      if (method === "Token Advance (₹200)") {
+        cardToken.classList.add("active");
+      } else {
+        cardToken.classList.remove("active");
+      }
     }
 
     if (qrBox) {
@@ -1877,6 +1895,7 @@ class BookingManager {
   updateCheckoutPayable(basePrice) {
     const chk = document.getElementById("chk-use-wallet");
     const totalEl = document.getElementById("chk-total-payable");
+    const origEl = document.getElementById("chk-original-payable");
     const deductLabel = document.getElementById("chk-wallet-deduct-label");
     const isUsing = chk && chk.checked;
     const deduction = isUsing ? 100 : 0;
@@ -1884,6 +1903,9 @@ class BookingManager {
 
     if (deductLabel) {
       deductLabel.textContent = isUsing ? "-₹100" : "₹0";
+    }
+    if (origEl) {
+      origEl.style.display = isUsing ? "inline" : "none";
     }
     if (totalEl) {
       totalEl.textContent = `₹${finalAmt.toLocaleString('en-IN')}`;
