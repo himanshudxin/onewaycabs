@@ -106,9 +106,14 @@ class BookingManager {
     const setupInputEvents = (input, dropdown, type) => {
       if (!input || !dropdown) return;
 
-      // Fast real-time keystroke filtering
+      // Fast real-time keystroke filtering with micro-debounce (eliminates frame drops on low-end devices)
+      let searchDebounceTimer = null;
       input.addEventListener("input", (e) => {
-        this.handleCitySearch(type, e.target.value.trim(), dropdown, false);
+        clearTimeout(searchDebounceTimer);
+        const val = e.target.value;
+        searchDebounceTimer = setTimeout(() => {
+          this.handleCitySearch(type, val.trim(), dropdown, false);
+        }, 30);
       });
 
       // Instant dropdown opening on focus or click
