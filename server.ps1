@@ -499,10 +499,32 @@ try {
 
                         $finalPayable = [Math]::Max(0, $baseTotal - $walletDeducted)
                         $bookingId = "OTB-2026-" + (Get-Random -Minimum 1000 -Maximum 9999)
+                        $txnId = "TXN_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() + "_" + (Get-Random -Minimum 1000 -Maximum 9999)
+
+                        # Standardized Payment Status: PENDING | PAID | FAILED | PARTIALLY PAID | REFUNDED
+                        $initialPaymentStatus = if ($body.paymentMethod -eq "Token Advance (₹200)") { "PARTIALLY PAID (Awaiting Advance Verification)" } else { "PENDING" }
+
+                        $paymentRecord = @{
+                            id = $txnId
+                            bookingId = $bookingId
+                            customerId = $user.id
+                            passengerPhone = "+91 $cleanPhone"
+                            amount = $finalPayable
+                            originalAmount = $baseTotal
+                            walletDeducted = $walletDeducted
+                            method = if ($body.paymentMethod) { $body.paymentMethod } else { "UPI / PhonePe QR Code" }
+                            status = $initialPaymentStatus
+                            upiUtr = ""
+                            verifiedBy = $null
+                            verifiedAt = $null
+                            createdAt = (Get-Date).ToString("o")
+                        }
+                        $db.payments = @($paymentRecord) + @($db.payments)
 
                         $newBooking = @{
                             bookingId = $bookingId
                             customerId = $user.id
+                            paymentTxnId = $txnId
                             passengerName = $body.passengerName
                             passengerPhone = "+91 $cleanPhone"
                             passengerEmail = $body.passengerEmail
@@ -521,7 +543,7 @@ try {
                             originalFare = $baseTotal
                             walletUsed = $walletDeducted
                             paymentMethod = if ($body.paymentMethod) { $body.paymentMethod } else { "UPI / PhonePe QR Code" }
-                            paymentStatus = if ($body.paymentMethod -eq "Cash / UPI to Driver") { "PENDING (Cash on Arrival)" } else { "PAYMENT INITIATED (UPI QR)" }
+                            paymentStatus = $initialPaymentStatus
                             bookingStatus = "REQUESTED"
                             partnerNotice = "Our partner/driver or agent will call you in 5 minutes to confirm booking."
                             driverDetails = $null
@@ -557,6 +579,31 @@ try {
                         $booking = $db.bookings | Where-Object { $_.bookingId -eq $bId } | Select-Object -First 1
                         if ($booking) {
                             $booking.bookingStatus = "CANCELLED"
+                            
+                            # Update payment status to REFUNDED
+                            $pay = $db.payments | Where-Object { $_.bookingId -eq $bId } | Select-Object -First 1
+                            if ($pay) {
+                                $pay.status = "REFUNDED"
+                            }
+
+                            # Refund wallet if used
+                            if ($booking.walletUsed -and $booking.walletUsed -gt 0) {
+                                $u = $db.users | Where-Object { $_.id -eq $booking.customerId } | Select-Object -First 1
+                                if ($u) {
+                                    $u.walletBalance = ($u.walletBalance + $booking.walletUsed)
+                                    $db.wallet_ledger += @{
+                                        id = "WLT_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                                        userId = $u.id
+                                        phone = $u.phone
+                                        type = "REFUND"
+                                        amount = $booking.walletUsed
+                                        balanceAfter = $u.walletBalance
+                                        description = "Refund for Cancelled Booking " + $bId
+                                        createdAt = (Get-Date).ToString("o")
+                                    }
+                                }
+                            }
+
                             Save-Db $db
                             Send-JsonResponse $response 200 @{ success = $true; message = "Booking cancelled with ₹0 fee" }
                         } else {
@@ -573,7 +620,7 @@ try {
                         Send-JsonResponse $response 401 @{ success = $false; message = "Unauthorized" }
                         continue
                     }
-                    $txns = @($db.wallet_ledger | Where-Object { $_.userId -eq $auth.user.id })
+                    $txns = @($db.wallet_ledger | Where-Object { $_.userId -eq $auth.user.id } | Sort-Object { $_.createdAt } -Descending)
                     Send-JsonResponse $response 200 @{
                         success = $true
                         balance = $auth.user.walletBalance
@@ -643,13 +690,42 @@ try {
                     $b = $db.bookings | Where-Object { $_.bookingId -eq $body.bookingId } | Select-Object -First 1
                     if ($b) {
                         $txn = if ($body.txnRef) { $body.txnRef } else { "UPI-VER-" + (Get-Random -Minimum 1000 -Maximum 9999) }
-                        $b | Add-Member -MemberType NoteProperty -Name "paymentStatus" -Value "PAID (Verified by Admin)" -Force
+                        $b | Add-Member -MemberType NoteProperty -Name "paymentStatus" -Value "PAID" -Force
                         $b | Add-Member -MemberType NoteProperty -Name "paymentTxnRef" -Value $txn -Force
+
+                        $pay = $db.payments | Where-Object { $_.bookingId -eq $body.bookingId } | Select-Object -First 1
+                        if ($pay) {
+                            $pay.status = "PAID"
+                            $pay.upiUtr = $txn
+                            $pay.verifiedBy = "Admin Dispatcher"
+                            $pay.verifiedAt = (Get-Date).ToString("o")
+                        }
+
+                        $db.audit_logs += @{
+                            id = "AUD_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                            entity = "PAYMENT"
+                            entityId = if ($b.paymentTxnId) { $b.paymentTxnId } else { $b.bookingId }
+                            action = "VERIFY_PAYMENT"
+                            actor = "admin"
+                            details = "Verified ₹$($b.totalFare) with UTR: $txn"
+                            createdAt = (Get-Date).ToString("o")
+                        }
+
                         Save-Db $db
-                        Send-JsonResponse $response 200 @{ success = $true; booking = $b }
+                        Send-JsonResponse $response 200 @{ success = $true; booking = $b; payment = $pay }
                     } else {
                         Send-JsonResponse $response 404 @{ success = $false; message = "Booking not found" }
                     }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/admin/payments" -and $httpMethod -eq "GET") {
+                    Send-JsonResponse $response 200 @{ success = $true; payments = $db.payments }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/admin/wallet-ledger" -and $httpMethod -eq "GET") {
+                    Send-JsonResponse $response 200 @{ success = $true; ledger = $db.wallet_ledger }
                     continue
                 }
 

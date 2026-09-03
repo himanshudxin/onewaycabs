@@ -606,10 +606,34 @@ module.exports = async (req, res) => {
 
       const finalPayable = Math.max(0, baseTotal - walletDeducted);
       const bookingId = `OTB-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const txnId = `TXN_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`;
+
+      // Standardized Payment Status: PENDING | PAID | FAILED | PARTIALLY PAID | REFUNDED
+      const initialPaymentStatus = (paymentMethod === 'Token Advance (₹200)') ? 'PARTIALLY PAID (Awaiting Advance Verification)' : 'PENDING';
+
+      const paymentRecord = {
+        id: txnId,
+        bookingId,
+        customerId: user.id,
+        passengerPhone: `+91 ${cleanPhone}`,
+        amount: finalPayable,
+        originalAmount: baseTotal,
+        walletDeducted,
+        method: paymentMethod || 'UPI / PhonePe QR Code',
+        status: initialPaymentStatus,
+        upiUtr: '',
+        verifiedBy: null,
+        verifiedAt: null,
+        createdAt: new Date().toISOString()
+      };
+
+      if (!db.payments) db.payments = [];
+      db.payments.unshift(paymentRecord);
 
       const newBooking = {
         bookingId,
         customerId: user.id,
+        paymentTxnId: txnId,
         passengerName: passengerName.trim(),
         passengerPhone: `+91 ${cleanPhone}`,
         passengerEmail: passengerEmail || '',
@@ -628,7 +652,7 @@ module.exports = async (req, res) => {
         originalFare: baseTotal,
         walletUsed: walletDeducted,
         paymentMethod: paymentMethod || 'UPI / PhonePe QR Code',
-        paymentStatus: (paymentMethod === 'Cash / UPI to Driver') ? 'PENDING (Cash on Arrival)' : 'PAYMENT INITIATED (UPI QR)',
+        paymentStatus: initialPaymentStatus,
         bookingStatus: 'REQUESTED',
         partnerNotice: 'Our partner/driver or agent will call you in 5 minutes to confirm booking.',
         driverDetails: null, // Zero driver details before real manual assignment!
@@ -822,17 +846,50 @@ module.exports = async (req, res) => {
       const booking = (db.bookings || []).find(b => b.bookingId === bookingId);
       if (!booking) return sendJson(404, { success: false, message: 'Booking not found' });
 
-      booking.paymentStatus = 'PAID (Verified by Admin)';
-      booking.paymentTxnRef = txnRef || `UPI-VER-${Date.now()}`;
+      const utr = txnRef || `UPI-VER-${Date.now()}`;
+      booking.paymentStatus = 'PAID';
+      booking.paymentTxnRef = utr;
+
+      const payment = (db.payments || []).find(p => p.bookingId === bookingId);
+      if (payment) {
+        payment.status = 'PAID';
+        payment.upiUtr = utr;
+        payment.verifiedBy = admin.name || 'Admin Dispatcher';
+        payment.verifiedAt = new Date().toISOString();
+      }
+
       booking.statusHistory.push({
         status: booking.bookingStatus,
         timestamp: new Date().toISOString(),
         actor: 'Admin Finance',
-        note: `Payment verified for ₹${booking.totalFare}. Txn: ${booking.paymentTxnRef}`
+        note: `Payment verified for ₹${booking.totalFare}. Txn: ${utr}`
+      });
+
+      // Audit Log
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'PAYMENT',
+        entityId: booking.paymentTxnId || bookingId,
+        action: 'VERIFY_PAYMENT',
+        actor: admin.username || 'admin',
+        details: `Verified ₹${booking.totalFare} with UTR: ${utr}`,
+        createdAt: new Date().toISOString()
       });
 
       saveDb(db);
-      return sendJson(200, { success: true, booking });
+      return sendJson(200, { success: true, booking, payment });
+    }
+
+    if (pathname === '/admin/payments' && method === 'GET') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+      return sendJson(200, { success: true, payments: db.payments || [] });
+    }
+
+    if (pathname === '/admin/wallet-ledger' && method === 'GET') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+      return sendJson(200, { success: true, ledger: db.wallet_ledger || [] });
     }
 
     if (pathname === '/admin/drivers' && method === 'GET') {
