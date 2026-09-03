@@ -457,11 +457,16 @@ module.exports = async (req, res) => {
       } = body;
 
       const cleanPhone = (passengerPhone || '').replace(/\D/g, '').slice(-10);
-      if (!cleanPhone || cleanPhone.length < 10) {
-        return sendJson(400, { success: false, message: 'Valid 10-digit mobile number required' });
+      if (!cleanPhone || cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
+        return sendJson(400, { success: false, message: 'Valid 10-digit Indian mobile number starting with 6-9 required' });
       }
-      if (!passengerName || passengerName.trim().length < 2) {
-        return sendJson(400, { success: false, message: 'Passenger name required' });
+      if (!passengerName || passengerName.trim().length < 2 || passengerName.trim().length > 60) {
+        return sendJson(400, { success: false, message: 'Passenger name required (2 to 60 characters)' });
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      if (pickupDate && pickupDate < today) {
+        return sendJson(400, { success: false, message: 'Pickup date cannot be in the past' });
       }
 
       // Server-side distance and fare recalculation (tamper-proof)

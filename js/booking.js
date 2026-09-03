@@ -1865,9 +1865,6 @@ class BookingManager {
     }
   }
 
-    if (totalEl) totalEl.textContent = `₹${finalAmt.toLocaleString('en-IN')}`;
-  }
-
   /* ==========================================================================
      INTELLIGENT LOCATION RECOMMENDATIONS & AUTO-TYPE CONTROLLER
      ========================================================================== */
@@ -2126,21 +2123,40 @@ class BookingManager {
   }
 
   async confirmBooking(price) {
-    const name = document.getElementById("chk-name")?.value.trim() || this.passengerDetails.name || window.currentUser?.name || "";
-    const phone = (document.getElementById("chk-phone")?.value || this.passengerDetails.phone || window.currentUser?.phone || "").replace(/\D/g, "").slice(-10);
+    if (this.isSubmittingBooking) return;
+
+    if (!this.originCity || !this.originCity.name) {
+      window.showToast("Please select a valid Pickup City/District", "warning");
+      return;
+    }
+    if (!this.destCity || !this.destCity.name) {
+      window.showToast("Please select a valid Drop City/District", "warning");
+      return;
+    }
+
+    const today = new Date().toISOString().split("T")[0];
+    if (this.pickupDate && this.pickupDate < today) {
+      window.showToast("Please choose a valid travel date (today or later)", "warning");
+      return;
+    }
+
+    const nameInput = document.getElementById("chk-name");
+    const phoneInput = document.getElementById("chk-phone");
+    const name = nameInput?.value.trim() || this.passengerDetails.name || window.currentUser?.name || "";
+    const phone = (phoneInput?.value || this.passengerDetails.phone || window.currentUser?.phone || "").replace(/\D/g, "").slice(-10);
     const email = document.getElementById("chk-email")?.value.trim() || this.passengerDetails.email || "";
     const pickupAddr = document.getElementById("chk-pickup-addr")?.value.trim() || this.passengerDetails.pickupAddress || `${this.originCity.name} City Area`;
     const dropAddr = document.getElementById("chk-drop-addr")?.value.trim() || this.passengerDetails.dropAddress || `${this.destCity.name} City Area`;
     
-    if (!name || name.length < 2) {
-      window.showToast("Please enter passenger full name", "warning");
-      document.getElementById("chk-name")?.focus();
+    if (!name || name.length < 2 || name.length > 60) {
+      window.showToast("Please enter passenger full name (2 to 60 characters)", "warning");
+      nameInput?.focus();
       return;
     }
 
-    if (!phone || phone.length < 10) {
-      window.showToast("Please enter a valid 10-digit mobile number", "warning");
-      document.getElementById("chk-phone")?.focus();
+    if (!phone || phone.length !== 10 || !/^[6-9]\d{9}$/.test(phone)) {
+      window.showToast("Please enter a valid 10-digit Indian mobile number starting with 6-9", "warning");
+      phoneInput?.focus();
       return;
     }
 
@@ -2156,44 +2172,59 @@ class BookingManager {
     const btnConfirm = document.querySelector("#modal-checkout .check-fare-primary-btn");
     if (btnConfirm) {
       btnConfirm.disabled = true;
-      btnConfirm.textContent = "Submitting Booking Request...";
+      btnConfirm.innerHTML = `
+        <span style="display:inline-block; width:15px; height:15px; border:2px solid #fff; border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; vertical-align:middle; margin-right:8px;"></span>
+        Submitting Booking Request...
+      `;
     }
+    this.isSubmittingBooking = true;
 
-    const payload = {
-      originCity: this.originCity.name,
-      destCity: this.destCity.name,
-      pickupDate: this.pickupDate,
-      pickupTime: this.pickupTime,
-      cabTier: this.selectedCabId || "sedan",
-      passengerName: name,
-      passengerPhone: `+91 ${phone}`,
-      passengerEmail: email,
-      pickupAddress: pickupAddr,
-      dropAddress: dropAddr,
-      paymentMethod: method,
-      useWallet: isUsingWallet
-    };
+    try {
+      const payload = {
+        originCity: this.originCity.name,
+        destCity: this.destCity.name,
+        pickupDate: this.pickupDate || today,
+        pickupTime: this.pickupTime || "10:00 AM",
+        cabTier: this.selectedCabId || "sedan",
+        passengerName: name,
+        passengerPhone: `+91 ${phone}`,
+        passengerEmail: email,
+        pickupAddress: pickupAddr,
+        dropAddress: dropAddr,
+        paymentMethod: method,
+        useWallet: isUsingWallet
+      };
 
-    const res = await ApiClient.createBooking(payload);
+      const res = await ApiClient.createBooking(payload);
 
-    if (res && res.success && res.booking) {
-      if (isUsingWallet && window.currentUser) {
-        window.currentUser.walletBalance = Math.max(0, (window.currentUser.walletBalance || 100) - (res.booking.walletUsed || 100));
-        if (window.renderNavAuth) window.renderNavAuth();
+      if (res && res.success && res.booking) {
+        if (isUsingWallet && window.currentUser) {
+          window.currentUser.walletBalance = Math.max(0, (window.currentUser.walletBalance || 100) - (res.booking.walletUsed || 100));
+          if (window.renderNavAuth) window.renderNavAuth();
+        }
+
+        const phoneInputHero = document.getElementById("input-fare-phone");
+        if (phoneInputHero) phoneInputHero.value = "";
+        localStorage.removeItem("oneway_fare_phone");
+
+        window.closeAllModals(false);
+        this.renderBookingConfirmation(res.booking);
+      } else {
+        window.showToast(res?.message || "Failed to submit booking request. Please check connection.", "warning");
+        if (btnConfirm) {
+          btnConfirm.disabled = false;
+          btnConfirm.innerHTML = "Confirm &amp; Book OneWay Cab →";
+        }
       }
-
-      const phoneInput = document.getElementById("input-fare-phone");
-      if (phoneInput) phoneInput.value = "";
-      localStorage.removeItem("oneway_fare_phone");
-
-      window.closeAllModals(false);
-      this.renderBookingConfirmation(res.booking);
-    } else {
-      window.showToast(res?.message || "Failed to submit booking request. Please check connection.", "warning");
+    } catch (err) {
+      console.error("Booking submission error:", err);
+      window.showToast("Network error while submitting booking. Please try again.", "warning");
       if (btnConfirm) {
         btnConfirm.disabled = false;
-        btnConfirm.textContent = "Confirm & Book OneWay Cab →";
+        btnConfirm.innerHTML = "Confirm &amp; Book OneWay Cab →";
       }
+    } finally {
+      this.isSubmittingBooking = false;
     }
   }
 

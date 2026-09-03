@@ -386,8 +386,18 @@ try {
                         $cleanPhone = ($rawPhone -replace '\D', '')
                         if ($cleanPhone.Length -gt 10) { $cleanPhone = $cleanPhone.Substring($cleanPhone.Length - 10) }
 
-                        if ($cleanPhone.Length -lt 10) {
-                            Send-JsonResponse $response 400 @{ success = $false; message = "Valid 10-digit mobile number required" }
+                        if ($cleanPhone.Length -ne 10 -or $cleanPhone -notmatch '^[6-9]\d{9}$') {
+                            Send-JsonResponse $response 400 @{ success = $false; message = "Valid 10-digit Indian mobile number starting with 6-9 required" }
+                            continue
+                        }
+                        if (-not $body.passengerName -or $body.passengerName.Trim().Length -lt 2 -or $body.passengerName.Trim().Length -gt 60) {
+                            Send-JsonResponse $response 400 @{ success = $false; message = "Passenger name required (2 to 60 characters)" }
+                            continue
+                        }
+
+                        $today = (Get-Date).ToString("yyyy-MM-dd")
+                        if ($body.pickupDate -and $body.pickupDate -lt $today) {
+                            Send-JsonResponse $response 400 @{ success = $false; message = "Pickup date cannot be in the past" }
                             continue
                         }
 

@@ -553,8 +553,8 @@ window.openMyTripsModal = async () => {
         <div style="font-size: 24px; color: var(--owc-text-muted); margin-bottom: 10px;">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11 2 11.5 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
         </div>
-        <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">No bookings found yet</h4>
-        <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 16px;">Book your first one-way taxi across Bihar and save up to 50%!</p>
+        <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">No trips yet.</h4>
+        <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 16px;">Book your first one-way taxi across Bihar with zero return fare!</p>
         <button type="button" class="btn-select-cab" style="width: auto; padding: 10px 24px;" onclick="window.closeAllModals(); document.getElementById('booking-hero').scrollIntoView({behavior: 'smooth'})">Book Cab Now</button>
       </div>
     ` : `
@@ -572,14 +572,16 @@ window.openMyTripsModal = async () => {
               </div>
               <div style="text-align: right;">
                 <span style="font-size: 18px; font-weight: 900; color: var(--owc-primary);">₹${r.totalFare.toLocaleString('en-IN')}</span>
-                <div style="font-size: 11px; color: var(--owc-success); font-weight: 700;">${r.bookingStatus}</div>
+                <div style="font-size: 11px; color: ${r.bookingStatus === 'REQUESTED' ? '#f59e0b' : 'var(--owc-success)'}; font-weight: 800;">
+                  ${r.bookingStatus === 'REQUESTED' ? 'REQUESTED / PENDING CONFIRMATION' : r.bookingStatus}
+                </div>
               </div>
             </div>
 
             <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--owc-text-muted); margin-bottom: 14px;">
               <span>Time: ${r.pickupDate} at ${r.pickupTime}</span>
               <span>Vehicle: ${r.fleetClass} (${r.fleetModel})</span>
-              <span>Driver: ${r.captainName || 'Assigning (5-Min Confirmation Call)'}</span>
+              <span>Driver: ${r.driverDetails ? `${r.driverDetails.name} (${r.driverDetails.phone}) • ${r.driverDetails.vehicleNumber}` : 'Driver details will be shared after confirmation.'}</span>
             </div>
 
             <div style="display: flex; gap: 10px; border-top: 1px dashed var(--owc-border); padding-top: 12px;">
