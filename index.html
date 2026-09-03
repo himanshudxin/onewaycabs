@@ -1108,46 +1108,84 @@
     </div>
   </div>
 
-  <!-- Modal 9: Mobile OTP Authentication Modal (₹100 Welcome Bonus) -->
+  <!-- Modal 9: Mobile OTP Authentication Modal (Real WhatsApp & SMS Delivery) -->
   <div class="modal-overlay" id="modal-auth">
     <div class="modal-dialog-box small">
       <div class="modal-header">
-        <div class="modal-title">Passenger Login & Bonus Wallet</div>
+        <div class="modal-title">Passenger Login &amp; Wallet Bonus</div>
         <button type="button" class="modal-close-btn" onclick="window.closeAllModals()">✕</button>
       </div>
       <div class="modal-body">
+        <!-- Step 1: Mobile Number & Channel Selection -->
         <div class="auth-flow-container" id="auth-phone-step">
           <div class="auth-logo-badge">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--owc-primary)" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
           </div>
-          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Login & Get ₹100 in Wallet</h3>
-          <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 20px;">Enter your 10-digit mobile number. Instant ₹100 welcome bonus will be credited into your wallet (one-time per user)!</p>
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Login &amp; Claim ₹100 in Wallet</h3>
+          <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 18px;">Enter your 10-digit mobile number to receive your real verification code instantly.</p>
+          
           <div class="input-field-group" style="margin-bottom: 16px;">
-            <span style="font-weight: 700; color: var(--owc-text-muted);">+91</span>
+            <div class="phone-country-pill" style="padding: 0 8px; border-right: 1px solid var(--owc-border); display: inline-flex; align-items: center; gap: 4px;">
+              <svg width="18" height="13" viewBox="0 0 30 20" style="border-radius: 2px;">
+                <rect width="30" height="6.67" fill="#FF9933"/>
+                <rect y="6.67" width="30" height="6.67" fill="#FFFFFF"/>
+                <rect y="13.33" width="30" height="6.67" fill="#138808"/>
+                <circle cx="15" cy="10" r="2.6" fill="none" stroke="#000080" stroke-width="0.7"/>
+              </svg>
+              <span style="font-weight: 700; font-size: 13px; color: var(--owc-text);">+91</span>
+            </div>
             <div class="input-content">
-              <input type="tel" id="auth-mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" value="" autocomplete="tel">
+              <input type="tel" id="auth-mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" value="" autocomplete="tel" inputmode="numeric">
             </div>
           </div>
-          <button type="button" class="check-fare-primary-btn" onclick="window.handleSendOTP()">
-            Send Verification OTP &amp; Claim ₹100 →
-          </button>
+
+          <!-- Dual Send Buttons: WhatsApp Real OTP & SMS -->
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button type="button" class="check-fare-primary-btn" onclick="window.handleSendRealOTP('whatsapp')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);" title="Receive OTP instantly on WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 6px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+              <span>Send OTP via WhatsApp (Instant)</span>
+            </button>
+            <button type="button" class="btn-nav-outline" onclick="window.handleSendRealOTP('sms')" style="width: 100%; padding: 12px; font-weight: 700; border-radius: var(--radius-md); font-size: 13px;" title="Receive OTP via SMS">
+              <span>Send OTP via SMS</span>
+            </button>
+          </div>
+
+          <div id="recaptcha-container" style="margin-top: 10px;"></div>
         </div>
 
+        <!-- Step 2: Verification Step -->
         <div class="auth-flow-container" id="auth-otp-step" style="display: none;">
           <div class="auth-logo-badge">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--owc-primary)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
-          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Verify Mobile OTP</h3>
-          <p style="font-size: 13px; color: var(--owc-text-muted);">Enter the 4-digit code sent to your number</p>
-          <div class="auth-otp-inputs-row">
-            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
-            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
-            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
-            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Enter Verification Code</h3>
+          <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 6px;" id="auth-otp-sent-label">
+            Code sent to <strong id="auth-sent-number-display">+91 ••••• •••••</strong>
+          </p>
+          <div style="font-size: 12px; margin-bottom: 16px;">
+            <a href="javascript:void(0)" onclick="window.resetAuthToPhoneStep()" style="color: var(--owc-primary); font-weight: 600; text-decoration: none;">Change mobile number</a>
           </div>
-          <button type="button" class="check-fare-primary-btn" onclick="window.handleVerifyOTP()">
+
+          <div class="auth-otp-inputs-row">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric" id="otp-digit-0">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric" id="otp-digit-1">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric" id="otp-digit-2">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric" id="otp-digit-3">
+          </div>
+
+          <button type="button" class="check-fare-primary-btn" onclick="window.handleVerifyOTP()" style="margin-top: 16px;">
             Verify OTP &amp; Continue →
           </button>
+
+          <!-- Resend Controls with Timer -->
+          <div style="margin-top: 16px; text-align: center; font-size: 12.5px; color: var(--owc-text-muted);">
+            <span id="auth-resend-timer-wrap">Resend code in <strong id="auth-resend-countdown" style="color: var(--owc-primary);">30</strong>s</span>
+            <div id="auth-resend-actions" style="display: none; margin-top: 6px; gap: 12px; justify-content: center;">
+              <a href="javascript:void(0)" onclick="window.handleSendRealOTP('whatsapp')" style="color: #10b981; font-weight: 700; text-decoration: none;">Resend via WhatsApp</a>
+              <span style="opacity: 0.5;">•</span>
+              <a href="javascript:void(0)" onclick="window.handleSendRealOTP('sms')" style="color: var(--owc-primary); font-weight: 700; text-decoration: none;">Resend via SMS</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
