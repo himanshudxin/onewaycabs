@@ -200,29 +200,57 @@ window.openAuthModal = () => {
 
 window.handleSendOTP = async () => {
   const phoneInput = document.getElementById("auth-mobile-input");
-  const phone = phoneInput ? phoneInput.value.trim() : "";
+  const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, "") : "";
 
   if (!phone || phone.length < 10) {
     window.showToast("Please enter a valid 10-digit mobile number", "warning");
     return;
   }
 
-  await ApiClient.sendOTP(phone);
-  window.showToast(`OTP sent to +91 ${phone}. Demo OTP is 4829`, "success");
+  const res = await ApiClient.sendOTP(phone);
+  const otpCode = res && res.otp ? res.otp : (window._currentSessionOtp || "4829");
+  window.showToast(`Verification code sent to +91 ${phone}: [ ${otpCode} ]`, "success");
 
   const phoneStep = document.getElementById("auth-phone-step");
   const otpStep = document.getElementById("auth-otp-step");
   if (phoneStep && otpStep) {
     phoneStep.style.display = "none";
     otpStep.style.display = "block";
+
+    // Setup auto-advance and focus on OTP digit boxes
+    const digitBoxes = otpStep.querySelectorAll(".otp-box-digit");
+    if (digitBoxes.length > 0) {
+      digitBoxes.forEach((b, idx) => {
+        b.value = "";
+        b.oninput = () => {
+          if (b.value.length >= 1 && idx < digitBoxes.length - 1) {
+            digitBoxes[idx + 1].focus();
+          }
+        };
+        b.onkeydown = (e) => {
+          if (e.key === "Backspace" && !b.value && idx > 0) {
+            digitBoxes[idx - 1].focus();
+          }
+        };
+      });
+      setTimeout(() => digitBoxes[0].focus(), 150);
+    }
   }
 };
 
 window.handleVerifyOTP = async () => {
   const phoneInput = document.getElementById("auth-mobile-input");
-  const phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : "6206494214";
+  const phone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : "";
+  const digitBoxes = document.querySelectorAll("#auth-otp-step .otp-box-digit");
+  let enteredOtp = "";
+  digitBoxes.forEach(b => enteredOtp += b.value.trim());
 
-  const res = await ApiClient.verifyOTP(phone, "4829", "User");
+  if (!enteredOtp || enteredOtp.length < 4) {
+    window.showToast("Please enter the complete 4-digit verification code", "warning");
+    return;
+  }
+
+  const res = await ApiClient.verifyOTP(phone, enteredOtp, "Passenger");
   if (res && res.success) {
     currentUser = res.user;
     if (currentUser.walletBalance === undefined) {
@@ -230,7 +258,9 @@ window.handleVerifyOTP = async () => {
     }
     renderNavAuth();
     window.closeAllModals();
-    window.showToast("Logged in successfully. ₹100 Welcome Bonus added to your wallet.", "success");
+    window.showToast(`Welcome! Logged in as ${currentUser.name}. ₹100 credited to wallet.`, "success");
+  } else {
+    window.showToast(res?.message || "Invalid OTP code. Please try again.", "error");
   }
 };
 

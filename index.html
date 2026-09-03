@@ -1125,11 +1125,11 @@
           <div class="input-field-group" style="margin-bottom: 16px;">
             <span style="font-weight: 700; color: var(--owc-text-muted);">+91</span>
             <div class="input-content">
-              <input type="tel" id="auth-mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" value="6206494214">
+              <input type="tel" id="auth-mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" value="" autocomplete="tel">
             </div>
           </div>
           <button type="button" class="check-fare-primary-btn" onclick="window.handleSendOTP()">
-            Send 4-Digit OTP & Claim ₹100 →
+            Send Verification OTP &amp; Claim ₹100 →
           </button>
         </div>
 
@@ -1140,13 +1140,13 @@
           <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Verify Mobile OTP</h3>
           <p style="font-size: 13px; color: var(--owc-text-muted);">Enter the 4-digit code sent to your number</p>
           <div class="auth-otp-inputs-row">
-            <input type="text" class="otp-box-digit" maxlength="1" value="4">
-            <input type="text" class="otp-box-digit" maxlength="1" value="8">
-            <input type="text" class="otp-box-digit" maxlength="1" value="2">
-            <input type="text" class="otp-box-digit" maxlength="1" value="9">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
+            <input type="text" class="otp-box-digit" maxlength="1" value="" placeholder="•" inputmode="numeric">
           </div>
           <button type="button" class="check-fare-primary-btn" onclick="window.handleVerifyOTP()">
-            Verify OTP & Credit ₹100 →
+            Verify OTP &amp; Continue →
           </button>
         </div>
       </div>
