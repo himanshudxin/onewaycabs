@@ -100,6 +100,23 @@ function Get-Locations() {
     return @()
 }
 
+$biharCoords = @{
+    "patna" = @(25.5941, 85.1376); "nalanda" = @(25.1978, 85.5186); "biharsharif" = @(25.1978, 85.5186); "rajgir" = @(25.0300, 85.4200);
+    "bhojpur" = @(25.5541, 84.6644); "ara" = @(25.5541, 84.6644); "buxar" = @(25.5647, 83.9777); "rohtas" = @(24.9536, 84.0159);
+    "sasaram" = @(24.9536, 84.0159); "dehri" = @(24.9167, 84.1833); "kaimur" = @(25.0450, 83.6144); "bhabua" = @(25.0450, 83.6144);
+    "gaya" = @(24.7914, 85.0002); "bodhgaya" = @(24.6961, 84.9870); "aurangabad" = @(24.7539, 84.3742); "nawada" = @(24.8872, 85.5433);
+    "jehanabad" = @(25.2136, 84.9867); "arwal" = @(25.2444, 84.6789); "muzaffarpur" = @(26.1209, 85.3647); "vaishali" = @(25.6858, 85.2155);
+    "hajipur" = @(25.6858, 85.2155); "eastchamparan" = @(26.6469, 84.9089); "motihari" = @(26.6469, 84.9089); "westchamparan" = @(26.8024, 84.5028);
+    "bettiah" = @(26.8024, 84.5028); "sitamarhi" = @(26.5978, 85.4892); "sheohar" = @(26.5167, 85.2833); "darbhanga" = @(26.1542, 85.8918);
+    "madhubani" = @(26.3533, 86.0718); "samastipur" = @(25.8628, 85.7811); "saran" = @(25.7796, 84.7499); "chhapra" = @(25.7796, 84.7499);
+    "siwan" = @(26.2196, 84.3567); "gopalganj" = @(26.4687, 84.4442); "bhagalpur" = @(25.2425, 87.0125); "banka" = @(24.8833, 86.9167);
+    "munger" = @(25.3750, 86.4744); "jamui" = @(24.9167, 86.2167); "khagaria" = @(25.5000, 86.4833); "lakhisarai" = @(25.1833, 86.0833);
+    "sheikhpura" = @(25.1333, 85.8500); "begusarai" = @(25.4182, 86.1272); "purnia" = @(25.7771, 87.4753); "katihar" = @(25.5394, 87.5661);
+    "araria" = @(26.1500, 87.5167); "kishanganj" = @(26.0744, 87.9400); "saharsa" = @(25.8833, 86.6000); "madhepura" = @(25.9167, 86.7833);
+    "supaul" = @(26.1167, 86.6000); "varanasi" = @(25.3176, 82.9739); "deoghar" = @(24.4826, 86.7001); "ranchi" = @(23.3441, 85.3096);
+    "siliguri" = @(26.7271, 88.3953); "gorakhpur" = @(26.7606, 83.3732); "kolkata" = @(22.5726, 88.3639)
+}
+
 $distanceTable = @{
     "patna_gaya" = 104; "gaya_patna" = 104;
     "patna_muzaffarpur" = 75; "muzaffarpur_patna" = 75;
@@ -115,9 +132,34 @@ $distanceTable = @{
     "patna_motihari" = 155; "motihari_patna" = 155;
     "patna_bettiah" = 200; "bettiah_patna" = 200;
     "patna_siwan" = 135; "siwan_patna" = 135;
+    "patna_samastipur" = 88; "samastipur_patna" = 88;
+    "patna_katihar" = 320; "katihar_patna" = 320;
+    "patna_saharsa" = 210; "saharsa_patna" = 210;
+    "patna_munger" = 178; "munger_patna" = 178;
+    "patna_kishanganj" = 395; "kishanganj_patna" = 395;
     "patna_deoghar" = 255; "deoghar_patna" = 255;
     "patna_varanasi" = 250; "varanasi_patna" = 250;
-    "patna_ranchi" = 325; "ranchi_patna" = 325
+    "patna_ranchi" = 325; "ranchi_patna" = 325;
+    "patna_siliguri" = 460; "siliguri_patna" = 460
+}
+
+function Get-HaversineDistance($lat1, $lon1, $lat2, $lon2) {
+    $R = 6371
+    $dLat = (($lat2 - $lat1) * [Math]::PI) / 180
+    $dLon = (($lon2 - $lon1) * [Math]::PI) / 180
+    $a = [Math]::Sin($dLat / 2) * [Math]::Sin($dLat / 2) +
+         [Math]::Cos(($lat1 * [Math]::PI) / 180) * [Math]::Cos(($lat2 * [Math]::PI) / 180) *
+         [Math]::Sin($dLon / 2) * [Math]::Sin($dLon / 2)
+    $c = 2 * [Math]::Atan2([Math]::Sqrt($a), [Math]::Sqrt(1 - $a))
+    return [Math]::Round($R * $c * 1.28) # 1.28x road tortuosity factor for Bihar highway network
+}
+
+function Resolve-Coordinates($name) {
+    $clean = ($name -replace '[^a-zA-Z]', '').ToLower()
+    foreach ($k in $biharCoords.Keys) {
+        if ($clean.Contains($k) -or $k.Contains($clean)) { return $biharCoords[$k] }
+    }
+    return $null
 }
 
 function Calculate-ServerFare($origin, $dest, $tier, $tripType = "oneway") {
@@ -126,10 +168,17 @@ function Calculate-ServerFare($origin, $dest, $tier, $tripType = "oneway") {
     $key = "${cleanOrigin}_${cleanDest}"
     
     $dist = 120
-    if ($distanceTable.ContainsKey($key)) {
-        $dist = $distanceTable[$key]
-    } elseif ($cleanOrigin -eq $cleanDest) {
+    if ($cleanOrigin -eq $cleanDest) {
         $dist = 35
+    } elseif ($distanceTable.ContainsKey($key)) {
+        $dist = $distanceTable[$key]
+    } else {
+        $c1 = Resolve-Coordinates $origin
+        $c2 = Resolve-Coordinates $dest
+        if ($c1 -and $c2) {
+            $calcDist = Get-HaversineDistance $c1[0] $c1[1] $c2[0] $c2[1]
+            $dist = [Math]::Max($calcDist, 35)
+        }
     }
 
     $baseRates = @{
@@ -142,14 +191,20 @@ function Calculate-ServerFare($origin, $dest, $tier, $tripType = "oneway") {
     $rate = if ($baseRates.ContainsKey($tier)) { $baseRates[$tier] } else { $baseRates["sedan"] }
     $effectiveDist = if ($tripType -eq "roundtrip") { $dist * 2 } else { $dist }
     $extraKm = [Math]::Max(0, $effectiveDist - 15)
-    $subCharge = $rate.base + ($extraKm * $rate.perKm)
+    $distanceCharge = [Math]::Round($extraKm * $rate.perKm)
+    $subCharge = $rate.base + $distanceCharge
+
+    $roundTripDiscount = 0
     if ($tripType -eq "roundtrip") {
-        $subCharge = [Math]::Round($subCharge * 0.88)
+        $roundTripDiscount = [Math]::Round($subCharge * 0.12)
+        $subCharge -= $roundTripDiscount
     }
 
     $tolls = [Math]::Round(($dist / 70) * 55)
     $allowance = if ($tripType -eq "roundtrip" -or $dist -gt 200) { 350 } else { 0 }
-    $subtotal = $subCharge + $tolls + $allowance
+    $parking = if ($cleanOrigin -like "*airport*" -or $cleanDest -like "*airport*") { 100 } else { 0 }
+    
+    $subtotal = $rate.base + $distanceCharge - $roundTripDiscount + $tolls + $allowance + $parking
     $gst = [Math]::Round($subtotal * 0.05)
     $total = [Math]::Round($subtotal + $gst)
     $hrs = [Math]::Floor($dist / 45)
@@ -161,8 +216,13 @@ function Calculate-ServerFare($origin, $dest, $tier, $tripType = "oneway") {
         tierId = $tier
         tierName = $rate.name
         tierModel = $rate.model
-        baseFare = [Math]::Round($subCharge)
+        baseFare = $rate.base
+        distanceCharge = $distanceCharge
+        extraKm = $extraKm
+        perKmRate = $rate.perKm
+        roundTripDiscount = $roundTripDiscount
         tollFastag = $tolls
+        parking = $parking
         driverAllowance = $allowance
         gst = $gst
         totalFare = $total

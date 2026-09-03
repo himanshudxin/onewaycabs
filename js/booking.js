@@ -1777,19 +1777,44 @@ class BookingManager {
 
           <hr style="border: none; border-top: 1px dashed var(--owc-border); margin: 16px 0;">
 
-          <div style="font-size: 14px; margin-bottom: 8px; display: flex; justify-content: space-between;">
-            <span>Base Outstation Fare:</span>
-            <span>₹${(price - 120).toLocaleString('en-IN')}</span>
-          </div>
+          <!-- Detailed Itemized Fare Breakdown -->
+          <div style="background: var(--owc-card-bg); border: 1px solid var(--owc-border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 14px; font-size: 12.5px;">
+            <div style="font-weight: 800; color: var(--owc-text); margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Itemized Fare Breakdown</div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="color: var(--owc-text-muted);">Base Fare (First ${fleet.baseKm || 15} KM):</span>
+              <span>₹${fleet.baseFare.toLocaleString('en-IN')}</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="color: var(--owc-text-muted);">Distance Charge (${Math.max(0, (this.calculatedDistanceKm || 104) - (fleet.baseKm || 15))} KM @ ₹${fleet.perKmRate}/KM):</span>
+              <span>₹${Math.round(Math.max(0, (this.calculatedDistanceKm || 104) - (fleet.baseKm || 15)) * (fleet.perKmRate || 25)).toLocaleString('en-IN')}</span>
+            </div>
 
-          <div style="font-size: 14px; margin-bottom: 8px; display: flex; justify-content: space-between;">
-            <span>Highway Tolls & Fastag:</span>
-            <span style="color: var(--owc-success); font-weight: 700;">Included</span>
-          </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="color: var(--owc-text-muted);">Toll / Fastag:</span>
+              <span style="color: #059669; font-weight: 700;">Included (₹${Math.round(((this.calculatedDistanceKm || 104) / 70) * 55)})</span>
+            </div>
 
-          <div style="font-size: 14px; margin-bottom: 8px; display: flex; justify-content: space-between;">
-            <span>Driver Allowance & 5% GST:</span>
-            <span style="color: var(--owc-success); font-weight: 700;">Included</span>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="color: var(--owc-text-muted);">Parking Charges:</span>
+              <span style="color: #059669; font-weight: 700;">${(this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport")) ? "Included (₹100)" : "₹0 (Free)"}</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="color: var(--owc-text-muted);">Driver Allowance:</span>
+              <span style="color: #059669; font-weight: 700;">${((this.calculatedDistanceKm || 104) > 200 || this.tripType === "roundtrip") ? "Included (₹350)" : "₹0 (Day Ride)"}</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+              <span style="color: var(--owc-text-muted);">Taxes / GST (5%):</span>
+              <span style="color: #059669; font-weight: 700;">Included</span>
+            </div>
+
+            <div style="border-top: 1px dashed var(--owc-border); padding-top: 6px; margin-top: 6px; display: flex; justify-content: space-between; font-weight: 800; color: var(--owc-text);">
+              <span>Standard Cab Fare:</span>
+              <span>₹${price.toLocaleString('en-IN')}</span>
+            </div>
           </div>
 
           <!-- Wallet Balance Deduction Card -->

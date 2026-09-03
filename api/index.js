@@ -105,7 +105,66 @@ function saveDb(db) {
   }
 }
 
-// Distance Calculation Matrix for Major Bihar Routes
+// 38 Districts of Bihar + Major Intercity Transit Hubs Coordinates
+const BIHAR_COORDS = {
+  "patna": [25.5941, 85.1376],
+  "nalanda": [25.1978, 85.5186],
+  "biharsharif": [25.1978, 85.5186],
+  "rajgir": [25.0300, 85.4200],
+  "bhojpur": [25.5541, 84.6644],
+  "ara": [25.5541, 84.6644],
+  "buxar": [25.5647, 83.9777],
+  "rohtas": [24.9536, 84.0159],
+  "sasaram": [24.9536, 84.0159],
+  "dehri": [24.9167, 84.1833],
+  "kaimur": [25.0450, 83.6144],
+  "bhabua": [25.0450, 83.6144],
+  "gaya": [24.7914, 85.0002],
+  "bodhgaya": [24.6961, 84.9870],
+  "aurangabad": [24.7539, 84.3742],
+  "nawada": [24.8872, 85.5433],
+  "jehanabad": [25.2136, 84.9867],
+  "arwal": [25.2444, 84.6789],
+  "muzaffarpur": [26.1209, 85.3647],
+  "vaishali": [25.6858, 85.2155],
+  "hajipur": [25.6858, 85.2155],
+  "eastchamparan": [26.6469, 84.9089],
+  "motihari": [26.6469, 84.9089],
+  "westchamparan": [26.8024, 84.5028],
+  "bettiah": [26.8024, 84.5028],
+  "sitamarhi": [26.5978, 85.4892],
+  "sheohar": [26.5167, 85.2833],
+  "darbhanga": [26.1542, 85.8918],
+  "madhubani": [26.3533, 86.0718],
+  "samastipur": [25.8628, 85.7811],
+  "saran": [25.7796, 84.7499],
+  "chhapra": [25.7796, 84.7499],
+  "siwan": [26.2196, 84.3567],
+  "gopalganj": [26.4687, 84.4442],
+  "bhagalpur": [25.2425, 87.0125],
+  "banka": [24.8833, 86.9167],
+  "munger": [25.3750, 86.4744],
+  "jamui": [24.9167, 86.2167],
+  "khagaria": [25.5000, 86.4833],
+  "lakhisarai": [25.1833, 86.0833],
+  "sheikhpura": [25.1333, 85.8500],
+  "begusarai": [25.4182, 86.1272],
+  "purnia": [25.7771, 87.4753],
+  "katihar": [25.5394, 87.5661],
+  "araria": [26.1500, 87.5167],
+  "kishanganj": [26.0744, 87.9400],
+  "saharsa": [25.8833, 86.6000],
+  "madhepura": [25.9167, 86.7833],
+  "supaul": [26.1167, 86.6000],
+  "varanasi": [25.3176, 82.9739],
+  "deoghar": [24.4826, 86.7001],
+  "ranchi": [23.3441, 85.3096],
+  "siliguri": [26.7271, 88.3953],
+  "gorakhpur": [26.7606, 83.3732],
+  "kolkata": [22.5726, 88.3639]
+};
+
+// Verified Highway Distance Matrix for Major Routes
 const BIHAR_DISTANCES = {
   "patna_gaya": 104,
   "patna_muzaffarpur": 75,
@@ -132,9 +191,30 @@ const BIHAR_DISTANCES = {
   "patna_siliguri": 460
 };
 
+function getHaversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c * 1.28); // 1.28x road tortuosity factor for Bihar highway network
+}
+
+function resolveCoordinates(name) {
+  const clean = (name || "").toLowerCase().replace(/[^a-z]/g, "");
+  for (const [key, coords] of Object.entries(BIHAR_COORDS)) {
+    if (clean.includes(key) || key.includes(clean)) return coords;
+  }
+  return null;
+}
+
 function getRouteDistance(origin, dest) {
   const normOrigin = (origin || "").toLowerCase().replace(/[^a-z]/g, "");
   const normDest = (dest || "").toLowerCase().replace(/[^a-z]/g, "");
+
+  if (normOrigin === normDest) return 35; // Local intra-city minimum
 
   const key1 = `${normOrigin}_${normDest}`;
   const key2 = `${normDest}_${normOrigin}`;
@@ -142,8 +222,14 @@ function getRouteDistance(origin, dest) {
   if (BIHAR_DISTANCES[key1]) return BIHAR_DISTANCES[key1];
   if (BIHAR_DISTANCES[key2]) return BIHAR_DISTANCES[key2];
 
-  // Default fallback for intra/inter district
-  if (normOrigin === normDest) return 35;
+  const coord1 = resolveCoordinates(origin);
+  const coord2 = resolveCoordinates(dest);
+
+  if (coord1 && coord2) {
+    const dist = getHaversineDistance(coord1[0], coord1[1], coord2[0], coord2[1]);
+    return Math.max(dist, 35);
+  }
+
   return 120;
 }
 
@@ -155,19 +241,26 @@ const FLEET_RATES = {
   suv: { baseFare: 1650, baseKm: 15, perKm: 33.0, name: "Family SUV (6+1)", model: "Maruti Ertiga, Carens" }
 };
 
-function calculateServerFare(distanceKm, cabTier = 'sedan', tripType = 'oneway') {
+function calculateServerFare(distanceKm, cabTier = 'sedan', tripType = 'oneway', origin = '', dest = '') {
   const tier = FLEET_RATES[cabTier] || FLEET_RATES.sedan;
   const effectiveKm = tripType === 'roundtrip' ? distanceKm * 2 : distanceKm;
   const extraKm = Math.max(0, effectiveKm - tier.baseKm);
+  const distanceCharge = Math.round(extraKm * tier.perKm);
+  let baseCharge = tier.baseFare + distanceCharge;
 
-  let baseCharge = tier.baseFare + (extraKm * tier.perKm);
+  let roundTripDiscount = 0;
   if (tripType === 'roundtrip') {
-    baseCharge = Math.round(baseCharge * 0.88); // 12% roundtrip discount
+    roundTripDiscount = Math.round(baseCharge * 0.12);
+    baseCharge -= roundTripDiscount;
   }
 
   const tollEst = Math.round((distanceKm / 70) * 55);
   const driverAllowance = (tripType === 'roundtrip' || distanceKm > 200) ? 350 : 0;
-  const subtotal = baseCharge + tollEst + driverAllowance;
+  const normOrigin = (origin || '').toLowerCase();
+  const normDest = (dest || '').toLowerCase();
+  const parkingCharge = (normOrigin.includes('airport') || normDest.includes('airport')) ? 100 : 0;
+
+  const subtotal = tier.baseFare + distanceCharge - roundTripDiscount + tollEst + driverAllowance + parkingCharge;
   const gst = Math.round(subtotal * 0.05);
   const totalFare = subtotal + gst;
 
@@ -177,8 +270,13 @@ function calculateServerFare(distanceKm, cabTier = 'sedan', tripType = 'oneway')
     tierId: cabTier,
     tierName: tier.name,
     tierModel: tier.model,
-    baseFare: Math.round(baseCharge),
+    baseFare: tier.baseFare,
+    distanceCharge,
+    extraKm,
+    perKmRate: tier.perKm,
+    roundTripDiscount,
     tollFastag: tollEst,
+    parking: parkingCharge,
     driverAllowance,
     gst,
     totalFare: Math.round(totalFare)
