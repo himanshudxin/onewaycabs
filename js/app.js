@@ -473,8 +473,8 @@ window.openPrivacyModal = () => {
           <p>When you contact your assigned Captain, calls are routed through our secure masked tele-relay system so your private contact number is never exposed to drivers or third parties.</p>
         </div>
         <div class="policy-block">
-          <h4>2. Encrypted OTP Authentication</h4>
-          <p>All login credentials, wallet balances, and trip start PINs are encrypted and transmitted over secure 256-bit TLS/SSL channels.</p>
+          <h4>2. Secure Direct Session Authentication</h4>
+          <p>All login credentials, wallet balances, and bookings are encrypted and transmitted over secure 256-bit TLS/SSL channels with server-side session protection.</p>
         </div>
         <div class="policy-block">
           <h4>3. Live Highway GPS Tracking</h4>
@@ -488,6 +488,38 @@ window.openPrivacyModal = () => {
     </div>
   `;
   window.openInfoDocModal("Privacy Policy", content);
+};
+
+window.openCancellationModal = () => {
+  const content = `
+    <div class="info-doc-container">
+      <div class="info-doc-hero">
+        <span class="info-doc-pill">100% Refund Policy</span>
+        <h2>Cancellation & Refund Policy</h2>
+        <p>OneWayTaxiBihar believes in fair, honest, and passenger-friendly policies. Zero hidden penalties.</p>
+      </div>
+
+      <div class="info-policy-sections">
+        <div class="policy-block">
+          <h4>1. Free Cancellation Anytime Before Dispatch</h4>
+          <p>You can cancel your booking anytime before driver dispatch with ₹0 cancellation fee. Any token advance or wallet balance used is 100% credited back immediately.</p>
+        </div>
+        <div class="policy-block">
+          <h4>2. Instant Wallet & UPI Refund</h4>
+          <p>For bookings paid via UPI or QR code, refunds are processed within 24 hours back to the source bank account, or instantly credited to your OneWayTaxiBihar wallet upon request.</p>
+        </div>
+        <div class="policy-block">
+          <h4>3. No Surge Penalty</h4>
+          <p>Even during festivals or highway delays, we do not deduct cancellation penalties if your travel plans change.</p>
+        </div>
+        <div class="policy-block">
+          <h4>4. Guaranteed Cab or 100% Refund</h4>
+          <p>In the rare circumstance that an assigned vehicle faces sudden mechanical breakdown, our Patna dispatch center guarantees a free replacement cab or a 100% refund with an additional ₹200 travel voucher.</p>
+        </div>
+      </div>
+    </div>
+  `;
+  window.openInfoDocModal("Cancellation & Refund Policy", content);
 };
 
 /* ==========================================================================
@@ -1002,17 +1034,17 @@ window.lookupTaxInvoice = async () => {
         <div style="background: var(--owc-slate-50); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--owc-border);">
           <strong style="color: var(--owc-text); display: block; margin-bottom: 4px;">Billed To (Passenger):</strong>
           <div>${found.passengerName || 'Valued Passenger'}</div>
-          <div>Phone: ${found.passengerPhone || '+91 62064 94214'}</div>
-          <div>Pickup: ${found.pickupAddress || 'Patna'}</div>
-          <div>Drop: ${found.dropAddress || 'Gaya'}</div>
+          <div>Phone: ${found.passengerPhone || 'Registered Contact'}</div>
+          <div>Pickup: ${found.pickupAddress || found.originCity || 'Patna'}</div>
+          <div>Drop: ${found.dropAddress || found.destCity || 'Gaya'}</div>
         </div>
 
         <div style="background: var(--owc-slate-50); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--owc-border);">
           <strong style="color: var(--owc-text); display: block; margin-bottom: 4px;">Trip & Vehicle Details:</strong>
           <div>Cab Tier: ${found.fleetClass || 'Prime Sedan'} (${found.fleetModel || 'Dzire'})</div>
-          <div>Vehicle Plate: ${found.vehicleNumber || 'BR-01-PK-9821'}</div>
-          <div>Highway Captain: ${found.captainName || 'Dharmendra Kumar'}</div>
-          <div>Payment Status: Paid (${found.paymentMethod || 'Cash/UPI'})</div>
+          <div>Vehicle Plate: ${found.driverDetails ? found.driverDetails.vehicleNumber : 'Shared after confirmation'}</div>
+          <div>Assigned Driver: ${found.driverDetails ? `${found.driverDetails.name} (${found.driverDetails.phone})` : 'Shared after confirmation'}</div>
+          <div>Payment Status: ${found.paymentStatus || 'Verified'} (${found.paymentMethod || 'UPI / QR'})</div>
         </div>
       </div>
 
@@ -1183,6 +1215,15 @@ window.copyUpiId = (upiId) => {
   }
 };
 
+// Global Back Navigation Handler (Supports Android Physical Back, Browser Back, and Modal Back Buttons)
+window.handleBackNavigation = () => {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.closeAllModals(false);
+  }
+};
+
 window.openHelpModal = () => {
   window.closeAllModals(false);
   const modal = document.getElementById("modal-help-support");
@@ -1193,11 +1234,18 @@ window.openHelpModal = () => {
   }
 };
 
-// Phone/Browser Back Button & Gesture Slide Handler (Preserves all form data)
+// Phone/Browser Back Button & Swipe Back Handler (Preserves all form data)
 window.addEventListener("popstate", () => {
   const openModal = document.querySelector(".modal-overlay.open");
   if (openModal) {
+    const isCheckout = openModal.id === "modal-checkout";
     window.closeAllModals(false);
+    if (isCheckout) {
+      const fleetSection = document.getElementById("cab-selection-section") || document.getElementById("results-section");
+      if (fleetSection) {
+        fleetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
   }
   const drawer = document.getElementById("mobile-drawer");
   if (drawer && drawer.classList.contains("open")) {

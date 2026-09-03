@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Driver Partner Console | OneWayTaxiBihar</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    :root {
+      --driver-bg: #090d16;
+      --driver-card: #131b2e;
+      --driver-border: #1e293b;
+      --driver-text: #f8fafc;
+      --driver-primary: #10b981;
+    }
+    body.driver-body {
+      background: var(--driver-bg);
+      color: var(--driver-text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .driver-navbar {
+      background: rgba(19, 27, 46, 0.95);
+      border-bottom: 1px solid var(--driver-border);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .driver-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #34d399;
+    }
+    .driver-badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .driver-container {
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px;
+      flex: 1;
+    }
+    .driver-login-box {
+      background: var(--driver-card);
+      border: 1px solid var(--driver-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 40px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .driver-trip-card {
+      background: var(--driver-card);
+      border: 1px solid var(--driver-border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .driver-step-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+    .btn-step-accept { background: #0284c7; color: white; }
+    .btn-step-way { background: #d97706; color: white; }
+    .btn-step-arrived { background: #8b5cf6; color: white; }
+    .btn-step-start { background: #059669; color: white; }
+    .btn-step-complete { background: #10b981; color: white; }
+    .btn-call-customer {
+      background: #10b981;
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-nav-map {
+      background: #0284c7;
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body class="driver-body">
+
+  <!-- Driver Login Screen -->
+  <div id="driver-login-view" style="display: none; padding: 16px;">
+    <div class="driver-login-box">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 32px; margin-bottom: 6px;">🚖</div>
+        <h2 style="font-size: 20px; font-weight: 900; margin: 0; color: #f8fafc;">Partner Driver Portal</h2>
+        <p style="font-size: 12.5px; color: #94a3b8; margin-top: 4px;">Log in to access your assigned Bihar outstation trips</p>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">REGISTERED MOBILE NUMBER</label>
+        <input type="tel" id="driver-phone-input" placeholder="e.g. 9431012345" maxlength="10" style="width: 100%; box-sizing: border-box; padding: 12px; background: #090d16; border: 1px solid #1e293b; border-radius: 8px; color: white; margin-top: 4px; font-size: 15px;">
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">4-DIGIT SECURITY PIN</label>
+        <input type="password" id="driver-pin-input" placeholder="Enter 4-digit PIN" maxlength="4" style="width: 100%; box-sizing: border-box; padding: 12px; background: #090d16; border: 1px solid #1e293b; border-radius: 8px; color: white; margin-top: 4px; font-size: 15px;">
+      </div>
+
+      <button type="button" onclick="handleDriverLogin()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer;">
+        Log In as Partner Driver →
+      </button>
+
+      <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b;">
+        Demo Verified Partners: <strong>9431012345 (PIN: 1234)</strong> or <strong>9835067890 (PIN: 5678)</strong>
+      </div>
+      <div style="text-align: center; margin-top: 14px; font-size: 12px;">
+        <a href="index.html" style="color: #38bdf8; text-decoration: none;">← Back to Passenger Website</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Driver Trips Dashboard -->
+  <div id="driver-dashboard-view">
+    <header class="driver-navbar">
+      <div class="driver-brand">
+        <span>OneWayTaxiBihar</span>
+        <span class="driver-badge">PARTNER</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span id="driver-name-display" style="font-size: 13px; font-weight: 700; color: #f8fafc;"></span>
+        <button type="button" onclick="handleDriverLogout()" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer;">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <main class="driver-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 17px; font-weight: 800; margin: 0;">My Assigned Trips</h3>
+        <button type="button" onclick="loadDriverTrips()" style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+          🔄 Refresh
+        </button>
+      </div>
+
+      <div id="driver-trips-list">
+        <!-- Injected via JS -->
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let _driverToken = localStorage.getItem("otb_driver_token");
+    let _driverProfile = null;
+
+    try {
+      _driverProfile = JSON.parse(localStorage.getItem("otb_driver_profile") || "null");
+    } catch(e) {}
+
+    async function initDriver() {
+      if (!_driverToken) {
+        document.getElementById("driver-login-view").style.display = "block";
+        document.getElementById("driver-dashboard-view").style.display = "none";
+        return;
+      }
+
+      document.getElementById("driver-login-view").style.display = "none";
+      document.getElementById("driver-dashboard-view").style.display = "block";
+
+      if (_driverProfile) {
+        document.getElementById("driver-name-display").textContent = `${_driverProfile.name} (${_driverProfile.vehicleNumber})`;
+      }
+
+      await loadDriverTrips();
+    }
+
+    async function handleDriverLogin() {
+      const phone = document.getElementById("driver-phone-input").value.trim();
+      const pin = document.getElementById("driver-pin-input").value.trim();
+
+      const res = await ApiClient.driverLogin(phone, pin);
+      if (res && res.success && res.token) {
+        _driverToken = res.token;
+        _driverProfile = res.driver;
+        localStorage.setItem("otb_driver_token", _driverToken);
+        localStorage.setItem("otb_driver_profile", JSON.stringify(_driverProfile));
+        initDriver();
+      } else {
+        alert(res?.message || "Invalid Driver Mobile or PIN");
+      }
+    }
+
+    function handleDriverLogout() {
+      localStorage.removeItem("otb_driver_token");
+      localStorage.removeItem("otb_driver_profile");
+      _driverToken = null;
+      _driverProfile = null;
+      initDriver();
+    }
+
+    async function loadDriverTrips() {
+      const res = await ApiClient.driverGetTrips(_driverToken);
+      const listEl = document.getElementById("driver-trips-list");
+
+      if (res && res.success && Array.isArray(res.trips)) {
+        if (res.trips.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align: center; padding: 40px 16px; background: var(--driver-card); border-radius: 14px; border: 1px dashed var(--driver-border);">
+              <div style="font-size: 32px; margin-bottom: 8px;">🛣️</div>
+              <h4 style="margin: 0 0 6px 0; font-size: 16px; color: #f8fafc;">No active trips assigned</h4>
+              <p style="font-size: 13px; color: #94a3b8; margin: 0;">Patna central dispatch will notify you when a new ride is assigned to your vehicle.</p>
+            </div>
+          `;
+          return;
+        }
+
+        listEl.innerHTML = res.trips.map(t => {
+          const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(t.pickupAddress || t.originCity)}`;
+          
+          let actionBtn = '';
+          if (t.bookingStatus === 'DRIVER ASSIGNED') {
+            actionBtn = `<button type="button" class="driver-step-btn btn-step-accept" onclick="updateTripStatus('${t.bookingId}', 'ACCEPTED')">Accept Trip</button>`;
+          } else if (t.bookingStatus === 'ACCEPTED') {
+            actionBtn = `<button type="button" class="driver-step-btn btn-step-way" onclick="updateTripStatus('${t.bookingId}', 'ON THE WAY')">On the Way to Pickup</button>`;
+          } else if (t.bookingStatus === 'ON THE WAY') {
+            actionBtn = `<button type="button" class="driver-step-btn btn-step-arrived" onclick="updateTripStatus('${t.bookingId}', 'ARRIVED')">Arrived at Doorstep</button>`;
+          } else if (t.bookingStatus === 'ARRIVED') {
+            actionBtn = `<button type="button" class="driver-step-btn btn-step-start" onclick="updateTripStatus('${t.bookingId}', 'TRIP STARTED')">Start Trip</button>`;
+          } else if (t.bookingStatus === 'TRIP STARTED') {
+            actionBtn = `<button type="button" class="driver-step-btn btn-step-complete" onclick="updateTripStatus('${t.bookingId}', 'COMPLETED')">Complete Trip</button>`;
+          } else {
+            actionBtn = `<div style="text-align: center; font-weight: 800; color: #34d399; font-size: 14px;">Trip ${t.bookingStatus}</div>`;
+          }
+
+          return `
+            <div class="driver-trip-card">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px dashed var(--driver-border); padding-bottom: 10px;">
+                <div>
+                  <span style="font-size: 11px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 4px;">${t.bookingId}</span>
+                  <h4 style="margin: 6px 0 0 0; font-size: 17px; font-weight: 800; color: #f8fafc;">${t.originCity} → ${t.destCity}</h4>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 18px; font-weight: 900; color: #34d399;">₹${(t.totalFare || 0).toLocaleString('en-IN')}</span>
+                  <div style="font-size: 11px; color: #94a3b8;">${t.paymentMethod || 'Cash'}</div>
+                </div>
+              </div>
+
+              <!-- Pickup & Drop Details -->
+              <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 14px;">
+                <div><strong>📍 Pickup:</strong> ${t.pickupAddress}</div>
+                <div><strong>🏁 Drop:</strong> ${t.dropAddress}</div>
+                <div><strong>⏰ Time:</strong> ${t.pickupDate} at ${t.pickupTime} (~${t.distanceKm} KM)</div>
+              </div>
+
+              <!-- Passenger Contact & Navigation Actions -->
+              <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <a href="tel:${t.passengerPhone}" class="btn-call-customer" style="flex: 1; justify-content: center;">
+                  📞 Call Passenger (${t.passengerPhone})
+                </a>
+                <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="btn-nav-map">
+                  🗺️ Maps
+                </a>
+              </div>
+
+              <!-- Trip Status Progression Button -->
+              <div>${actionBtn}</div>
+            </div>
+          `;
+        }).join("");
+      } else if (res && res.status === 401) {
+        handleDriverLogout();
+      }
+    }
+
+    async function updateTripStatus(bookingId, newStatus) {
+      const res = await ApiClient.driverUpdateStatus(bookingId, newStatus, _driverToken);
+      if (res && res.success) {
+        await loadDriverTrips();
+      } else {
+        alert(res?.message || "Failed to update status");
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener("DOMContentLoaded", initDriver);
+  </script>
+</body>
+</html>

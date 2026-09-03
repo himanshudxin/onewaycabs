@@ -1,6 +1,7 @@
 /**
- * OneWayTaxiBihar (onewaytaxibihar.com) - REST API Client
- * Seamless backend API communication with resilient localStorage fallback.
+ * OneWayTaxiBihar (onewaytaxibihar.com) - Production REST API Client
+ * Genuine backend communication with server-side validation, secure sessions,
+ * and zero mock demo data.
  */
 
 class ApiClient {
@@ -20,18 +21,22 @@ class ApiClient {
         ...options,
         headers: {
           ...defaultHeaders,
-          ...options.headers
+          ...(options.headers || {})
         }
       });
 
+      const data = await response.json().catch(() => null);
+
       if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+        const errorMsg = data?.message || `HTTP ${response.status}: ${response.statusText}`;
+        console.warn(`[ApiClient] ${endpoint} returned error:`, errorMsg);
+        return { success: false, status: response.status, message: errorMsg };
       }
 
-      return await response.json();
+      return data;
     } catch (err) {
-      console.warn(`[ApiClient] Network request failed for ${endpoint}. Using offline fallback:`, err.message);
-      return null;
+      console.error(`[ApiClient] Network request failed for ${endpoint}:`, err);
+      return { success: false, message: "Network connection error. Please try again." };
     }
   }
 
@@ -40,51 +45,40 @@ class ApiClient {
     return await this.request("/api/health");
   }
 
-  // Direct Login (No OTP verification - Instant access & ₹100 Welcome Bonus)
-  static async directLogin(name, phone) {
+  // Direct Passenger Login (Name + Phone, Zero OTP)
+  static async directLogin(name, phone, email = "") {
     const cleanPhone = (phone || "").replace(/\D/g, "").slice(-10);
-    const cleanName = (name || "").trim() || "Valued Passenger";
+    const cleanName = (name || "").trim();
 
-    const user = {
-      id: "usr_otb_" + Date.now().toString().slice(-6),
-      name: cleanName,
-      phone: `+91 ${cleanPhone}`,
-      email: `${cleanName.toLowerCase().replace(/[^a-z0-9]/g, "")}_${cleanPhone.slice(-4)}@onewaytaxibihar.com`,
-      city: "Patna",
-      avatar: cleanName.substring(0, 2).toUpperCase(),
-      memberSince: new Date().getFullYear().toString(),
-      totalTrips: 0,
-      rating: 5.0,
-      walletBalance: 100
-    };
+    const res = await this.request("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ name: cleanName, phone: cleanPhone, email })
+    });
 
-    localStorage.setItem("otb_auth_token", "otb_tok_" + Date.now());
-    localStorage.setItem("otb_current_user", JSON.stringify(user));
-    return { success: true, token: "otb_tok_" + Date.now(), user: user };
+    if (res && res.success && res.token) {
+      localStorage.setItem("otb_auth_token", res.token);
+      localStorage.setItem("otb_current_user", JSON.stringify(res.user));
+      return res;
+    }
+
+    return res || { success: false, message: "Login failed" };
   }
 
-  // Legacy compat aliases redirecting cleanly to direct login
-  static async sendOTP(phone) {
-    return { success: true, message: `Direct authentication enabled for ${phone}` };
-  }
-
-  static async verifyOTP(phone, otp, name = "Passenger") {
-    return this.directLogin(name, phone);
-  }
-
-  // Get Current User Profile (Returns null if logged out)
+  // Get Current User Profile (Server-Verified)
   static async getUserProfile() {
     const token = localStorage.getItem("otb_auth_token");
     if (!token) return null;
 
-    const saved = localStorage.getItem("otb_current_user");
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
+    const res = await this.request("/api/user/profile");
+    if (res && res.success && res.user) {
+      localStorage.setItem("otb_current_user", JSON.stringify(res.user));
+      return res.user;
     }
 
-    const res = await this.request("/api/user/profile");
-    if (res && res.success && res.user) return res.user;
-
+    // If token invalid/expired, clear local state
+    if (res && res.status === 401) {
+      this.logout();
+    }
     return null;
   }
 
@@ -95,150 +89,125 @@ class ApiClient {
     localStorage.removeItem("owc_auth_token");
   }
 
-  // Get Rides (Past and Active - Only genuine user bookings, 0 mock data)
+  // Server-Side Fare & Distance Calculation Engine
+  static async calculateFare(origin, dest, cabTier = "sedan", tripType = "oneway") {
+    const res = await this.request("/api/fares/calculate", {
+      method: "POST",
+      body: JSON.stringify({ origin, dest, cabTier, tripType })
+    });
+    if (res && res.success && res.fare) {
+      return res.fare;
+    }
+    return null;
+  }
+
+  // Get Genuine Customer Bookings (Strict Customer Isolation)
   static async getRides() {
-    const res = await this.request("/api/rides");
+    const res = await this.request("/api/bookings");
+    if (res && res.success && Array.isArray(res.bookings)) {
+      return res.bookings;
+    }
     if (res && res.success && Array.isArray(res.rides)) {
       return res.rides;
     }
-
-    // Genuine local user bookings only (empty array if no rides booked yet)
-    return JSON.parse(localStorage.getItem("oneway_taxi_bihar_bookings") || "[]");
+    return [];
   }
 
-  // Create / Save a New Booking
-  static async createBooking(rideData) {
-    const res = await this.request("/api/rides", {
+  // Submit New Booking Request (Status: REQUESTED, Server-Recalculated Fare)
+  static async createBooking(bookingPayload) {
+    const res = await this.request("/api/bookings", {
       method: "POST",
-      body: JSON.stringify(rideData)
+      body: JSON.stringify(bookingPayload)
     });
 
-    const local = JSON.parse(localStorage.getItem("oneway_taxi_bihar_bookings") || "[]");
-    local.unshift(rideData);
-    localStorage.setItem("oneway_taxi_bihar_bookings", JSON.stringify(local));
-
-    if (res && res.success) return res;
-    return { success: true, booking: rideData };
+    if (res && res.success) {
+      return res;
+    }
+    return res || { success: false, message: "Booking creation failed" };
   }
 
   // Cancel Booking with zero fee
   static async cancelBooking(bookingId) {
-    const res = await this.request("/api/rides/cancel", {
+    return await this.request("/api/bookings/cancel", {
       method: "POST",
       body: JSON.stringify({ bookingId })
     });
-
-    const local = JSON.parse(localStorage.getItem("oneway_taxi_bihar_bookings") || "[]");
-    const updated = local.map(r => r.bookingId === bookingId ? { ...r, bookingStatus: "Cancelled (Refunded)" } : r);
-    return res || { success: true };
   }
 
-  // Send Fare Inquiry Lead to Helpdesk
-  static async sendLead(leadData) {
-    const res = await this.request("/api/leads", {
+  // Get Customer Wallet Ledger
+  static async getWalletLedger() {
+    return await this.request("/api/wallet/ledger");
+  }
+
+  // Admin Portal APIs
+  static async adminLogin(username, password) {
+    return await this.request("/api/admin/login", {
       method: "POST",
-      body: JSON.stringify(leadData)
+      body: JSON.stringify({ username, password })
     });
-
-    const local = JSON.parse(localStorage.getItem("oneway_taxi_leads") || "[]");
-    local.unshift(leadData);
-    localStorage.setItem("oneway_taxi_leads", JSON.stringify(local));
-
-    if (res && res.success) return res;
-    return { success: true, lead: leadData };
   }
 
-  // Get All Leads (Helpdesk Portal)
-  static async getLeads() {
-    const res = await this.request("/api/leads");
-    if (res && res.success && Array.isArray(res.leads)) {
-      return res.leads;
-    }
-    return JSON.parse(localStorage.getItem("oneway_taxi_leads") || "[]");
-  }
-
-  // Get Categorized Location Recommendations for Pickup / Drop
-  static async getLocationRecommendations(cityId = "patna", type = "pickup") {
-    const res = await this.request(`/api/locations/recommendations?city=${encodeURIComponent(cityId)}&type=${encodeURIComponent(type)}`);
-    if (res && res.success && Array.isArray(res.locations)) {
-      return res;
-    }
-
-    // Resilient offline fallback using OTB_LOCATIONS
-    const all = window.OTB_LOCATIONS || [];
-    const lowerCity = (cityId || "patna").toLowerCase();
-    let matched = all.filter(l => (l.cityId && l.cityId.toLowerCase() === lowerCity) || (l.cityName && l.cityName.toLowerCase().includes(lowerCity)));
-    if (matched.length === 0) {
-      matched = all.filter(l => l.popular).slice(0, 8);
-    }
-
-    const quickChips = matched.slice(0, 6).map(l => {
-      let shortName = l.name;
-      const m = shortName.match(/^(.*?)\s*\(/);
-      if (m) shortName = m[1];
-      return {
-        id: l.id,
-        label: shortName,
-        fullAddress: l.address,
-        category: l.category
-      };
+  static async adminGetBookings(token) {
+    return await this.request("/api/admin/bookings", {
+      headers: { Authorization: `Bearer ${token}` }
     });
+  }
 
-    const categories = {};
-    matched.forEach(l => {
-      const cat = l.category || "Major Landmarks";
-      if (!categories[cat]) categories[cat] = [];
-      categories[cat].push(l);
+  static async adminConfirmBooking(bookingId, token) {
+    return await this.request("/api/admin/confirm", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId })
     });
-
-    return {
-      success: true,
-      city: cityId,
-      type: type,
-      total: matched.length,
-      quickChips: quickChips,
-      categories: categories,
-      locations: matched
-    };
   }
 
-  // Search Locations Across POIs & Landmarks
-  static async searchLocations(query = "", cityId = "") {
-    const q = encodeURIComponent(query || "");
-    const c = encodeURIComponent(cityId || "");
-    const res = await this.request(`/api/locations/search?q=${q}&city=${c}`);
-    if (res && res.success && Array.isArray(res.results)) {
-      return res.results;
-    }
-
-    // Offline fallback
-    const all = window.OTB_LOCATIONS || [];
-    const lowerQ = (query || "").toLowerCase();
-    const lowerCity = (cityId || "").toLowerCase();
-
-    return all.filter(l => {
-      const matchesCity = !lowerCity || (l.cityId && l.cityId.toLowerCase() === lowerCity) || (l.cityName && l.cityName.toLowerCase().includes(lowerCity));
-      if (!matchesCity) return false;
-      if (!lowerQ) return true;
-
-      const tagMatch = l.tags && l.tags.some(t => t.toLowerCase().includes(lowerQ));
-      return (l.name && l.name.toLowerCase().includes(lowerQ)) ||
-             (l.address && l.address.toLowerCase().includes(lowerQ)) ||
-             (l.category && l.category.toLowerCase().includes(lowerQ)) ||
-             (l.hindiName && l.hindiName.includes(query)) ||
-             tagMatch;
-    }).slice(0, 15);
+  static async adminAssignDriver(bookingId, driverId, token) {
+    return await this.request("/api/admin/assign-driver", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId, driverId })
+    });
   }
 
-  // Get Popular Hubs
-  static async getPopularLocations() {
-    const res = await this.request("/api/locations/popular");
-    if (res && res.success && Array.isArray(res.locations)) {
-      return res.locations;
-    }
-    const all = window.OTB_LOCATIONS || [];
-    return all.filter(l => l.popular);
+  static async adminVerifyPayment(bookingId, txnRef, token) {
+    return await this.request("/api/admin/verify-payment", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId, txnRef })
+    });
   }
+
+  static async adminGetDrivers(token) {
+    return await this.request("/api/admin/drivers", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  // Driver Partner Portal APIs
+  static async driverLogin(phone, pin) {
+    return await this.request("/api/driver/login", {
+      method: "POST",
+      body: JSON.stringify({ phone, pin })
+    });
+  }
+
+  static async driverGetTrips(token) {
+    return await this.request("/api/driver/trips", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  static async driverUpdateStatus(bookingId, newStatus, token) {
+    return await this.request("/api/driver/status", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId, newStatus })
+    });
+  }
+
+  // Legacy compat aliases (safely redirected)
+  static async sendOTP(phone) { return { success: true }; }
+  static async verifyOTP(phone, otp, name) { return this.directLogin(name, phone); }
 }
 
 if (typeof window !== "undefined") {

@@ -202,6 +202,17 @@
 
   <!-- Mobile Navigation Drawer (Three Line Menu) -->
   <div class="mobile-nav-drawer" id="mobile-drawer">
+    <!-- Top Back / Close Header inside Drawer -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--owc-border); background: var(--owc-card-bg);">
+      <button type="button" class="modal-back-btn" onclick="window.closeMobileDrawer()" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--owc-slate-100); border: 1px solid var(--owc-border); border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; color: var(--owc-text);">
+        ← Back
+      </button>
+      <span style="font-weight: 800; font-size: 13px; color: var(--owc-text);">Menu &amp; Portals</span>
+      <button type="button" onclick="window.closeMobileDrawer()" style="background: none; border: none; font-size: 18px; color: var(--owc-text-muted); cursor: pointer; padding: 4px;">
+        ✕
+      </button>
+    </div>
+
     <!-- Top Call Bar inside Drawer -->
     <div class="drawer-top-help-bar">
       <a href="tel:+918002141816" class="drawer-help-link" onclick="window.closeMobileDrawer()">
@@ -213,10 +224,12 @@
     </div>
 
     <!-- User Profile / Auth Slot in Drawer -->
-    <div id="mobile-auth-slot" style="margin-bottom: 14px;"></div>
+    <div class="drawer-user-section" id="mobile-auth-slot">
+      <!-- Injected via JavaScript -->
+    </div>
 
-    <!-- Quick 24x7 Helpdesk & Call Row -->
-    <div class="drawer-quick-contact-row">
+    <!-- Drawer Quick Contact Pills -->
+    <div class="drawer-contact-row">
       <a href="https://wa.me/917281851011?text=Hi%20OneWayTaxiBihar,%20I%20need%20a%20cab" target="_blank" rel="noopener noreferrer" class="drawer-contact-pill wa" onclick="window.closeMobileDrawer()">
         WhatsApp Helpdesk
       </a>
@@ -254,6 +267,8 @@
       <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openFareChartModal();">Fare & Rate Chart</a></li>
       <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openInvoiceModal();">Request Official GST Invoice</a></li>
       <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openReferModal();">Refer Friends &amp; Earn ₹150</a></li>
+      <li><a href="admin.html" style="color: #38bdf8; font-weight: 700;">Admin Dispatch Console ↗</a></li>
+      <li><a href="driver.html" style="color: #34d399; font-weight: 700;">Driver Partner App ↗</a></li>
     </ul>
 
     <div class="drawer-footer-info">
@@ -925,6 +940,7 @@
             <li><a href="javascript:void(0)" onclick="window.openContactModal()">Contact 24x7 Helpdesk</a></li>
             <li><a href="javascript:void(0)" onclick="window.openTermsModal()">Terms & Conditions</a></li>
             <li><a href="javascript:void(0)" onclick="window.openPrivacyModal()">Privacy Policy</a></li>
+            <li><a href="javascript:void(0)" onclick="window.openCancellationModal()">Cancellation &amp; Refund Policy</a></li>
             <li><a href="javascript:void(0)" onclick="window.openReferModal()">Refer &amp; Earn ₹150 Cash</a></li>
           </ul>
         </div>
@@ -941,12 +957,14 @@
         </div>
 
         <div class="footer-col">
-          <h3>Self-Service</h3>
+          <h3>Self-Service & Portals</h3>
           <ul>
             <li><a href="javascript:void(0)" onclick="window.openInvoiceModal()">Request GST Tax Invoice</a></li>
             <li><a href="javascript:void(0)" onclick="window.openMyTripsModal()">Track Active Trip</a></li>
             <li><a href="javascript:void(0)" onclick="window.openFareChartModal()">Rate Card Calculator</a></li>
             <li><a href="javascript:void(0)" onclick="window.openCityPresenceModal()">38 Districts Directory</a></li>
+            <li><a href="admin.html" style="color: #38bdf8; font-weight: 700;">Admin Dispatch Desk</a></li>
+            <li><a href="driver.html" style="color: #34d399; font-weight: 700;">Driver Partner App</a></li>
             <li><a href="tel:+918002141816">Patna Helpdesk: +91 80021 41816</a></li>
           </ul>
         </div>
@@ -1113,7 +1131,7 @@
     <div class="modal-dialog-box small">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <button type="button" class="modal-back-btn" onclick="window.closeAllModals()" aria-label="Go Back">← Back</button>
+          <button type="button" class="modal-back-btn" onclick="window.handleBackNavigation()" aria-label="Go Back">← Back</button>
           <div class="modal-title">Passenger Login &amp; Wallet Bonus</div>
         </div>
         <button type="button" class="modal-close-btn" onclick="window.closeAllModals()">✕</button>
@@ -1172,7 +1190,7 @@
     <div class="modal-dialog-box large">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <button type="button" class="modal-back-btn" onclick="window.closeAllModals()" aria-label="Go Back">← Back</button>
+          <button type="button" class="modal-back-btn" onclick="window.handleBackNavigation()" aria-label="Go Back">← Back</button>
           <div class="modal-title">My Trips &amp; Bookings Dashboard</div>
         </div>
         <button type="button" class="modal-close-btn" onclick="window.closeAllModals()">✕</button>
@@ -1188,7 +1206,7 @@
     <div class="modal-dialog-box large">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <button type="button" class="modal-back-btn" onclick="window.closeAllModals()" aria-label="Go Back">← Back</button>
+          <button type="button" class="modal-back-btn" onclick="window.handleBackNavigation()" aria-label="Go Back">← Back</button>
           <div class="modal-title">Complete Your Outstation Booking</div>
         </div>
         <button type="button" class="modal-close-btn" onclick="window.closeAllModals()">✕</button>
@@ -1204,7 +1222,7 @@
     <div class="modal-dialog-box">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <button type="button" class="modal-back-btn" onclick="window.closeAllModals()" aria-label="Go Back">← Back</button>
+          <button type="button" class="modal-back-btn" onclick="window.handleBackNavigation()" aria-label="Go Back">← Back</button>
           <div class="modal-title">Booking Request Status</div>
         </div>
         <button type="button" class="modal-close-btn" onclick="window.closeAllModals()">✕</button>

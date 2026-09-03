@@ -2091,54 +2091,49 @@ class BookingManager {
 
     const chkWallet = document.getElementById("chk-use-wallet");
     const isUsingWallet = chkWallet && chkWallet.checked;
-    const walletDeducted = isUsingWallet ? 100 : 0;
-    const finalPaid = Math.max(0, price - walletDeducted);
 
-    if (walletDeducted > 0 && window.currentUser) {
-      window.currentUser.walletBalance = Math.max(0, (window.currentUser.walletBalance || 100) - walletDeducted);
-      if (window.renderNavAuth) window.renderNavAuth();
+    const btnConfirm = document.querySelector("#modal-checkout .check-fare-primary-btn");
+    if (btnConfirm) {
+      btnConfirm.disabled = true;
+      btnConfirm.textContent = "Submitting Booking Request...";
     }
 
-    const bookingId = `OTB-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    const fleet = OTB_FLEET.find(f => f.id === this.selectedCabId) || OTB_FLEET[1];
-
-    const bookingRecord = {
-      bookingId: bookingId,
-      tripType: this.tripType,
+    const payload = {
       originCity: this.originCity.name,
       destCity: this.destCity.name,
       pickupDate: this.pickupDate,
       pickupTime: this.pickupTime,
-      distanceKm: this.calculatedDistanceKm,
-      duration: this.calculatedDuration,
-      fleetClass: fleet.category,
-      fleetModel: fleet.models,
+      cabTier: this.selectedCabId || "sedan",
       passengerName: name,
       passengerPhone: `+91 ${phone}`,
       passengerEmail: email,
       pickupAddress: pickupAddr,
       dropAddress: dropAddr,
-      totalFare: finalPaid,
-      walletUsed: walletDeducted,
-      originalFare: price,
       paymentMethod: method,
-      paymentStatus: (method === "Cash / UPI to Driver") ? "Pending (Pay on Arrival)" : "Payment Initiated via UPI QR",
-      bookingStatus: "Confirmation in Progress (Call in 5 mins)",
-      partnerNotice: "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      createdAt: new Date().toISOString()
+      useWallet: isUsingWallet
     };
 
-    this.activeBooking = bookingRecord;
-    await ApiClient.createBooking(bookingRecord);
+    const res = await ApiClient.createBooking(payload);
 
-    const phoneInput = document.getElementById("input-fare-phone");
-    if (phoneInput) {
-      phoneInput.value = "";
+    if (res && res.success && res.booking) {
+      if (isUsingWallet && window.currentUser) {
+        window.currentUser.walletBalance = Math.max(0, (window.currentUser.walletBalance || 100) - (res.booking.walletUsed || 100));
+        if (window.renderNavAuth) window.renderNavAuth();
+      }
+
+      const phoneInput = document.getElementById("input-fare-phone");
+      if (phoneInput) phoneInput.value = "";
+      localStorage.removeItem("oneway_fare_phone");
+
+      window.closeAllModals(false);
+      this.renderBookingConfirmation(res.booking);
+    } else {
+      window.showToast(res?.message || "Failed to submit booking request. Please check connection.", "warning");
+      if (btnConfirm) {
+        btnConfirm.disabled = false;
+        btnConfirm.textContent = "Confirm & Book OneWay Cab →";
+      }
     }
-    localStorage.removeItem("oneway_fare_phone");
-
-    window.closeAllModals(false);
-    this.renderBookingConfirmation(bookingRecord);
   }
 
   renderBookingConfirmation(booking) {
@@ -2153,7 +2148,10 @@ class BookingManager {
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
         
-        <h2 style="font-size: 21px; font-weight: 900; color: var(--owc-text); margin-bottom: 4px;">Booking Request Received!</h2>
+        <h2 style="font-size: 21px; font-weight: 900; color: var(--owc-text); margin-bottom: 4px;">BOOKING REQUEST RECEIVED</h2>
+        <div style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800; margin-bottom: 12px;">
+          STATUS: REQUESTED / PENDING CONFIRMATION
+        </div>
         <p style="font-size: 13.5px; color: var(--owc-text-muted); margin-bottom: 16px;">
           Booking ID: <strong style="color: var(--owc-primary); font-size: 16px;">${booking.bookingId}</strong>
         </p>
@@ -2165,10 +2163,16 @@ class BookingManager {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
             <div>
-              <h3 style="font-size: 16px; font-weight: 800; color: #065f46; margin-bottom: 3px; line-height: 1.35;">Our partner/driver or agent will call you in 5 minutes to confirm booking.</h3>
-              <p style="font-size: 12.5px; color: #047857; margin: 0; line-height: 1.45;">Hamari Patna 24x7 control helpline se executive aapko agle 5 minute ke andar call karke cab assign aur pickup details confirm karenge.</p>
+              <h3 style="font-size: 16px; font-weight: 800; color: #065f46; margin-bottom: 3px; line-height: 1.35;">Our partner/driver or agent will call you within 5 minutes to confirm your booking.</h3>
+              <p style="font-size: 12.5px; color: #047857; margin: 0; line-height: 1.45;">Hamare Patna control room se executive aapko 5 minute ke andar call karke cab assign aur dispatch confirm karenge.</p>
             </div>
           </div>
+        </div>
+
+        <!-- Driver Assignment Notice -->
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: var(--radius-md); padding: 12px 14px; text-align: left; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span style="font-size: 12.5px; color: #475569; font-weight: 600;">Driver details will be shared after confirmation.</span>
         </div>
 
         <!-- Verified Trip Details Card -->
@@ -2190,8 +2194,8 @@ class BookingManager {
             <strong>${booking.fleetClass} (${booking.fleetModel})</strong>
           </div>
           <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--owc-border); padding-top: 8px; margin-top: 8px;">
-            <span style="color: var(--owc-text-muted);">Payment:</span>
-            <strong style="color: var(--owc-primary); font-size: 15px;">₹${booking.totalFare.toLocaleString('en-IN')}</strong> (${booking.paymentMethod})
+            <span style="color: var(--owc-text-muted);">Total Fare:</span>
+            <strong style="color: var(--owc-primary); font-size: 15px;">₹${(booking.totalFare || 0).toLocaleString('en-IN')}</strong> (${booking.paymentMethod})
           </div>
         </div>
 
