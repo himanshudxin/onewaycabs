@@ -181,6 +181,48 @@ class ApiClient {
     });
   }
 
+  static async adminCancelBooking(bookingId, reason, token) {
+    return await this.request("/api/admin/cancel-booking", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId, reason })
+    });
+  }
+
+  static async adminGetPayments(token) {
+    return await this.request("/api/admin/payments", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  static async adminGetWalletLedger(token) {
+    return await this.request("/api/admin/wallet-ledger", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  static async adminAdjustWallet(userId, amount, type, description, token) {
+    return await this.request("/api/admin/wallet-credit", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ userId, amount, type, description })
+    });
+  }
+
+  static async adminGetAuditLogs(token) {
+    return await this.request("/api/admin/audit-logs", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
+
+  static async adminAddDriver(driverData, token) {
+    return await this.request("/api/admin/drivers/add", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(driverData)
+    });
+  }
+
   static async adminGetDrivers(token) {
     return await this.request("/api/admin/drivers", {
       headers: { Authorization: `Bearer ${token}` }

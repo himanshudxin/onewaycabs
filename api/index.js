@@ -898,6 +898,141 @@ module.exports = async (req, res) => {
       return sendJson(200, { success: true, drivers: db.drivers || [] });
     }
 
+    if (pathname === '/admin/audit-logs' && method === 'GET') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+      const logs = (db.audit_logs || []).slice().reverse();
+      return sendJson(200, { success: true, logs });
+    }
+
+    if (pathname === '/admin/cancel-booking' && method === 'POST') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      const { bookingId, reason } = body;
+      const booking = (db.bookings || []).find(b => b.bookingId === bookingId);
+      if (!booking) return sendJson(404, { success: false, message: 'Booking not found' });
+
+      booking.bookingStatus = 'CANCELLED';
+      booking.statusHistory.push({
+        status: 'CANCELLED',
+        timestamp: new Date().toISOString(),
+        actor: 'Admin Dispatcher',
+        note: reason || 'Admin cancelled booking'
+      });
+
+      if (booking.walletUsed && booking.walletUsed > 0) {
+        const u = (db.users || []).find(x => x.id === booking.customerId);
+        if (u) {
+          u.walletBalance = (u.walletBalance || 0) + booking.walletUsed;
+          if (!db.wallet_ledger) db.wallet_ledger = [];
+          db.wallet_ledger.push({
+            id: `WLT_${Date.now()}`,
+            userId: u.id,
+            phone: u.phone,
+            type: 'REFUND',
+            amount: booking.walletUsed,
+            balanceAfter: u.walletBalance,
+            description: `Admin Refund for Booking ${booking.bookingId}`,
+            createdAt: new Date().toISOString()
+          });
+        }
+      }
+
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'BOOKING',
+        entityId: booking.bookingId,
+        action: 'CANCEL_BOOKING',
+        actor: admin.username || 'admin',
+        details: `Cancelled booking. Reason: ${reason || 'Dispatch decision'}`,
+        createdAt: new Date().toISOString()
+      });
+
+      saveDb(db);
+      return sendJson(200, { success: true, booking });
+    }
+
+    if (pathname === '/admin/wallet-credit' && method === 'POST') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      const { userId, phone, amount, type, description } = body;
+      const user = (db.users || []).find(u => u.id === userId || (phone && u.phone.includes(phone)));
+      if (!user) return sendJson(404, { success: false, message: 'User not found' });
+
+      const amt = parseInt(amount) || 0;
+      const adjType = type || 'CREDIT';
+      if (adjType === 'CREDIT') {
+        user.walletBalance = (user.walletBalance || 0) + amt;
+      } else {
+        user.walletBalance = Math.max(0, (user.walletBalance || 0) - amt);
+      }
+
+      if (!db.wallet_ledger) db.wallet_ledger = [];
+      db.wallet_ledger.push({
+        id: `WLT_${Date.now()}`,
+        userId: user.id,
+        phone: user.phone,
+        type: adjType,
+        amount: amt,
+        balanceAfter: user.walletBalance,
+        description: description || 'Admin Manual Adjustment',
+        createdAt: new Date().toISOString()
+      });
+
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'WALLET',
+        entityId: user.id,
+        action: 'WALLET_ADJUSTMENT',
+        actor: admin.username || 'admin',
+        details: `Adjusted ${adjType} ₹${amt} for ${user.name}. Bal: ₹${user.walletBalance}`,
+        createdAt: new Date().toISOString()
+      });
+
+      saveDb(db);
+      return sendJson(200, { success: true, balance: user.walletBalance, user });
+    }
+
+    if (pathname === '/admin/drivers/add' && method === 'POST') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      const { name, phone, pin, vehicleNumber, vehicleModel, fleetTier } = body;
+      const newDrv = {
+        id: `drv_${Math.floor(100 + Math.random() * 900)}`,
+        name,
+        phone,
+        pin: pin || '1234',
+        vehicleNumber,
+        vehicleModel,
+        fleetTier: fleetTier || 'sedan',
+        rating: 4.9,
+        totalTrips: 0,
+        status: 'Available'
+      };
+
+      if (!db.drivers) db.drivers = [];
+      db.drivers.push(newDrv);
+
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'DRIVER',
+        entityId: newDrv.id,
+        action: 'ADD_DRIVER',
+        actor: admin.username || 'admin',
+        details: `Onboarded driver ${newDrv.name} (${newDrv.vehicleNumber})`,
+        createdAt: new Date().toISOString()
+      });
+
+      saveDb(db);
+      return sendJson(200, { success: true, driver: newDrv });
+    }
+
     // -------------------------------------------------------------
     // 10. DRIVER PARTNER APIS
     // -------------------------------------------------------------

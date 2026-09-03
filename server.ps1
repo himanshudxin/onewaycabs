@@ -734,6 +734,133 @@ try {
                     continue
                 }
 
+                if ($urlPath -eq "/api/admin/audit-logs" -and $httpMethod -eq "GET") {
+                    $logs = @($db.audit_logs | Sort-Object { $_.createdAt } -Descending)
+                    Send-JsonResponse $response 200 @{ success = $true; logs = $logs }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/admin/cancel-booking" -and $httpMethod -eq "POST") {
+                    $body = Read-RequestBody $request
+                    $b = $db.bookings | Where-Object { $_.bookingId -eq $body.bookingId } | Select-Object -First 1
+                    if ($b) {
+                        $b | Add-Member -MemberType NoteProperty -Name "bookingStatus" -Value "CANCELLED" -Force
+                        $b.statusHistory += @{
+                            status = "CANCELLED"
+                            timestamp = (Get-Date).ToString("o")
+                            actor = "Admin Dispatcher"
+                            note = if ($body.reason) { $body.reason } else { "Admin cancelled request" }
+                        }
+
+                        # Restore wallet if deducted
+                        if ($b.walletUsed -and $b.walletUsed -gt 0) {
+                            $u = $db.users | Where-Object { $_.id -eq $b.customerId } | Select-Object -First 1
+                            if ($u) {
+                                $u.walletBalance = ($u.walletBalance + $b.walletUsed)
+                                $db.wallet_ledger += @{
+                                    id = "WLT_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                                    userId = $u.id
+                                    phone = $u.phone
+                                    type = "REFUND"
+                                    amount = $b.walletUsed
+                                    balanceAfter = $u.walletBalance
+                                    description = "Admin Refund for Booking " + $b.bookingId
+                                    createdAt = (Get-Date).ToString("o")
+                                }
+                            }
+                        }
+
+                        $reasonText = if ($body.reason) { $body.reason } else { "Dispatch decision" }
+                        $db.audit_logs += @{
+                            id = "AUD_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                            entity = "BOOKING"
+                            entityId = $b.bookingId
+                            action = "CANCEL_BOOKING"
+                            actor = "admin"
+                            details = "Admin cancelled booking. Reason: " + $reasonText
+                            createdAt = (Get-Date).ToString("o")
+                        }
+
+                        Save-Db $db
+                        Send-JsonResponse $response 200 @{ success = $true; message = "Booking cancelled"; booking = $b }
+                    } else {
+                        Send-JsonResponse $response 404 @{ success = $false; message = "Booking not found" }
+                    }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/admin/wallet-credit" -and $httpMethod -eq "POST") {
+                    $body = Read-RequestBody $request
+                    $user = $db.users | Where-Object { $_.id -eq $body.userId -or $_.phone -like "*$($body.phone)" } | Select-Object -First 1
+                    if ($user) {
+                        $amt = [int]($body.amount)
+                        $type = if ($body.type) { $body.type } else { "CREDIT" }
+                        if ($type -eq "CREDIT") {
+                            $user.walletBalance = ($user.walletBalance + $amt)
+                        } else {
+                            $user.walletBalance = [Math]::Max(0, $user.walletBalance - $amt)
+                        }
+
+                        $db.wallet_ledger += @{
+                            id = "WLT_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                            userId = $user.id
+                            phone = $user.phone
+                            type = $type
+                            amount = $amt
+                            balanceAfter = $user.walletBalance
+                            description = if ($body.description) { $body.description } else { "Admin Manual Adjustment" }
+                            createdAt = (Get-Date).ToString("o")
+                        }
+
+                        $db.audit_logs += @{
+                            id = "AUD_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                            entity = "WALLET"
+                            entityId = $user.id
+                            action = "WALLET_ADJUSTMENT"
+                            actor = "admin"
+                            details = "Admin adjusted $($type) ₹$($amt) for $($user.name) ($($user.phone)). Bal: ₹$($user.walletBalance)"
+                            createdAt = (Get-Date).ToString("o")
+                        }
+
+                        Save-Db $db
+                        Send-JsonResponse $response 200 @{ success = $true; balance = $user.walletBalance; user = $user }
+                    } else {
+                        Send-JsonResponse $response 404 @{ success = $false; message = "User not found" }
+                    }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/admin/drivers/add" -and $httpMethod -eq "POST") {
+                    $body = Read-RequestBody $request
+                    $newDrv = @{
+                        id = "drv_" + (Get-Random -Minimum 100 -Maximum 999)
+                        name = $body.name
+                        phone = $body.phone
+                        pin = if ($body.pin) { $body.pin } else { "1234" }
+                        vehicleNumber = $body.vehicleNumber
+                        vehicleModel = $body.vehicleModel
+                        fleetTier = if ($body.fleetTier) { $body.fleetTier } else { "sedan" }
+                        rating = 4.9
+                        totalTrips = 0
+                        status = "Available"
+                    }
+                    $db.drivers += $newDrv
+
+                    $db.audit_logs += @{
+                        id = "AUD_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                        entity = "DRIVER"
+                        entityId = $newDrv.id
+                        action = "ADD_DRIVER"
+                        actor = "admin"
+                        details = "Onboarded driver $($newDrv.name) ($($newDrv.vehicleNumber))"
+                        createdAt = (Get-Date).ToString("o")
+                    }
+
+                    Save-Db $db
+                    Send-JsonResponse $response 200 @{ success = $true; driver = $newDrv }
+                    continue
+                }
+
                 # 9. Driver Partner APIs
                 if ($urlPath -eq "/api/driver/login" -and $httpMethod -eq "POST") {
                     $body = Read-RequestBody $request

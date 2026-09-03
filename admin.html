@@ -9,14 +9,14 @@
   <link rel="stylesheet" href="css/components.css">
   <style>
     :root {
-      --admin-bg: #0f172a;
+      --admin-bg: #0b0f19;
       --admin-card: #1e293b;
       --admin-border: #334155;
       --admin-text: #f8fafc;
       --admin-muted: #94a3b8;
     }
     body.admin-body {
-      background: #0b0f19;
+      background: var(--admin-bg);
       color: var(--admin-text);
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       margin: 0;
@@ -26,7 +26,7 @@
     .admin-navbar {
       background: rgba(15, 23, 42, 0.95);
       border-bottom: 1px solid var(--admin-border);
-      padding: 14px 24px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -38,62 +38,95 @@
     .admin-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 17px;
+      gap: 10px;
+      font-size: 16px;
       font-weight: 800;
       color: #38bdf8;
     }
     .admin-badge {
       background: rgba(56, 189, 248, 0.15);
       color: #38bdf8;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       padding: 2px 8px;
       border-radius: 6px;
       letter-spacing: 0.5px;
     }
     .admin-container {
-      max-width: 1300px;
+      max-width: 1340px;
       margin: 0 auto;
-      padding: 24px 16px;
+      padding: 20px 16px;
     }
     .admin-stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
     }
     .admin-stat-card {
       background: var(--admin-card);
       border: 1px solid var(--admin-border);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 10px;
+      padding: 14px;
     }
     .admin-stat-val {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 900;
       margin-top: 4px;
     }
     .admin-stat-lbl {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--admin-muted);
       text-transform: uppercase;
       font-weight: 700;
+      letter-spacing: 0.3px;
     }
+    
+    /* Top Main Nav Tabs */
+    .admin-main-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--admin-border);
+      margin-bottom: 18px;
+      overflow-x: auto;
+    }
+    .admin-nav-tab {
+      background: transparent;
+      border: none;
+      color: var(--admin-muted);
+      padding: 10px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .admin-nav-tab.active {
+      color: #38bdf8;
+      border-bottom-color: #38bdf8;
+    }
+    .admin-nav-tab:hover {
+      color: #f8fafc;
+    }
+
     .admin-filter-bar {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 16px;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      align-items: center;
+      flex-wrap: wrap;
     }
     .admin-filter-pill {
       background: var(--admin-card);
       border: 1px solid var(--admin-border);
       color: var(--admin-muted);
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
@@ -104,10 +137,11 @@
       color: #ffffff;
       border-color: #38bdf8;
     }
+
     .admin-table-wrap {
       background: var(--admin-card);
       border: 1px solid var(--admin-border);
-      border-radius: 14px;
+      border-radius: 12px;
       overflow-x: auto;
     }
     .admin-table {
@@ -118,24 +152,24 @@
     }
     .admin-table th {
       background: #111827;
-      padding: 12px 16px;
+      padding: 12px 14px;
       font-weight: 700;
       color: var(--admin-muted);
       border-bottom: 1px solid var(--admin-border);
       text-transform: uppercase;
       font-size: 11px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
     }
     .admin-table td {
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-bottom: 1px solid rgba(51, 65, 85, 0.6);
       vertical-align: middle;
     }
     .admin-status-badge {
       display: inline-block;
-      padding: 3px 10px;
+      padding: 3px 8px;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       text-transform: uppercase;
     }
@@ -144,10 +178,11 @@
     .status-DRIVER_ASSIGNED { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid #9333ea; }
     .status-COMPLETED { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; }
     .status-CANCELLED { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #dc2626; }
+    
     .btn-action-sm {
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       border: none;
       cursor: pointer;
@@ -160,6 +195,9 @@
     .btn-confirm { background: #059669; color: white; }
     .btn-assign { background: #9333ea; color: white; }
     .btn-verify-pay { background: #0284c7; color: white; }
+    .btn-cancel { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
+    .btn-details { background: #334155; color: white; }
+
     .login-modal-box {
       background: #1e293b;
       border: 1px solid #334155;
@@ -174,7 +212,7 @@
 </head>
 <body class="admin-body">
 
-  <!-- Admin Login Overlay (Visible if not authenticated) -->
+  <!-- Admin Login View -->
   <div id="admin-login-view" style="display: none; padding: 20px;">
     <div class="login-modal-box">
       <div style="text-align: center; margin-bottom: 20px;">
@@ -219,61 +257,186 @@
     </header>
 
     <main class="admin-container">
-      <!-- Top Metrics -->
-      <div class="admin-stats-grid">
-        <div class="admin-stat-card">
-          <div class="admin-stat-lbl">New Requests</div>
-          <div class="admin-stat-val" id="stat-requested" style="color: #fbbf24;">0</div>
+      
+      <!-- Top Primary Navigation Tabs (Req 157, 158) -->
+      <nav class="admin-main-tabs">
+        <button type="button" class="admin-nav-tab active" id="main-tab-bookings" onclick="switchMainTab('bookings')">
+          🚖 Bookings &amp; Dispatch
+        </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-payments" onclick="switchMainTab('payments')">
+          💳 Payments &amp; UTR Verification
+        </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-wallet" onclick="switchMainTab('wallet')">
+          👛 Customer Wallet Ledger
+        </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-drivers" onclick="switchMainTab('drivers')">
+          👨‍✈️ Chauffeurs &amp; Fleet
+        </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-audit" onclick="switchMainTab('audit')">
+          📜 Audit Logs (Who Changed What)
+        </button>
+      </nav>
+
+      <!-- ================= VIEW 1: BOOKINGS & DISPATCH ================= -->
+      <div id="view-bookings">
+        <!-- Top Metrics (Req 157) -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">New Requests (Call 5m)</div>
+            <div class="admin-stat-val" id="stat-requested" style="color: #fbbf24;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Confirmed</div>
+            <div class="admin-stat-val" id="stat-confirmed" style="color: #38bdf8;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Driver Assigned</div>
+            <div class="admin-stat-val" id="stat-assigned" style="color: #c084fc;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Completed Trips</div>
+            <div class="admin-stat-val" id="stat-completed" style="color: #34d399;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Cancelled Trips</div>
+            <div class="admin-stat-val" id="stat-cancelled" style="color: #f87171;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Total Bookings</div>
+            <div class="admin-stat-val" id="stat-total">0</div>
+          </div>
         </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-lbl">Confirmed</div>
-          <div class="admin-stat-val" id="stat-confirmed" style="color: #38bdf8;">0</div>
+
+        <!-- Search & Date Filter Bar (Req 159, 160, 161) -->
+        <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+          <input type="text" id="admin-search-input" placeholder="🔍 Search Booking ID, passenger, phone, city..." style="flex: 1; min-width: 260px; padding: 10px 14px; background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 8px; color: white; font-size: 13px;" oninput="applyFilters()">
+          <input type="date" id="admin-date-filter" style="padding: 10px 14px; background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 8px; color: white; font-size: 13px;" onchange="applyFilters()">
+          <button type="button" style="padding: 10px 16px; background: #334155; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="clearFilters()">Reset Filters</button>
         </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-lbl">Driver Assigned</div>
-          <div class="admin-stat-val" id="stat-assigned" style="color: #c084fc;">0</div>
+
+        <!-- Status Filter Pills (Req 160) -->
+        <div class="admin-filter-bar">
+          <button type="button" class="admin-filter-pill active" onclick="setFilter('ALL', this)">All</button>
+          <button type="button" class="admin-filter-pill" onclick="setFilter('REQUESTED', this)">Requests (5-Min Call)</button>
+          <button type="button" class="admin-filter-pill" onclick="setFilter('CONFIRMED', this)">Confirmed</button>
+          <button type="button" class="admin-filter-pill" onclick="setFilter('DRIVER ASSIGNED', this)">Driver Assigned</button>
+          <button type="button" class="admin-filter-pill" onclick="setFilter('COMPLETED', this)">Completed</button>
+          <button type="button" class="admin-filter-pill" onclick="setFilter('CANCELLED', this)">Cancelled</button>
         </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-lbl">Completed Trips</div>
-          <div class="admin-stat-val" id="stat-completed" style="color: #34d399;">0</div>
-        </div>
-        <div class="admin-stat-card">
-          <div class="admin-stat-lbl">Total Bookings</div>
-          <div class="admin-stat-val" id="stat-total">0</div>
+
+        <!-- Bookings Table -->
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Passenger / Phone</th>
+                <th>Route &amp; Time</th>
+                <th>Vehicle &amp; Fare</th>
+                <th>Status &amp; Payment</th>
+                <th>Assigned Chauffeur</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-bookings-tbody">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: var(--admin-muted);">Loading bookings...</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Filter Tabs -->
-      <div class="admin-filter-bar">
-        <button type="button" class="admin-filter-pill active" onclick="setFilter('ALL', this)">All Bookings</button>
-        <button type="button" class="admin-filter-pill" onclick="setFilter('REQUESTED', this)">Requests (Call in 5m)</button>
-        <button type="button" class="admin-filter-pill" onclick="setFilter('CONFIRMED', this)">Confirmed</button>
-        <button type="button" class="admin-filter-pill" onclick="setFilter('DRIVER ASSIGNED', this)">Driver Assigned</button>
-        <button type="button" class="admin-filter-pill" onclick="setFilter('COMPLETED', this)">Completed</button>
-        <button type="button" class="admin-filter-pill" onclick="setFilter('CANCELLED', this)">Cancelled</button>
+      <!-- ================= VIEW 2: PAYMENTS & VERIFICATION ================= -->
+      <div id="view-payments" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Payment Transactions &amp; UTR Audit (Req 157, 158)</h3>
+          <button type="button" class="btn-action-sm btn-confirm" onclick="loadPayments()">↻ Refresh Payments</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Txn ID</th>
+                <th>Booking Ref</th>
+                <th>Customer Phone</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Payment Status</th>
+                <th>UPI UTR / Bank Ref</th>
+                <th>Verified By</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-payments-tbody">
+              <tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--admin-muted);">Loading payments...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <!-- Bookings Table -->
-      <div class="admin-table-wrap">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Booking ID</th>
-              <th>Customer / Phone</th>
-              <th>Route &amp; Time</th>
-              <th>Vehicle &amp; Fare</th>
-              <th>Status</th>
-              <th>Assigned Driver</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="admin-bookings-tbody">
-            <tr>
-              <td colspan="7" style="text-align: center; padding: 40px; color: var(--admin-muted);">Loading bookings...</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- ================= VIEW 3: WALLET LEDGER ================= -->
+      <div id="view-wallet" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Customer Wallet Ledger &amp; Adjustments (Req 158)</h3>
+          <button type="button" class="btn-action-sm btn-confirm" onclick="openWalletAdjustModal()">+ Adjust Customer Wallet</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Ledger ID</th>
+                <th>Customer / Phone</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance After</th>
+                <th>Reason / Description</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="admin-wallet-tbody">
+              <tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--admin-muted);">Loading wallet ledger...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <!-- ================= VIEW 4: DRIVERS & FLEET ================= -->
+      <div id="view-drivers" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Registered Driver Partners &amp; Vehicles (Req 158)</h3>
+          <button type="button" class="btn-action-sm btn-confirm" onclick="openAddDriverModal()">+ Onboard New Driver</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;" id="admin-drivers-grid">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- ================= VIEW 5: AUDIT LOGS (Req 163, 164) ================= -->
+      <div id="view-audit" style="display: none;">
+        <div style="margin-bottom: 14px;">
+          <h3 style="margin: 0; font-size: 17px; font-weight: 800;">System Audit Logs — Who Changed What (Req 163, 164)</h3>
+          <p style="font-size: 12.5px; color: var(--admin-muted); margin: 4px 0 0 0;">Immutable record of all admin confirmations, driver assignments, payment verifications, and cancellations.</p>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Actor / Admin</th>
+                <th>Entity</th>
+                <th>Entity ID</th>
+                <th>Action</th>
+                <th>Details &amp; Audit Summary</th>
+              </tr>
+            </thead>
+            <tbody id="admin-audit-tbody">
+              <tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--admin-muted);">Loading audit logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -292,11 +455,101 @@
     </div>
   </div>
 
+  <!-- View Full Booking Details Modal -->
+  <div id="modal-booking-details" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 580px; width: 100%; max-height: 85vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <h3 style="margin: 0; font-size: 17px; font-weight: 800;" id="details-modal-title">Booking Details</h3>
+        <button type="button" onclick="closeDetailsModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <div id="details-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Onboard Driver Modal -->
+  <div id="modal-add-driver" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 440px; width: 100%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Onboard Driver Partner</h3>
+        <button type="button" onclick="closeAddDriverModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <form onsubmit="handleAddDriverSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">DRIVER FULL NAME *</label>
+          <input type="text" id="drv-name" required style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">10-DIGIT MOBILE NUMBER *</label>
+          <input type="tel" id="drv-phone" required placeholder="e.g. 9431012345" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">4-DIGIT DRIVER APP LOGIN PIN *</label>
+          <input type="password" id="drv-pin" maxlength="4" required placeholder="e.g. 1234" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">VEHICLE NUMBER (PLATE) *</label>
+          <input type="text" id="drv-veh-num" required placeholder="e.g. BR 01 PA 4921" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">VEHICLE MODEL &amp; COLOR *</label>
+          <input type="text" id="drv-veh-model" required placeholder="e.g. Swift Dzire (White)" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">FLEET TIER</label>
+          <select id="drv-tier" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+            <option value="sedan">Prime Sedan (Dzire / Etios)</option>
+            <option value="hatchback">Go Hatchback (WagonR / Tiago)</option>
+            <option value="suv">Family SUV (Ertiga)</option>
+            <option value="sedan_prime">Executive Sedan (Honda City)</option>
+          </select>
+        </div>
+        <button type="submit" style="margin-top: 6px; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          Save &amp; Activate Driver →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Wallet Adjustment Modal -->
+  <div id="modal-wallet-adjust" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 420px; width: 100%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Adjust Customer Wallet</h3>
+        <button type="button" onclick="closeWalletAdjustModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <form onsubmit="handleWalletAdjustSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">CUSTOMER 10-DIGIT PHONE *</label>
+          <input type="tel" id="wlt-adj-phone" required placeholder="e.g. 9835055555" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">ACTION TYPE</label>
+          <select id="wlt-adj-type" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+            <option value="CREDIT">CREDIT (+ Add to Balance)</option>
+            <option value="DEBIT">DEBIT (- Deduct from Balance)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">AMOUNT (₹) *</label>
+          <input type="number" id="wlt-adj-amount" required min="1" max="10000" placeholder="e.g. 100" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">REASON / NOTE *</label>
+          <input type="text" id="wlt-adj-reason" required placeholder="e.g. Promotional Courtesy Bonus" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <button type="submit" style="margin-top: 6px; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          Apply Wallet Adjustment →
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script src="js/api.js"></script>
   <script>
     let _adminToken = localStorage.getItem("otb_admin_token");
     let _allBookings = [];
     let _currentFilter = "ALL";
+    let _currentMainTab = "bookings";
     let _activeAssignBookingId = null;
     let _availableDrivers = [];
 
@@ -334,6 +587,22 @@
       initAdmin();
     }
 
+    function switchMainTab(tabName) {
+      _currentMainTab = tabName;
+      const tabs = ["bookings", "payments", "wallet", "drivers", "audit"];
+      tabs.forEach(t => {
+        const view = document.getElementById(`view-${t}`);
+        const btn = document.getElementById(`main-tab-${t}`);
+        if (view) view.style.display = (t === tabName) ? "block" : "none";
+        if (btn) btn.classList.toggle("active", t === tabName);
+      });
+
+      if (tabName === "payments") loadPayments();
+      else if (tabName === "wallet") loadWallet();
+      else if (tabName === "drivers") renderDriversGrid();
+      else if (tabName === "audit") loadAuditLogs();
+    }
+
     async function loadDrivers() {
       const res = await ApiClient.adminGetDrivers(_adminToken);
       if (res && res.success) {
@@ -346,25 +615,27 @@
       if (res && res.success) {
         _allBookings = res.bookings || [];
         renderMetrics();
-        renderTable();
+        applyFilters();
       } else if (res && res.status === 401) {
         handleAdminLogout();
       }
     }
 
     function renderMetrics() {
-      let requested = 0, confirmed = 0, assigned = 0, completed = 0;
+      let requested = 0, confirmed = 0, assigned = 0, completed = 0, cancelled = 0;
       _allBookings.forEach(b => {
         if (b.bookingStatus === "REQUESTED") requested++;
         else if (b.bookingStatus === "CONFIRMED") confirmed++;
         else if (b.bookingStatus === "DRIVER ASSIGNED") assigned++;
         else if (b.bookingStatus === "COMPLETED") completed++;
+        else if (b.bookingStatus === "CANCELLED") cancelled++;
       });
 
       document.getElementById("stat-requested").textContent = requested;
       document.getElementById("stat-confirmed").textContent = confirmed;
       document.getElementById("stat-assigned").textContent = assigned;
       document.getElementById("stat-completed").textContent = completed;
+      document.getElementById("stat-cancelled").textContent = cancelled;
       document.getElementById("stat-total").textContent = _allBookings.length;
     }
 
@@ -372,29 +643,59 @@
       _currentFilter = filter;
       document.querySelectorAll(".admin-filter-pill").forEach(p => p.classList.remove("active"));
       el.classList.add("active");
-      renderTable();
+      applyFilters();
     }
 
-    function renderTable() {
-      const tbody = document.getElementById("admin-bookings-tbody");
+    function clearFilters() {
+      document.getElementById("admin-search-input").value = "";
+      document.getElementById("admin-date-filter").value = "";
+      _currentFilter = "ALL";
+      document.querySelectorAll(".admin-filter-pill").forEach((p, idx) => p.classList.toggle("active", idx === 0));
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const searchQ = (document.getElementById("admin-search-input")?.value || "").toLowerCase().trim();
+      const dateQ = document.getElementById("admin-date-filter")?.value || "";
+
       const filtered = _allBookings.filter(b => {
-        if (_currentFilter === "ALL") return true;
-        return b.bookingStatus === _currentFilter;
+        // Status filter
+        if (_currentFilter !== "ALL" && b.bookingStatus !== _currentFilter) return false;
+
+        // Date filter
+        if (dateQ && b.pickupDate !== dateQ) return false;
+
+        // Search text
+        if (searchQ) {
+          const matchId = b.bookingId.toLowerCase().includes(searchQ);
+          const matchName = (b.passengerName || "").toLowerCase().includes(searchQ);
+          const matchPhone = (b.passengerPhone || "").includes(searchQ);
+          const matchRoute = `${b.originCity} ${b.destCity}`.toLowerCase().includes(searchQ);
+          if (!matchId && !matchName && !matchPhone && !matchRoute) return false;
+        }
+
+        return true;
       });
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--admin-muted);">No bookings found in this category.</td></tr>`;
+      renderTable(filtered);
+    }
+
+    function renderTable(bookings) {
+      const tbody = document.getElementById("admin-bookings-tbody");
+      if (!bookings || bookings.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--admin-muted);">No bookings found matching filters.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = filtered.map(b => {
+      tbody.innerHTML = bookings.map(b => {
         const statusClass = `status-${(b.bookingStatus || 'REQUESTED').replace(/\s+/g, '_')}`;
         const driverName = b.driverDetails ? `${b.driverDetails.name} (${b.driverDetails.vehicleNumber})` : '<span style="color: #94a3b8; font-style: italic;">Not assigned</span>';
+        const isPaid = b.paymentStatus && b.paymentStatus.includes('PAID');
 
         return `
           <tr>
             <td>
-              <strong style="color: #38bdf8;">${b.bookingId}</strong>
+              <strong style="color: #38bdf8; font-family: monospace;">${b.bookingId}</strong>
               <div style="font-size: 11px; color: var(--admin-muted);">${new Date(b.createdAt).toLocaleDateString()}</div>
             </td>
             <td>
@@ -404,7 +705,7 @@
               </div>
             </td>
             <td>
-              <strong>${b.originCity} → ${b.destCity}</strong>
+              <strong>${b.originCity} ➔ ${b.destCity}</strong>
               <div style="font-size: 11.5px; color: var(--admin-muted);">${b.pickupDate} at ${b.pickupTime}</div>
             </td>
             <td>
@@ -413,7 +714,9 @@
             </td>
             <td>
               <span class="admin-status-badge ${statusClass}">${b.bookingStatus}</span>
-              <div style="font-size: 10.5px; color: #94a3b8; margin-top: 2px;">${b.paymentStatus || 'Pending'}</div>
+              <div style="font-size: 10.5px; color: ${isPaid ? '#34d399' : '#fbbf24'}; margin-top: 3px; font-weight: 700;">
+                ${b.paymentStatus || 'Pending'}
+              </div>
             </td>
             <td>${driverName}</td>
             <td>
@@ -424,9 +727,13 @@
                 ${(b.bookingStatus === 'CONFIRMED' || b.bookingStatus === 'REQUESTED') ? `
                   <button type="button" class="btn-action-sm btn-assign" onclick="openAssignModal('${b.bookingId}')">Assign Driver</button>
                 ` : ''}
-                ${!b.paymentStatus.includes('PAID') ? `
+                ${!isPaid ? `
                   <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${b.bookingId}')">Verify Pay</button>
                 ` : ''}
+                ${b.bookingStatus !== 'CANCELLED' ? `
+                  <button type="button" class="btn-action-sm btn-cancel" onclick="cancelRideAdmin('${b.bookingId}')">✕ Cancel</button>
+                ` : ''}
+                <button type="button" class="btn-action-sm btn-details" onclick="openDetailsModal('${b.bookingId}')">Details</button>
               </div>
             </td>
           </tr>
@@ -443,6 +750,18 @@
       }
     }
 
+    async function cancelRideAdmin(bookingId) {
+      const reason = prompt("Enter cancellation reason:", "Customer requested cancellation via phone");
+      if (!reason) return;
+      const res = await ApiClient.adminCancelBooking(bookingId, reason, _adminToken);
+      if (res && res.success) {
+        alert(`Booking ${bookingId} cancelled and any wallet deduction refunded.`);
+        await loadBookings();
+      } else {
+        alert(res?.message || "Cancellation failed");
+      }
+    }
+
     async function verifyPay(bookingId) {
       const txn = prompt("Enter verified UPI Transaction Reference (UTR / Bank ID):", "UPI-" + Date.now().toString().slice(-6));
       if (!txn) return;
@@ -455,7 +774,7 @@
     function openAssignModal(bookingId) {
       _activeAssignBookingId = bookingId;
       const b = _allBookings.find(x => x.bookingId === bookingId);
-      document.getElementById("assign-modal-route").textContent = `Route: ${b.originCity} → ${b.destCity} (${b.fleetClass || 'Sedan'})`;
+      document.getElementById("assign-modal-route").textContent = `Route: ${b.originCity} → ${b.destCity} (${b.fleetClass || 'Sedan'}) • Passenger: ${b.passengerName}`;
       
       const listEl = document.getElementById("drivers-selection-list");
       listEl.innerHTML = _availableDrivers.map(d => `
@@ -464,7 +783,7 @@
             <strong style="color: #f8fafc; font-size: 14px;">${d.name}</strong>
             <div style="font-size: 12px; color: #94a3b8;">${d.vehicleModel} • ${d.vehicleNumber} (⭐ ${d.rating})</div>
           </div>
-          <button type="button" class="btn-action-sm btn-assign" onclick="assignDriverSubmit('${d.id}')">Assign</button>
+          <button type="button" class="btn-action-sm btn-assign" onclick="assignDriverSubmit('${d.id}')">Assign Chauffeur</button>
         </div>
       `).join("");
 
@@ -487,7 +806,203 @@
       }
     }
 
-    // Initialize on load
+    function openDetailsModal(bookingId) {
+      const b = _allBookings.find(x => x.bookingId === bookingId);
+      if (!b) return;
+
+      document.getElementById("details-modal-title").textContent = `Booking Details: ${b.bookingId}`;
+      const content = document.getElementById("details-modal-content");
+
+      const historyHtml = (b.statusHistory || []).map(h => `
+        <div style="padding: 6px 0; border-bottom: 1px dashed #334155; font-size: 12px;">
+          <strong>${h.status}</strong> by <em>${h.actor || 'System'}</em> at ${new Date(h.timestamp).toLocaleString()}
+          <div style="color: #94a3b8;">${h.note || ''}</div>
+        </div>
+      `).join("");
+
+      content.innerHTML = `
+        <div style="font-size: 13px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: #0f172a; padding: 12px; border-radius: 8px;">
+            <div><strong>Route:</strong> ${b.originCity} ➔ ${b.destCity} (${b.distanceKm} KM)</div>
+            <div><strong>Pickup Address:</strong> ${b.pickupAddress || 'City center'}</div>
+            <div><strong>Drop Address:</strong> ${b.dropAddress || 'City center'}</div>
+            <div><strong>Travel Schedule:</strong> ${b.pickupDate} at ${b.pickupTime}</div>
+          </div>
+
+          <div style="background: #0f172a; padding: 12px; border-radius: 8px;">
+            <div><strong>Passenger:</strong> ${b.passengerName} (<a href="tel:${b.passengerPhone}" style="color: #34d399;">${b.passengerPhone}</a>)</div>
+            <div><strong>Cab Tier:</strong> ${b.fleetClass} (${b.fleetModel})</div>
+            <div><strong>Fare Breakdown:</strong> Base Total: ₹${b.totalFare} | Wallet Used: ₹${b.walletUsed || 0}</div>
+            <div><strong>Payment Status:</strong> ${b.paymentStatus} (${b.paymentMethod || 'UPI'})</div>
+          </div>
+
+          <div>
+            <h4 style="margin: 8px 0 4px 0; font-size: 13px; color: #38bdf8;">Status History &amp; Actor Audit Trail</h4>
+            <div style="background: #0f172a; padding: 10px; border-radius: 8px; max-height: 160px; overflow-y: auto;">
+              ${historyHtml || 'No status changes recorded.'}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("modal-booking-details").style.display = "flex";
+    }
+
+    function closeDetailsModal() {
+      document.getElementById("modal-booking-details").style.display = "none";
+    }
+
+    // Payments View
+    async function loadPayments() {
+      const res = await ApiClient.adminGetPayments(_adminToken);
+      const tbody = document.getElementById("admin-payments-tbody");
+      if (!res || !res.success || !res.payments || res.payments.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--admin-muted);">No payment transactions found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = res.payments.map(p => `
+        <tr>
+          <td><code style="color: #38bdf8;">${p.id}</code></td>
+          <td><strong>${p.bookingId}</strong></td>
+          <td>${p.passengerPhone || 'N/A'}</td>
+          <td><strong>₹${(p.amount || 0).toLocaleString('en-IN')}</strong></td>
+          <td>${p.method}</td>
+          <td><span class="admin-status-badge ${p.status.includes('PAID') ? 'status-COMPLETED' : 'status-REQUESTED'}">${p.status}</span></td>
+          <td>${p.upiUtr ? `<code style="color: #34d399;">${p.upiUtr}</code>` : '<span style="color:#94a3b8;">Pending UTR</span>'}</td>
+          <td>${p.verifiedBy || 'Unverified'}</td>
+          <td>
+            ${!p.status.includes('PAID') ? `
+              <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${p.bookingId}')">Verify</button>
+            ` : '✓ Verified'}
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // Wallet View
+    async function loadWallet() {
+      const res = await ApiClient.adminGetWalletLedger(_adminToken);
+      const tbody = document.getElementById("admin-wallet-tbody");
+      if (!res || !res.success || !res.ledger || res.ledger.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--admin-muted);">No wallet ledger records found.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = res.ledger.map(w => {
+        const isCredit = w.type === 'CREDIT' || w.type === 'REFUND';
+        const color = isCredit ? '#34d399' : '#f87171';
+        return `
+          <tr>
+            <td><code>${w.id}</code></td>
+            <td>${w.phone || w.userId}</td>
+            <td><strong style="color: ${color};">${w.type}</strong></td>
+            <td><strong style="color: ${color};">${isCredit ? '+' : '-'}₹${w.amount}</strong></td>
+            <td>₹${w.balanceAfter}</td>
+            <td>${w.description}</td>
+            <td style="font-size: 11.5px; color: var(--admin-muted);">${new Date(w.createdAt).toLocaleString()}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function openWalletAdjustModal() {
+      document.getElementById("modal-wallet-adjust").style.display = "flex";
+    }
+    function closeWalletAdjustModal() {
+      document.getElementById("modal-wallet-adjust").style.display = "none";
+    }
+    async function handleWalletAdjustSubmit(e) {
+      e.preventDefault();
+      const phone = document.getElementById("wlt-adj-phone").value.trim();
+      const type = document.getElementById("wlt-adj-type").value;
+      const amount = document.getElementById("wlt-adj-amount").value;
+      const description = document.getElementById("wlt-adj-reason").value.trim();
+
+      const res = await ApiClient.adminAdjustWallet(null, amount, type, description, _adminToken);
+      if (res && res.success) {
+        alert(`Wallet adjusted successfully. New Balance: ₹${res.balance}`);
+        closeWalletAdjustModal();
+        loadWallet();
+      } else {
+        alert(res?.message || "Adjustment failed");
+      }
+    }
+
+    // Drivers View
+    function renderDriversGrid() {
+      const grid = document.getElementById("admin-drivers-grid");
+      if (!_availableDrivers || _availableDrivers.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--admin-muted);">No drivers registered yet.</div>`;
+        return;
+      }
+      grid.innerHTML = _availableDrivers.map(d => `
+        <div style="background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 12px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <h4 style="margin: 0; font-size: 16px; font-weight: 800;">${d.name}</h4>
+              <div style="font-size: 12px; color: #34d399; font-weight: 700;">${d.phone}</div>
+            </div>
+            <span class="admin-status-badge status-COMPLETED">${d.status || 'Available'}</span>
+          </div>
+          <div style="font-size: 12.5px; color: var(--admin-muted); margin-bottom: 10px;">
+            <div>Vehicle: <strong>${d.vehicleModel}</strong></div>
+            <div>Plate: <code style="color: #38bdf8;">${d.vehicleNumber}</code> • Tier: ${d.fleetTier}</div>
+            <div>Rating: ⭐ ${d.rating} (${d.totalTrips || 0} trips)</div>
+          </div>
+          <div style="border-top: 1px dashed var(--admin-border); padding-top: 8px; font-size: 11px; color: var(--admin-muted);">
+            Driver App PIN: <code>${d.pin || '1234'}</code>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openAddDriverModal() {
+      document.getElementById("modal-add-driver").style.display = "flex";
+    }
+    function closeAddDriverModal() {
+      document.getElementById("modal-add-driver").style.display = "none";
+    }
+    async function handleAddDriverSubmit(e) {
+      e.preventDefault();
+      const driverData = {
+        name: document.getElementById("drv-name").value.trim(),
+        phone: document.getElementById("drv-phone").value.trim(),
+        pin: document.getElementById("drv-pin").value.trim(),
+        vehicleNumber: document.getElementById("drv-veh-num").value.trim(),
+        vehicleModel: document.getElementById("drv-veh-model").value.trim(),
+        fleetTier: document.getElementById("drv-tier").value
+      };
+
+      const res = await ApiClient.adminAddDriver(driverData, _adminToken);
+      if (res && res.success) {
+        alert("Driver partner onboarded successfully!");
+        closeAddDriverModal();
+        await loadDrivers();
+        renderDriversGrid();
+      } else {
+        alert(res?.message || "Failed to add driver");
+      }
+    }
+
+    // Audit Logs View (Req 163, 164)
+    async function loadAuditLogs() {
+      const res = await ApiClient.adminGetAuditLogs(_adminToken);
+      const tbody = document.getElementById("admin-audit-tbody");
+      if (!res || !res.success || !res.logs || res.logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--admin-muted);">No audit logs recorded yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = res.logs.map(l => `
+        <tr>
+          <td style="font-size: 11.5px; color: var(--admin-muted);">${new Date(l.createdAt).toLocaleString()}</td>
+          <td><strong style="color: #38bdf8;">${l.actor || 'admin'}</strong></td>
+          <td><span class="admin-badge">${l.entity}</span></td>
+          <td><code>${l.entityId}</code></td>
+          <td><strong>${l.action}</strong></td>
+          <td style="color: #f8fafc;">${l.details}</td>
+        </tr>
+      `).join("");
+    }
+
     window.addEventListener("DOMContentLoaded", initAdmin);
   </script>
 </body>

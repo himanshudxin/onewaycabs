@@ -520,6 +520,8 @@ window.openCancellationModal = () => {
 /* ==========================================================================
    3. MY TRIPS & INVOICE DASHBOARD
    ========================================================================== */
+window.currentTripsTab = "upcoming";
+
 window.openMyTripsModal = async () => {
   window.closeAllModals(false);
   const modal = document.getElementById("modal-my-trips");
@@ -527,78 +529,195 @@ window.openMyTripsModal = async () => {
   if (!modal || !body) return;
 
   const rides = await ApiClient.getRides();
+  const ledgerRes = await ApiClient.getWalletLedger();
+  const ledger = (ledgerRes && ledgerRes.success) ? ledgerRes.ledger : [];
+
+  const upcomingRides = rides.filter(r => r.bookingStatus !== 'COMPLETED' && r.bookingStatus !== 'CANCELLED');
+  const completedRides = rides.filter(r => r.bookingStatus === 'COMPLETED');
+  const cancelledRides = rides.filter(r => r.bookingStatus === 'CANCELLED');
+
+  const renderRideCard = (r, isUpcoming = false) => {
+    const statusColor = r.bookingStatus === 'REQUESTED' ? '#f59e0b' : (r.bookingStatus === 'CANCELLED' ? '#ef4444' : 'var(--owc-success)');
+    const statusBg = r.bookingStatus === 'REQUESTED' ? 'rgba(245, 158, 11, 0.12)' : (r.bookingStatus === 'CANCELLED' ? 'rgba(239, 68, 68, 0.12)' : 'rgba(16, 185, 129, 0.12)');
+    const payStatusColor = (r.paymentStatus && r.paymentStatus.includes('PAID')) ? '#059669' : '#d97706';
+
+    return `
+      <div style="background: var(--owc-card-bg); border: 1.5px solid var(--owc-border); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="background: var(--owc-primary-subtle); color: var(--owc-primary); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px; font-family: monospace;">
+                ${r.bookingId}
+              </span>
+              <span style="background: ${statusBg}; color: ${statusColor}; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px;">
+                ${r.bookingStatus === 'REQUESTED' ? 'REQUESTED (Call in 5m)' : r.bookingStatus}
+              </span>
+            </div>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--owc-text); margin-top: 4px; margin-bottom: 2px;">
+              ${r.originCity} ➔ ${r.destCity}
+            </h4>
+            <div style="font-size: 11.5px; color: var(--owc-text-muted);">
+              📍 Pickup: ${r.pickupAddress || `${r.originCity} Doorstep`} • Drop: ${r.dropAddress || `${r.destCity} Destination`}
+            </div>
+          </div>
+
+          <div style="text-align: right;">
+            <span style="font-size: 18px; font-weight: 900; color: var(--owc-primary);">₹${(r.totalFare || 0).toLocaleString('en-IN')}</span>
+            <div style="font-size: 11px; font-weight: 700; color: ${payStatusColor};">
+              ${r.paymentStatus || 'Pending'} (${r.paymentMethod || 'UPI'})
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--owc-text-muted); background: var(--owc-slate-50); padding: 8px 12px; border-radius: 8px; margin-bottom: 12px;">
+          <span>📅 <strong>${r.pickupDate}</strong> at <strong>${r.pickupTime}</strong></span>
+          <span>🚗 <strong>${r.fleetClass}</strong> (${r.fleetModel})</span>
+          <span>👤 ${r.passengerName} (${r.passengerPhone})</span>
+        </div>
+
+        <!-- Driver Info / 5-Minute Confirmation Note -->
+        <div style="font-size: 12px; margin-bottom: 12px; color: var(--owc-text);">
+          ${r.driverDetails ? `
+            <div style="display: flex; align-items: center; gap: 8px; background: rgba(59, 130, 246, 0.08); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+              <span style="font-weight: 800; color: #0284c7;">Assigned Chauffeur:</span>
+              <strong>${r.driverDetails.name}</strong> (${r.driverDetails.phone}) • <span style="font-family: monospace;">${r.driverDetails.vehicleNumber}</span>
+            </div>
+          ` : `
+            <div style="font-size: 11.5px; color: #059669; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Our partner/driver or agent will call you in 5 minutes to confirm booking. Driver details shared upon confirmation.
+            </div>
+          `}
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 8px; border-top: 1px dashed var(--owc-border); padding-top: 10px; flex-wrap: wrap;">
+          ${r.bookingStatus !== 'CANCELLED' ? `
+            <button type="button" class="btn-select-cab" style="padding: 6px 14px; font-size: 12px; width: auto;" onclick="window.startLiveTrackingSimulation('${r.bookingId}')">
+              Track Live GPS
+            </button>
+            <button type="button" class="btn-nav-outline" style="padding: 6px 14px; font-size: 12px;" onclick="window.printTaxInvoice('${r.bookingId}')">
+              Tax Invoice
+            </button>
+          ` : `
+            <span style="font-size: 11.5px; color: #ef4444; font-weight: 700; align-self: center;">This booking was cancelled with ₹0 fee.</span>
+          `}
+          ${isUpcoming ? `
+            <button type="button" style="background: transparent; border: 1px solid var(--owc-danger); color: var(--owc-danger); padding: 6px 14px; border-radius: var(--radius-md); font-size: 12px; font-weight: 700; cursor: pointer;" onclick="window.cancelRideWithRefund('${r.bookingId}')">
+              Cancel (₹0 Fee)
+            </button>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  };
+
+  const renderEmptyState = (msg, iconSvg) => `
+    <div style="text-align: center; padding: 36px 16px; background: var(--owc-slate-50); border-radius: var(--radius-lg); border: 1.5px dashed var(--owc-border);">
+      <div style="font-size: 32px; color: var(--owc-text-muted); margin-bottom: 8px;">
+        ${iconSvg || '🚕'}
+      </div>
+      <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--owc-text);">${msg}</h4>
+      <p style="font-size: 12.5px; color: var(--owc-text-muted); margin-bottom: 14px;">Travel intercity anywhere in Bihar with certified AC cabs and transparent fares.</p>
+      <button type="button" class="btn-select-cab" style="width: auto; padding: 8px 20px; font-size: 12.5px;" onclick="window.closeAllModals(); document.getElementById('booking-hero').scrollIntoView({behavior: 'smooth'})">
+        Book One-Way Cab Now
+      </button>
+    </div>
+  `;
 
   body.innerHTML = `
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--owc-border); padding-bottom: 14px;">
+    <!-- Top Account & Wallet Banner -->
+    <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid var(--owc-border); padding-bottom: 12px;">
       <div>
-        <h3 style="font-size: 18px; font-weight: 800; color: var(--owc-text);">Your Outstation Trips &amp; Account</h3>
-        <p style="font-size: 13px; color: var(--owc-text-muted);">
-          ${currentUser ? `<strong>${currentUser.name || 'Passenger'}</strong> (${currentUser.phone || ''}) • Wallet: <strong>₹${currentUser.walletBalance || 0}</strong>` : 'Manage your upcoming Bihar cab bookings & invoices'}
+        <h3 style="font-size: 17px; font-weight: 800; color: var(--owc-text); margin: 0 0 4px 0;">Customer Trips &amp; Wallet Hub</h3>
+        <p style="font-size: 12.5px; color: var(--owc-text-muted); margin: 0;">
+          ${currentUser ? `<strong>${currentUser.name || 'Passenger'}</strong> (${currentUser.phone || ''})` : 'Manage your Bihar outstation bookings & invoices'}
         </p>
       </div>
-      <div style="display: flex; gap: 8px; align-items: center;">
-        <button type="button" class="btn-nav-book" onclick="window.closeAllModals(); document.getElementById('booking-hero').scrollIntoView({behavior: 'smooth'})">
-          + Book Cab
-        </button>
+
+      <!-- Wallet Balance Pill (Req 146) -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #059669; color: #065f46; padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+          <span>Wallet Balance:</span>
+          <span style="color: #059669; font-size: 15px;">₹${currentUser ? (currentUser.walletBalance || 100) : 100}</span>
+        </div>
         ${currentUser ? `
-          <button type="button" class="btn-logout-danger" onclick="window.handleLogout()">
+          <button type="button" class="btn-logout-danger" style="padding: 6px 12px; font-size: 12px;" onclick="window.handleLogout()">
             Logout
           </button>
         ` : ''}
       </div>
     </div>
 
-    ${rides.length === 0 ? `
-      <div style="text-align: center; padding: 40px 20px; background: var(--owc-slate-50); border-radius: var(--radius-lg);">
-        <div style="font-size: 24px; color: var(--owc-text-muted); margin-bottom: 10px;">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11 2 11.5 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+    <!-- 4 Filter Tabs (Req 145, 147) -->
+    <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 14px; border-bottom: 1px solid var(--owc-border-light);">
+      <button type="button" class="admin-filter-pill ${window.currentTripsTab === 'upcoming' ? 'active' : ''}" id="tab-btn-upcoming" onclick="window.switchCustomerTab('upcoming')">
+        Upcoming Trips (${upcomingRides.length})
+      </button>
+      <button type="button" class="admin-filter-pill ${window.currentTripsTab === 'completed' ? 'active' : ''}" id="tab-btn-completed" onclick="window.switchCustomerTab('completed')">
+        Completed Trips (${completedRides.length})
+      </button>
+      <button type="button" class="admin-filter-pill ${window.currentTripsTab === 'cancelled' ? 'active' : ''}" id="tab-btn-cancelled" onclick="window.switchCustomerTab('cancelled')">
+        Cancelled (${cancelledRides.length})
+      </button>
+      <button type="button" class="admin-filter-pill ${window.currentTripsTab === 'wallet' ? 'active' : ''}" id="tab-btn-wallet" onclick="window.switchCustomerTab('wallet')">
+        Wallet Ledger (${ledger.length})
+      </button>
+    </div>
+
+    <!-- Tab 1: Upcoming Trips -->
+    <div id="customer-tab-upcoming" style="display: ${window.currentTripsTab === 'upcoming' ? 'flex' : 'none'}; flex-direction: column; gap: 12px; max-height: 460px; overflow-y: auto;">
+      ${upcomingRides.length === 0 ? renderEmptyState("No upcoming trips found.") : upcomingRides.map(r => renderRideCard(r, true)).join("")}
+    </div>
+
+    <!-- Tab 2: Completed Trips -->
+    <div id="customer-tab-completed" style="display: ${window.currentTripsTab === 'completed' ? 'flex' : 'none'}; flex-direction: column; gap: 12px; max-height: 460px; overflow-y: auto;">
+      ${completedRides.length === 0 ? renderEmptyState("No completed trips yet.") : completedRides.map(r => renderRideCard(r, false)).join("")}
+    </div>
+
+    <!-- Tab 3: Cancelled Trips -->
+    <div id="customer-tab-cancelled" style="display: ${window.currentTripsTab === 'cancelled' ? 'flex' : 'none'}; flex-direction: column; gap: 12px; max-height: 460px; overflow-y: auto;">
+      ${cancelledRides.length === 0 ? renderEmptyState("No cancelled trips.", "✓") : cancelledRides.map(r => renderRideCard(r, false)).join("")}
+    </div>
+
+    <!-- Tab 4: Wallet Transaction History (Req 147) -->
+    <div id="customer-tab-wallet" style="display: ${window.currentTripsTab === 'wallet' ? 'block' : 'none'}; max-height: 460px; overflow-y: auto;">
+      <div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); color: white; border-radius: 12px; padding: 18px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9;">AVAILABLE WALLET CREDIT</div>
+          <div style="font-size: 28px; font-weight: 900;">₹${currentUser ? (currentUser.walletBalance || 100) : 100}</div>
+          <div style="font-size: 12px; opacity: 0.95; margin-top: 2px;">Applicable automatically for ₹100 instant discount on bookings</div>
         </div>
-        <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">No trips yet.</h4>
-        <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 16px;">Book your first one-way taxi across Bihar with zero return fare!</p>
-        <button type="button" class="btn-select-cab" style="width: auto; padding: 10px 24px;" onclick="window.closeAllModals(); document.getElementById('booking-hero').scrollIntoView({behavior: 'smooth'})">Book Cab Now</button>
+        <div style="font-size: 36px; opacity: 0.85;">👛</div>
       </div>
-    ` : `
-      <div style="display: flex; flex-direction: column; gap: 14px; max-height: 480px; overflow-y: auto;">
-        ${rides.map(r => `
-          <div style="background: var(--owc-card-bg); border: 1px solid var(--owc-border); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-              <div>
-                <span style="background: var(--owc-primary-subtle); color: var(--owc-primary); font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: var(--radius-full);">
-                  ${r.bookingId}
-                </span>
-                <h4 style="font-size: 16px; font-weight: 800; color: var(--owc-text); margin-top: 4px;">
-                  ${r.originCity} → ${r.destCity}
-                </h4>
-              </div>
-              <div style="text-align: right;">
-                <span style="font-size: 18px; font-weight: 900; color: var(--owc-primary);">₹${r.totalFare.toLocaleString('en-IN')}</span>
-                <div style="font-size: 11px; color: ${r.bookingStatus === 'REQUESTED' ? '#f59e0b' : 'var(--owc-success)'}; font-weight: 800;">
-                  ${r.bookingStatus === 'REQUESTED' ? 'REQUESTED / PENDING CONFIRMATION' : r.bookingStatus}
+
+      <div style="font-size: 13px; font-weight: 800; color: var(--owc-text); margin-bottom: 8px;">WALLET TRANSACTION AUDIT TRAIL</div>
+      ${ledger.length === 0 ? `
+        <div style="text-align: center; padding: 24px; color: var(--owc-text-muted); font-size: 13px; background: var(--owc-slate-50); border-radius: 8px;">
+          No wallet transactions recorded yet. Complete bookings to earn referral rewards.
+        </div>
+      ` : `
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${ledger.map(tx => {
+            const isCredit = tx.type === 'CREDIT' || tx.type === 'REFUND';
+            const color = isCredit ? '#059669' : '#dc2626';
+            const sign = isCredit ? '+' : '-';
+            return `
+              <div style="background: var(--owc-card-bg); border: 1px solid var(--owc-border); border-radius: 8px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-weight: 700; font-size: 13px; color: var(--owc-text);">${tx.description || tx.type}</div>
+                  <div style="font-size: 11px; color: var(--owc-text-muted);">${new Date(tx.createdAt).toLocaleString()} • Ref: ${tx.id}</div>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-weight: 900; font-size: 15px; color: ${color};">${sign}₹${tx.amount}</span>
+                  <div style="font-size: 11px; color: var(--owc-text-muted);">Bal: ₹${tx.balanceAfter}</div>
                 </div>
               </div>
-            </div>
-
-            <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--owc-text-muted); margin-bottom: 14px;">
-              <span>Time: ${r.pickupDate} at ${r.pickupTime}</span>
-              <span>Vehicle: ${r.fleetClass} (${r.fleetModel})</span>
-              <span>Driver: ${r.driverDetails ? `${r.driverDetails.name} (${r.driverDetails.phone}) • ${r.driverDetails.vehicleNumber}` : 'Driver details will be shared after confirmation.'}</span>
-            </div>
-
-            <div style="display: flex; gap: 10px; border-top: 1px dashed var(--owc-border); padding-top: 12px;">
-              <button type="button" class="btn-select-cab" style="padding: 8px 16px; font-size: 12.5px; width: auto;" onclick="window.startLiveTrackingSimulation('${r.bookingId}')">
-                Track Live GPS
-              </button>
-              <button type="button" class="btn-nav-outline" style="padding: 8px 16px; font-size: 12.5px;" onclick="window.printTaxInvoice('${r.bookingId}')">
-                Tax Invoice
-              </button>
-              <button type="button" style="background: transparent; border: 1px solid var(--owc-danger); color: var(--owc-danger); padding: 8px 16px; border-radius: var(--radius-md); font-size: 12.5px; font-weight: 700; cursor: pointer;" onclick="window.cancelRideWithRefund('${r.bookingId}')">
-                Cancel (₹0 Fee)
-              </button>
-            </div>
-          </div>
-        `).join("")}
-      </div>
-    `}
+            `;
+          }).join("")}
+        </div>
+      `}
+    </div>
   `;
 
   modal.classList.add("open");
@@ -606,10 +725,21 @@ window.openMyTripsModal = async () => {
   history.pushState({ modal: "modal-my-trips" }, "", "#modal-my-trips");
 };
 
+window.switchCustomerTab = (tab) => {
+  window.currentTripsTab = tab;
+  const tabs = ["upcoming", "completed", "cancelled", "wallet"];
+  tabs.forEach(t => {
+    const panel = document.getElementById(`customer-tab-${t}`);
+    const btn = document.getElementById(`tab-btn-${t}`);
+    if (panel) panel.style.display = (t === tab) ? (t === 'wallet' ? 'block' : 'flex') : 'none';
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+};
+
 window.cancelRideWithRefund = async (bookingId) => {
-  if (confirm(`Are you sure you want to cancel booking ${bookingId}?\nOneWayTaxiBihar has ZERO cancellation charges. Any payment will be 100% refunded to your wallet.`)) {
+  if (confirm(`Are you sure you want to cancel booking ${bookingId}?\nOneWayTaxiBihar has ZERO cancellation charges. Any wallet deduction will be 100% refunded immediately.`)) {
     await ApiClient.cancelBooking(bookingId);
-    window.showToast(`Booking ${bookingId} cancelled with ₹0 fee. 100% refunded!`, "success");
+    window.showToast(`Booking ${bookingId} cancelled with ₹0 fee. 100% refunded to wallet!`, "success");
     window.openMyTripsModal();
   }
 };
