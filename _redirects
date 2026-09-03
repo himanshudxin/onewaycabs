@@ -1,0 +1,5 @@
+# Canonical routing
+/index.html   /   301!
+
+# Fallback for SPA or unknown routes
+/*   /index.html   200

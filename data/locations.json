@@ -1,0 +1,1132 @@
+﻿[
+    {
+        "id":  "pat_air",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Jay Prakash Narayan International Airport (PAT)",
+        "hindiName":  "जय प्रकाश नारायण हवाई अड्डा",
+        "category":  "Airport",
+        "icon":  "airport",
+        "address":  "Terminal 1, Departure / Arrival Gate, Jay Prakash Narayan Airport, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "airport",
+                     "flight",
+                     "terminal",
+                     "pat",
+                     "departure",
+                     "arrival",
+                     "boarding",
+                     "plane"
+                 ]
+    },
+    {
+        "id":  "pat_jn_p1",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Patna Junction (Platform 1 - Main Porch)",
+        "hindiName":  "पटना जंक्शन (प्लेटफॉर्म 1 मुख्य द्वार)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Platform 1 VIP Porch, Near Mahavir Mandir, Station Road, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "patna junction",
+                     "railway station",
+                     "train",
+                     "platform 1",
+                     "station road",
+                     "mahavir mandir",
+                     "pnbe"
+                 ]
+    },
+    {
+        "id":  "pat_jn_kar",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Patna Junction (Karbigahiya Side - South Porch)",
+        "hindiName":  "पटना जंक्शन (करबिगहिया साइड)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Karbigahiya Gate, Platform 10 Side, Kankarbagh Road, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "karbigahiya",
+                     "patna junction",
+                     "south gate",
+                     "platform 10",
+                     "kankarbagh side",
+                     "train"
+                 ]
+    },
+    {
+        "id":  "pat_rjp_term",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Rajendra Nagar Terminal (RJPB)",
+        "hindiName":  "राजेन्द्र नगर टर्मिनल",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Main Entrance, Kankarbagh Main Road, Rajendra Nagar, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "rajendra nagar",
+                     "terminal",
+                     "rjpb",
+                     "train",
+                     "station",
+                     "kankarbagh"
+                 ]
+    },
+    {
+        "id":  "pat_danapur",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Danapur Railway Station (DNR) - Khagaul",
+        "hindiName":  "दानापुर रेलवे स्टेशन (खगौल)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Main Station Porch, Khagaul, Danapur, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "danapur",
+                     "khagaul",
+                     "dnr",
+                     "cantt",
+                     "train",
+                     "station"
+                 ]
+    },
+    {
+        "id":  "pat_ppta",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Patliputra Junction (PPTA) - Rukanpura",
+        "hindiName":  "पाटलिपुत्र जंक्शन",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Main Gate, Bailey Road Link, Rukanpura, Patliputra, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "patliputra",
+                     "ppta",
+                     "rukanpura",
+                     "bailey road",
+                     "train",
+                     "station"
+                 ]
+    },
+    {
+        "id":  "pat_isbt",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Bairiya ISBT (Patliputra Bus Terminal)",
+        "hindiName":  "बैरिया आईएसबीटी (पाटलिपुत्र बस टर्मिनल)",
+        "category":  "Bus Stand",
+        "icon":  "bus",
+        "address":  "New ISBT Bairiya, Patna Bypass, Bairiya, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "isbt",
+                     "bairiya",
+                     "bus stand",
+                     "bus terminal",
+                     "patliputra bus terminal",
+                     "interstate"
+                 ]
+    },
+    {
+        "id":  "pat_gandhi_maidan",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Gandhi Maidan (Gate No. 1 / Red Cross / Maurya)",
+        "hindiName":  "गांधी मैदान (गेट 1)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Gate No. 1, Near Hotel Maurya \u0026 Panache, Gandhi Maidan, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "gandhi maidan",
+                     "hotel maurya",
+                     "biscomaun",
+                     "red cross",
+                     "central patna"
+                 ]
+    },
+    {
+        "id":  "pat_aiims",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "AIIMS Patna (All India Institute of Medical Sciences)",
+        "hindiName":  "एम्स पटना (फुलवारीशरीफ)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "Main OPD \u0026 Emergency Gate, Aurangabad Road, Phulwari Sharif, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "aiims",
+                     "aiims patna",
+                     "hospital",
+                     "phulwari sharif",
+                     "emergency",
+                     "doctor",
+                     "medical"
+                 ]
+    },
+    {
+        "id":  "pat_igims",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "IGIMS Hospital (Indira Gandhi Institute of Medical Sciences)",
+        "hindiName":  "आईजीआईएमएस अस्पताल (बेली रोड)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "Bailey Road Gate, Sheikhpura, Raja Bazar, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "igims",
+                     "hospital",
+                     "bailey road",
+                     "sheikhpura",
+                     "raja bazar",
+                     "medical"
+                 ]
+    },
+    {
+        "id":  "pat_pmch",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "PMCH (Patna Medical College \u0026 Hospital)",
+        "hindiName":  "पीएमसीएच अस्पताल (अशोक राजपथ)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "Main Emergency Gate, Ashok Rajpath, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "pmch",
+                     "patna medical college",
+                     "hospital",
+                     "ashok rajpath",
+                     "ganga path",
+                     "medical"
+                 ]
+    },
+    {
+        "id":  "pat_paras",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Paras HMRI Hospital (Raja Bazar)",
+        "hindiName":  "पारस एचएमआरआई अस्पताल",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "NH-30, Bailey Road, Raja Bazar, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "paras",
+                     "paras hmri",
+                     "raja bazar",
+                     "hospital",
+                     "bailey road"
+                 ]
+    },
+    {
+        "id":  "pat_boring_road",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Boring Road Chauraha / Krishna Apartment",
+        "hindiName":  "बोरिंग रोड चौराहा",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Boring Road Chauraha, Near Krishna Apartment, Boring Road, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "boring road",
+                     "chauraha",
+                     "coaching hub",
+                     "krishna apartment",
+                     "nageshwar colony"
+                 ]
+    },
+    {
+        "id":  "pat_bailey_road",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Bailey Road (Saguna More / Rupaspur Flyover)",
+        "hindiName":  "बेली रोड (सगुना मोड़)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Saguna More, Bailey Road, Danapur Cantt Crossing, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "bailey road",
+                     "saguna more",
+                     "rupaspur",
+                     "danapur road",
+                     "gola road"
+                 ]
+    },
+    {
+        "id":  "pat_kankarbagh",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Kankarbagh Colony More / Malahi Pakri",
+        "hindiName":  "कंकड़बाग कॉलोनी मोड़",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Colony More, Old Bypass Road, Kankarbagh, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "kankarbagh",
+                     "colony more",
+                     "tiwary beopers",
+                     "malahi pakri",
+                     "tempo stand"
+                 ]
+    },
+    {
+        "id":  "pat_dak_bungalow",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Dak Bungalow Chauraha / Fraser Road",
+        "hindiName":  "डाक बंगला चौराहा",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Dak Bungalow Crossing, Fraser Road, Central Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "dak bungalow",
+                     "fraser road",
+                     "maurya lok",
+                     "patna central"
+                 ]
+    },
+    {
+        "id":  "pat_patna_sahib",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Takht Sri Patna Sahib (Gurudwara)",
+        "hindiName":  "तख्त श्री पटना साहिब गुरुद्वारा",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Main Deodhi Gate, Patna City, Takht Sri Harmandir Sahib, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "patna sahib",
+                     "gurudwara",
+                     "harmandir ji",
+                     "patna city",
+                     "jhauganj"
+                 ]
+    },
+    {
+        "id":  "pat_high_court",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Patna High Court \u0026 Old Secretariat",
+        "hindiName":  "पटना उच्च न्यायालय एवं सचिवालय",
+        "category":  "Government \u0026 University",
+        "icon":  "landmark",
+        "address":  "Bailey Road, Near High Court Gate 1, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "high court",
+                     "secretariat",
+                     "patna high court",
+                     "raj bhavan",
+                     "bailey road"
+                 ]
+    },
+    {
+        "id":  "pat_zero_mile",
+        "cityId":  "patna",
+        "cityName":  "Patna",
+        "name":  "Zero Mile / Pahari / NH-30 Toll Gateway",
+        "hindiName":  "जीरो माइल (पहाड़ी)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Zero Mile Chowk, Patna-Gaya Highway Junction, Pahari, Patna",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "zero mile",
+                     "pahari",
+                     "gaya highway gate",
+                     "bypass",
+                     "didarganj",
+                     "nh-30"
+                 ]
+    },
+    {
+        "id":  "gay_mahabodhi",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Mahabodhi Temple Complex (UNESCO World Heritage)",
+        "hindiName":  "महाबोधि मंदिर (बोधगया)",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Main Entrance Gate, Temple Road, Bodh Gaya, Bihar 824231",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "mahabodhi",
+                     "bodh gaya",
+                     "temple",
+                     "buddha",
+                     "unesco",
+                     "monastery",
+                     "meditation"
+                 ]
+    },
+    {
+        "id":  "gay_jn",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Gaya Junction (Platform 1 - Main Porch)",
+        "hindiName":  "गया जंक्शन (प्लेटफॉर्म 1)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Main Gate, Station Road, Near Gol Bagicha, Gaya",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "gaya junction",
+                     "train",
+                     "station",
+                     "platform 1",
+                     "station road",
+                     "grand chord"
+                 ]
+    },
+    {
+        "id":  "gay_airport",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Gaya International Airport (GAY)",
+        "hindiName":  "गया अंतर्राष्ट्रीय हवाई अड्डा",
+        "category":  "Airport",
+        "icon":  "airport",
+        "address":  "Airport Terminal Porch, Bodh Gaya Road, Gaya, Bihar 823004",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "gaya airport",
+                     "airport",
+                     "flight",
+                     "gay",
+                     "bodh gaya flight",
+                     "terminal"
+                 ]
+    },
+    {
+        "id":  "gay_vishnupad",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Vishnupad Temple (Falgu River Ghat / Pind Daan)",
+        "hindiName":  "विष्णुपद मंदिर (फल्गु नदी घाट)",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Vishnupad Temple Gate, Chand Chaura, Falgu River Bank, Gaya",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "vishnupad",
+                     "falgu river",
+                     "pind daan",
+                     "temple",
+                     "gaya ji",
+                     "shraddha"
+                 ]
+    },
+    {
+        "id":  "gay_giant_buddha",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Great 80-Foot Buddha Statue \u0026 Monasteries",
+        "hindiName":  "80 फीट बुद्ध प्रतिमा (बोधगया)",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Daijokyo Buddhist Temple Road, Bodh Gaya, Bihar 824231",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "giant buddha",
+                     "80 feet statue",
+                     "japanese temple",
+                     "thai monastery",
+                     "bodh gaya"
+                 ]
+    },
+    {
+        "id":  "gay_bus_stand",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Gaya Central Bus Stand / Sikaria More",
+        "hindiName":  "गया सेंट्रल बस स्टैंड",
+        "category":  "Bus Stand",
+        "icon":  "bus",
+        "address":  "Sikaria More, Bodh Gaya Bypass Road, Gaya",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "gaya bus stand",
+                     "bus terminal",
+                     "sikaria more",
+                     "interstate bus"
+                 ]
+    },
+    {
+        "id":  "gay_magadh_univ",
+        "cityId":  "gaya",
+        "cityName":  "Gaya (Bodh Gaya)",
+        "name":  "Magadh University Campus (Bodh Gaya)",
+        "hindiName":  "मगध विश्वविद्यालय परिसर",
+        "category":  "Government \u0026 University",
+        "icon":  "landmark",
+        "address":  "Main Administrative Gate, Bodh Gaya Road, Bodh Gaya",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "magadh university",
+                     "university",
+                     "bodh gaya road",
+                     "college"
+                 ]
+    },
+    {
+        "id":  "muz_jn",
+        "cityId":  "muzaffarpur",
+        "cityName":  "Muzaffarpur",
+        "name":  "Muzaffarpur Junction (Platform 1 - VIP Porch)",
+        "hindiName":  "मुजफ्फरपुर जंक्शन (प्लेटफॉर्म 1)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Platform 1 Gate, Station Road, Muzaffarpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "muzaffarpur junction",
+                     "train",
+                     "station",
+                     "station road",
+                     "mfp"
+                 ]
+    },
+    {
+        "id":  "muz_bairia_bus",
+        "cityId":  "muzaffarpur",
+        "cityName":  "Muzaffarpur",
+        "name":  "Bairia Bus Stand (Muzaffarpur ISBT)",
+        "hindiName":  "बैरिया बस स्टैंड (मुजफ्फरपुर)",
+        "category":  "Bus Stand",
+        "icon":  "bus",
+        "address":  "Bairia Golambar, NH-22 Crossing, Bairia, Muzaffarpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "bairia",
+                     "muzaffarpur bus stand",
+                     "isbt",
+                     "bus terminal",
+                     "nh-22"
+                 ]
+    },
+    {
+        "id":  "muz_skmch",
+        "cityId":  "muzaffarpur",
+        "cityName":  "Muzaffarpur",
+        "name":  "SKMCH (Sri Krishna Medical College \u0026 Hospital)",
+        "hindiName":  "एसकेएमसीएच अस्पताल (मुजफ्फरपुर)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "NH-57, Zero Mile Road, Umanagar, Muzaffarpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "skmch",
+                     "hospital",
+                     "medical college",
+                     "zero mile",
+                     "emergency"
+                 ]
+    },
+    {
+        "id":  "muz_mithanpura",
+        "cityId":  "muzaffarpur",
+        "cityName":  "Muzaffarpur",
+        "name":  "Mithanpura Chowk / Club Road",
+        "hindiName":  "मिठनपुरा चौक (क्लब रोड)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Mithanpura Chauraha, Club Road, Muzaffarpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "mithanpura",
+                     "club road",
+                     "commercial",
+                     "jubba sahni park"
+                 ]
+    },
+    {
+        "id":  "muz_gobarsahi",
+        "cityId":  "muzaffarpur",
+        "cityName":  "Muzaffarpur",
+        "name":  "Gobarsahi Chowk / Bhagwanpur NH-22",
+        "hindiName":  "गोबरसही चौक (भगवानपुर)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "NH-22, Bhagwanpur - Gobarsahi Bypass, Muzaffarpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "gobarsahi",
+                     "bhagwanpur",
+                     "nh-22",
+                     "patna highway gate"
+                 ]
+    },
+    {
+        "id":  "dar_airport",
+        "cityId":  "darbhanga",
+        "cityName":  "Darbhanga",
+        "name":  "Darbhanga Airport (DMB)",
+        "hindiName":  "दरभंगा हवाई अड्डा",
+        "category":  "Airport",
+        "icon":  "airport",
+        "address":  "Air Force Station Terminal Gate, Darbhanga, Bihar 846005",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "darbhanga airport",
+                     "airport",
+                     "flight",
+                     "dmb",
+                     "terminal",
+                     "mithila airport"
+                 ]
+    },
+    {
+        "id":  "dar_jn",
+        "cityId":  "darbhanga",
+        "cityName":  "Darbhanga",
+        "name":  "Darbhanga Junction (Platform 1 - Main Porch)",
+        "hindiName":  "दरभंगा जंक्शन (प्लेटफॉर्म 1)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Platform 1 Gate, Station Road, Darbhanga",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "darbhanga junction",
+                     "train",
+                     "station",
+                     "station road",
+                     "dbg"
+                 ]
+    },
+    {
+        "id":  "dar_dmch",
+        "cityId":  "darbhanga",
+        "cityName":  "Darbhanga",
+        "name":  "DMCH (Darbhanga Medical College \u0026 Hospital)",
+        "hindiName":  "डीएमसीएच अस्पताल (दरभंगा)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "DMCH Main Gate, Benta, Laheriasarai, Darbhanga",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "dmch",
+                     "hospital",
+                     "laheriasarai",
+                     "medical college",
+                     "benta"
+                 ]
+    },
+    {
+        "id":  "dar_laheriasarai",
+        "cityId":  "darbhanga",
+        "cityName":  "Darbhanga",
+        "name":  "Laheriasarai Collectorate / Court Complex",
+        "hindiName":  "लहेरियासराय समाहरणालय",
+        "category":  "Government \u0026 University",
+        "icon":  "landmark",
+        "address":  "Collectorate Campus, Court Road, Laheriasarai, Darbhanga",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "laheriasarai",
+                     "court",
+                     "collectorate",
+                     "dm office",
+                     "vip road"
+                 ]
+    },
+    {
+        "id":  "dar_raj_complex",
+        "cityId":  "darbhanga",
+        "cityName":  "Darbhanga",
+        "name":  "Raj Darbhanga Palace Complex / Shyama Mandir",
+        "hindiName":  "राज दरभंगा परिसर / श्यामा माई मंदिर",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Kameshwar Singh Campus, Shyama Mandir Road, Darbhanga",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "raj darbhanga",
+                     "shyama mandir",
+                     "palace",
+                     "kameshwar singh",
+                     "anand bagh"
+                 ]
+    },
+    {
+        "id":  "bha_jn",
+        "cityId":  "bhagalpur",
+        "cityName":  "Bhagalpur",
+        "name":  "Bhagalpur Junction (Platform 1 - Station Chowk)",
+        "hindiName":  "भागलपुर जंक्शन (प्लेटफॉर्म 1)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Platform 1 Gate, Station Chowk, Bhagalpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "bhagalpur junction",
+                     "train",
+                     "station",
+                     "station chowk",
+                     "bgp"
+                 ]
+    },
+    {
+        "id":  "bha_jlnmch",
+        "cityId":  "bhagalpur",
+        "cityName":  "Bhagalpur",
+        "name":  "JLNMCH Hospital (Mayaganj)",
+        "hindiName":  "जवाहरलाल नेहरू मेडिकल कॉलेज अस्पताल (मायागंज)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "Mayaganj Main Hospital Gate, Barari Road, Bhagalpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "jlnmch",
+                     "mayaganj",
+                     "hospital",
+                     "medical college",
+                     "emergency"
+                 ]
+    },
+    {
+        "id":  "bha_zero_mile",
+        "cityId":  "bhagalpur",
+        "cityName":  "Bhagalpur",
+        "name":  "Zero Mile Chowk / Barari NH-80",
+        "hindiName":  "जीरो माइल (बरारी)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Zero Mile Chowk, Barari Bypass, Bhagalpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "zero mile",
+                     "barari",
+                     "nh-80",
+                     "vikramshila setu gate"
+                 ]
+    },
+    {
+        "id":  "nal_rajgir_ropeway",
+        "cityId":  "nalanda",
+        "cityName":  "Nalanda (Bihar Sharif / Rajgir)",
+        "name":  "Rajgir Ropeway \u0026 Vishwa Shanti Stupa",
+        "hindiName":  "राजगीर रोपवे एवं विश्व शांति स्तूप",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Ropeway Base Station, Ratnagiri Hills, Rajgir, Nalanda",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "rajgir",
+                     "ropeway",
+                     "shanti stupa",
+                     "ratnagiri",
+                     "glass bridge",
+                     "safari"
+                 ]
+    },
+    {
+        "id":  "nal_hot_springs",
+        "cityId":  "nalanda",
+        "cityName":  "Nalanda (Bihar Sharif / Rajgir)",
+        "name":  "Rajgir Brahmakund (Natural Hot Springs)",
+        "hindiName":  "राजगीर ब्रह्मकुंड (गर्म जल कुंड)",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Brahmakund Gate, Vaibhava Hill Base, Rajgir, Nalanda",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "brahmakund",
+                     "hot spring",
+                     "kund",
+                     "rajgir",
+                     "suraj kund"
+                 ]
+    },
+    {
+        "id":  "nal_ruins",
+        "cityId":  "nalanda",
+        "cityName":  "Nalanda (Bihar Sharif / Rajgir)",
+        "name":  "Nalanda Ancient University Ruins (UNESCO Site)",
+        "hindiName":  "नालंदा विश्वविद्यालय भग्नावशेष",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Main Entrance Gate, Nalanda Ruins Complex, Bargaon, Nalanda",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "nalanda",
+                     "ruins",
+                     "ancient university",
+                     "unesco",
+                     "museum"
+                 ]
+    },
+    {
+        "id":  "nal_bihar_sharif_bus",
+        "cityId":  "nalanda",
+        "cityName":  "Nalanda (Bihar Sharif / Rajgir)",
+        "name":  "Bihar Sharif (Ramchandrapur Bus Stand)",
+        "hindiName":  "बिहारशरीफ (रामचंद्रपुर बस स्टैंड)",
+        "category":  "Bus Stand",
+        "icon":  "bus",
+        "address":  "Ramchandrapur Bus Stand, Ranchi Road, Bihar Sharif, Nalanda",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "bihar sharif",
+                     "ramchandrapur",
+                     "bus stand",
+                     "ranchi road"
+                 ]
+    },
+    {
+        "id":  "ara_jn",
+        "cityId":  "bhojpur",
+        "cityName":  "Bhojpur (Ara)",
+        "name":  "Ara Junction (Platform 1 - Main Porch)",
+        "hindiName":  "आरा जंक्शन (प्लेटफॉर्म 1)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Platform 1 Gate, Station Road, Ara, Bhojpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "ara junction",
+                     "train",
+                     "station",
+                     "bhojpur",
+                     "ara"
+                 ]
+    },
+    {
+        "id":  "ara_zero_mile",
+        "cityId":  "bhojpur",
+        "cityName":  "Bhojpur (Ara)",
+        "name":  "Zero Mile Chowk (Patna Highway Gateway)",
+        "hindiName":  "जीरो माइल (आरा)",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Zero Mile, Patna-Buxar Four Lane, Ara, Bhojpur",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "zero mile",
+                     "ara",
+                     "patna highway",
+                     "koelwar gate"
+                 ]
+    },
+    {
+        "id":  "beg_jn",
+        "cityId":  "begusarai",
+        "cityName":  "Begusarai",
+        "name":  "Begusarai Railway Station (Platform 1)",
+        "hindiName":  "बेगूसराय रेलवे स्टेशन",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Station Porch, Station Road, Begusarai",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "begusarai",
+                     "railway station",
+                     "train",
+                     "station road"
+                 ]
+    },
+    {
+        "id":  "beg_refinery",
+        "cityId":  "begusarai",
+        "cityName":  "Begusarai",
+        "name":  "Barauni IOCL Refinery Township Gate",
+        "hindiName":  "बरौनी रिफाइनरी टाउनशिप गेट",
+        "category":  "Commercial \u0026 Localities",
+        "icon":  "landmark",
+        "address":  "Refinery Gate 1, IOCL Township, Barauni, Begusarai",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "iocl",
+                     "refinery",
+                     "barauni",
+                     "township"
+                 ]
+    },
+    {
+        "id":  "pur_line_bazar",
+        "cityId":  "purnia",
+        "cityName":  "Purnia",
+        "name":  "Line Bazar Medical Hub (Purnia)",
+        "hindiName":  "लाइन बाजार (पूर्णिया)",
+        "category":  "Hospital",
+        "icon":  "hospital",
+        "address":  "Line Bazar Medical Chowk, Purnia, Bihar",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "line bazar",
+                     "purnia",
+                     "hospital hub",
+                     "medical"
+                 ]
+    },
+    {
+        "id":  "pur_bus_stand",
+        "cityId":  "purnia",
+        "cityName":  "Purnia",
+        "name":  "Purnia Central Bus Stand (Bhatta Bazar)",
+        "hindiName":  "पूर्णिया बस स्टैंड",
+        "category":  "Bus Stand",
+        "icon":  "bus",
+        "address":  "Central Bus Stand, Bhatta Bazar Road, Purnia",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "purnia bus stand",
+                     "bus stand",
+                     "bhatta bazar"
+                 ]
+    },
+    {
+        "id":  "var_temple",
+        "cityId":  "varanasi",
+        "cityName":  "Varanasi (Kashi)",
+        "name":  "Kashi Vishwanath Temple Corridor (Godowlia Gate)",
+        "hindiName":  "काशी विश्वनाथ मंदिर कॉरिडोर (गोदौलिया गेट)",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "Gate No. 4, Godowlia - Dashashwamedh Ghat Road, Varanasi",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "kashi vishwanath",
+                     "temple",
+                     "dashashwamedh ghat",
+                     "godowlia",
+                     "varanasi"
+                 ]
+    },
+    {
+        "id":  "var_cantt",
+        "cityId":  "varanasi",
+        "cityName":  "Varanasi (Kashi)",
+        "name":  "Varanasi Junction (Cantt Station - Platform 1)",
+        "hindiName":  "वाराणसी कैंट रेलवे स्टेशन",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Cantt Main Station Porch, Station Road, Varanasi",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "varanasi cantt",
+                     "bsb",
+                     "train",
+                     "station",
+                     "cantt"
+                 ]
+    },
+    {
+        "id":  "var_airport",
+        "cityId":  "varanasi",
+        "cityName":  "Varanasi (Kashi)",
+        "name":  "Lal Bahadur Shastri International Airport (VNS)",
+        "hindiName":  "लाल बहादुर शास्त्री अंतर्राष्ट्रीय हवाई अड्डा (बाबतपुर)",
+        "category":  "Airport",
+        "icon":  "airport",
+        "address":  "Airport Terminal, Babatpur, Varanasi, Uttar Pradesh 221006",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "varanasi airport",
+                     "vns",
+                     "babatpur",
+                     "flight",
+                     "airport"
+                 ]
+    },
+    {
+        "id":  "deo_temple",
+        "cityId":  "deoghar",
+        "cityName":  "Deoghar (Baba Baidyanath)",
+        "name":  "Baba Baidyanath Jyotirlinga Temple (VIP Gate)",
+        "hindiName":  "बाबा बैद्यनाथ धाम मंदिर (वीआईपी गेट)",
+        "category":  "Pilgrim \u0026 Heritage",
+        "icon":  "landmark",
+        "address":  "VIP Entry Gate, Shivganga Path, Deoghar, Jharkhand",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "baidyanath dham",
+                     "baba dham",
+                     "jyotirlinga",
+                     "deoghar",
+                     "temple",
+                     "shivganga"
+                 ]
+    },
+    {
+        "id":  "deo_airport",
+        "cityId":  "deoghar",
+        "cityName":  "Deoghar (Baba Baidyanath)",
+        "name":  "Deoghar International Airport (DGH)",
+        "hindiName":  "देवघर हवाई अड्डा",
+        "category":  "Airport",
+        "icon":  "airport",
+        "address":  "Airport Terminal, Kunda, Deoghar, Jharkhand 814143",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "deoghar airport",
+                     "dgh",
+                     "flight",
+                     "airport",
+                     "kunda"
+                 ]
+    },
+    {
+        "id":  "ran_airport",
+        "cityId":  "ranchi",
+        "cityName":  "Ranchi",
+        "name":  "Birsa Munda Airport (IXR) - Hinoo",
+        "hindiName":  "बिरसा मुंडा हवाई अड्डा (राँची)",
+        "category":  "Airport",
+        "icon":  "airport",
+        "address":  "Terminal 1 Gate, Hinoo, Ranchi, Jharkhand 834002",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "ranchi airport",
+                     "ixr",
+                     "birsa munda",
+                     "hinoo",
+                     "airport"
+                 ]
+    },
+    {
+        "id":  "ran_station",
+        "cityId":  "ranchi",
+        "cityName":  "Ranchi",
+        "name":  "Ranchi Junction (Platform 1 - Main Gate)",
+        "hindiName":  "राँची जंक्शन (प्लेटफॉर्म 1)",
+        "category":  "Railway Station",
+        "icon":  "railway",
+        "address":  "Platform 1 Gate, Chutia, Station Road, Ranchi",
+        "popular":  true,
+        "pickupSupported":  true,
+        "dropSupported":  true,
+        "tags":  [
+                     "ranchi junction",
+                     "rnc",
+                     "train",
+                     "station",
+                     "chutia"
+                 ]
+    }
+]

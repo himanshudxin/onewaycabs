@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /data/
+Disallow: /api/
+
+Sitemap: https://onewaytaxibihar.com/sitemap.xml

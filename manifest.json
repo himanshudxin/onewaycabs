@@ -1,0 +1,43 @@
+{
+  "name": "OneWayTaxiBihar - Fixed Rate Intercity Cabs",
+  "short_name": "OneWayTaxi",
+  "description": "Book one way outstation cabs online across all 38 districts of Bihar with zero return fare and 24x7 Patna helpline.",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#0070f3",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "transportation", "business"],
+  "shortcuts": [
+    {
+      "name": "Book One-Way Cab",
+      "short_name": "Book Cab",
+      "description": "Calculate instant fixed fare and book cab",
+      "url": "/#booking-hero",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Call Patna Helpdesk",
+      "short_name": "Call Support",
+      "description": "Direct call to 24x7 Bihar customer helpline",
+      "url": "tel:+918002141816",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "WhatsApp Dispatch",
+      "short_name": "WhatsApp",
+      "description": "Chat with 24x7 Bihar cab dispatch desk",
+      "url": "https://wa.me/917281851011",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}
