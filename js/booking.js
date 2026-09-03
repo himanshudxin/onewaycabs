@@ -96,6 +96,87 @@ class BookingManager {
     }
 
     this.calculateAndRenderFares();
+    this.restoreState();
+  }
+
+  saveState() {
+    try {
+      const nameVal = document.getElementById("chk-name")?.value;
+      const phoneVal = document.getElementById("chk-phone")?.value;
+      const emailVal = document.getElementById("chk-email")?.value;
+      const pickupAddrVal = document.getElementById("chk-pickup-addr")?.value;
+      const dropAddrVal = document.getElementById("chk-drop-addr")?.value;
+
+      if (nameVal !== undefined) this.passengerDetails.name = nameVal.trim();
+      if (phoneVal !== undefined) this.passengerDetails.phone = phoneVal.trim();
+      if (emailVal !== undefined) this.passengerDetails.email = emailVal.trim();
+      if (pickupAddrVal !== undefined) this.passengerDetails.pickupAddress = pickupAddrVal.trim();
+      if (dropAddrVal !== undefined) this.passengerDetails.dropAddress = dropAddrVal.trim();
+
+      const state = {
+        tripType: this.tripType,
+        originCity: this.originCity,
+        destCity: this.destCity,
+        pickupDate: this.pickupDate,
+        pickupTime: this.pickupTime,
+        returnDate: this.returnDate,
+        localPackageId: this.localPackageId,
+        selectedCabId: this.selectedCabId,
+        calculatedDistanceKm: this.calculatedDistanceKm,
+        calculatedDuration: this.calculatedDuration,
+        calculatedToll: this.calculatedToll,
+        passengerDetails: this.passengerDetails,
+        paymentMethod: document.querySelector('input[name="pay-method"]:checked')?.value || this.paymentMethod,
+        useWallet: document.getElementById("chk-use-wallet")?.checked ?? true
+      };
+      sessionStorage.setItem("otb_booking_state", JSON.stringify(state));
+      if (this.passengerDetails.name || this.passengerDetails.phone) {
+        localStorage.setItem("otb_passenger_cache", JSON.stringify(this.passengerDetails));
+      }
+    } catch (e) {
+      console.warn("Could not save booking state:", e);
+    }
+  }
+
+  restoreState() {
+    try {
+      const raw = sessionStorage.getItem("otb_booking_state");
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s.tripType) this.tripType = s.tripType;
+        if (s.originCity) this.originCity = s.originCity;
+        if (s.destCity) this.destCity = s.destCity;
+        if (s.pickupDate) this.pickupDate = s.pickupDate;
+        if (s.pickupTime) this.pickupTime = s.pickupTime;
+        if (s.returnDate) this.returnDate = s.returnDate;
+        if (s.localPackageId) this.localPackageId = s.localPackageId;
+        if (s.selectedCabId) this.selectedCabId = s.selectedCabId;
+        if (s.calculatedDistanceKm) this.calculatedDistanceKm = s.calculatedDistanceKm;
+        if (s.calculatedDuration) this.calculatedDuration = s.calculatedDuration;
+        if (s.calculatedToll) this.calculatedToll = s.calculatedToll;
+        if (s.passengerDetails) Object.assign(this.passengerDetails, s.passengerDetails);
+        if (s.paymentMethod) this.paymentMethod = s.paymentMethod;
+
+        // Restore DOM inputs
+        const formatCityLabel = (c) => c ? `${c.name}${c.district && c.district !== c.name && c.type !== 'airport' ? ', ' + c.district : ''} (${c.hindiName || ''}), ${c.state}` : "";
+        const pInput = document.getElementById("input-pickup");
+        const dInput = document.getElementById("input-drop");
+        const dateInput = document.getElementById("pickup-date-input");
+        const timeSelect = document.getElementById("pickup-time-select");
+
+        if (pInput && this.originCity) pInput.value = formatCityLabel(this.originCity);
+        if (dInput && this.destCity) dInput.value = formatCityLabel(this.destCity);
+        if (dateInput && this.pickupDate) dateInput.value = this.pickupDate;
+        if (timeSelect && this.pickupTime) timeSelect.value = this.pickupTime;
+      } else {
+        const pCache = localStorage.getItem("otb_passenger_cache");
+        if (pCache) {
+          Object.assign(this.passengerDetails, JSON.parse(pCache));
+        }
+      }
+    } catch (e) {
+      console.warn("Could not restore booking state:", e);
+    }
   }
 
   setDefaultDates() {
@@ -1085,6 +1166,8 @@ class BookingManager {
         section.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 120);
       window.showToast(`Outstation Fares Calculated: ${this.originCity.name} to ${this.destCity.name}`, "success");
+      history.pushState({ step: "cabs" }, "", "#cabs");
+      this.saveState();
     }
 
     return true;
@@ -1842,8 +1925,20 @@ class BookingManager {
 
     checkoutModal.classList.add("open");
     document.body.classList.add("modal-open");
-    history.pushState({ modal: "modal-checkout" }, "", "#modal-checkout");
+    history.pushState({ modal: "modal-checkout", step: "checkout" }, "", "#checkout");
+    this.saveState();
     this.setupCheckoutLocationAutocomplete();
+    this.setupCheckoutFormPersistence();
+  }
+
+  setupCheckoutFormPersistence() {
+    const fields = ["chk-name", "chk-phone", "chk-email", "chk-pickup-addr", "chk-drop-addr"];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("input", () => this.saveState());
+      }
+    });
   }
 
   toggleFareBreakdown() {

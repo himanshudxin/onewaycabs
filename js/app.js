@@ -1222,12 +1222,37 @@ window.copyUpiId = (upiId, btnEl) => {
   }
 };
 
-// Global Back Navigation Handler (Supports Android Physical Back, Browser Back, and Modal Back Buttons)
+// Global Back Navigation Handler (Supports Android Physical Back, Browser Back, Swipe Back, and Modal Back Buttons)
 window.handleBackNavigation = () => {
+  const drawer = document.getElementById("mobile-drawer");
+  if (drawer && drawer.classList.contains("open")) {
+    window.closeMobileDrawer(true);
+    return;
+  }
+
+  const openModal = document.querySelector(".modal-overlay.open");
+  if (openModal) {
+    const isCheckout = openModal.id === "modal-checkout";
+    window.closeAllModals(false);
+    if (isCheckout) {
+      const fleetSection = document.getElementById("cab-selection-section") || document.getElementById("results-section");
+      if (fleetSection) {
+        fleetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+    if (window.history.length > 1 && window.location.hash) {
+      try {
+        history.back();
+      } catch (e) {}
+    }
+    return;
+  }
+
   if (window.history.length > 1) {
     window.history.back();
   } else {
     window.closeAllModals(false);
+    window.closeMobileDrawer(false);
   }
 };
 
@@ -1241,28 +1266,61 @@ window.openHelpModal = () => {
   }
 };
 
-// Phone/Browser Back Button & Swipe Back Handler (Preserves all form data)
-window.addEventListener("popstate", () => {
+// Phone / Browser Back Button & Swipe Back Handler (Preserves all form data)
+window.addEventListener("popstate", (e) => {
+  // 1. Close mobile drawer if open
+  const drawer = document.getElementById("mobile-drawer");
+  if (drawer && drawer.classList.contains("open")) {
+    drawer.classList.remove("open");
+    document.body.classList.remove("drawer-open");
+    return;
+  }
+
+  // 2. Handle active modal if open
   const openModal = document.querySelector(".modal-overlay.open");
   if (openModal) {
     const isCheckout = openModal.id === "modal-checkout";
     window.closeAllModals(false);
+
+    // If returning from checkout, return focus to cab selection
     if (isCheckout) {
       const fleetSection = document.getElementById("cab-selection-section") || document.getElementById("results-section");
       if (fleetSection) {
         fleetSection.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }
+    return;
   }
-  const drawer = document.getElementById("mobile-drawer");
-  if (drawer && drawer.classList.contains("open")) {
-    drawer.classList.remove("open");
+
+  // 3. Handle step back from cab selection to hero booking form
+  if (!window.location.hash || window.location.hash === "#hero" || window.location.hash === "") {
+    const hero = document.getElementById("booking-hero");
+    if (hero) {
+      hero.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 });
 
-window.closeMobileDrawer = () => {
+window.openMobileDrawer = () => {
   const d = document.getElementById("mobile-drawer");
-  if (d) d.classList.remove("open");
+  if (d) {
+    d.classList.add("open");
+    document.body.classList.add("drawer-open");
+    history.pushState({ drawer: true }, "", "#menu");
+  }
+};
+
+window.closeMobileDrawer = (updateHistory = true) => {
+  const d = document.getElementById("mobile-drawer");
+  if (d && d.classList.contains("open")) {
+    d.classList.remove("open");
+    document.body.classList.remove("drawer-open");
+    if (updateHistory && window.location.hash === "#menu") {
+      try {
+        history.back();
+      } catch (e) {}
+    }
+  }
 };
 
 function setupMobileDrawer() {
@@ -1270,7 +1328,11 @@ function setupMobileDrawer() {
   const drawer = document.getElementById("mobile-drawer");
   if (btn && drawer) {
     btn.addEventListener("click", () => {
-      drawer.classList.toggle("open");
+      if (drawer.classList.contains("open")) {
+        window.closeMobileDrawer(true);
+      } else {
+        window.openMobileDrawer();
+      }
     });
   }
 }
