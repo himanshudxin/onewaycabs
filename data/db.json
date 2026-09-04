@@ -1,69 +1,109 @@
-{
-  "users": [],
-  "sessions": [],
-  "bookings": [],
-  "drivers": [
-    {
-      "id": "drv_101",
-      "name": "Ramesh Kumar Sharma",
-      "phone": "+91 94310 12345",
-      "pin": "1234",
-      "vehicleNumber": "BR 01 PA 4921",
-      "vehicleModel": "Swift Dzire (White)",
-      "fleetTier": "sedan",
-      "rating": 4.9,
-      "totalTrips": 342,
-      "status": "Available"
-    },
-    {
-      "id": "drv_102",
-      "name": "Amit Kumar Singh",
-      "phone": "+91 98350 67890",
-      "pin": "5678",
-      "vehicleNumber": "BR 01 PB 7712",
-      "vehicleModel": "Maruti Ertiga (Silver)",
-      "fleetTier": "suv",
-      "rating": 4.85,
-      "totalTrips": 286,
-      "status": "Available"
-    },
-    {
-      "id": "drv_103",
-      "name": "Rajesh Ranjan",
-      "phone": "+91 70041 22334",
-      "pin": "2468",
-      "vehicleNumber": "BR 01 PC 3189",
-      "vehicleModel": "WagonR (Grey)",
-      "fleetTier": "hatchback",
-      "rating": 4.8,
-      "totalTrips": 195,
-      "status": "Available"
-    },
-    {
-      "id": "drv_104",
-      "name": "Sanjay Paswan",
-      "phone": "+91 82103 44556",
-      "pin": "1357",
-      "vehicleNumber": "BR 01 PD 6024",
-      "vehicleModel": "Honda City (Brown)",
-      "fleetTier": "sedan_prime",
-      "rating": 4.95,
-      "totalTrips": 412,
-      "status": "Available"
-    }
-  ],
-  "payments": [],
-  "wallet_ledger": [],
-  "audit_logs": [],
-  "admins": [
-    {
-      "id": "adm_01",
-      "username": "admin",
-      "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-      "name": "Patna Central Dispatch",
-      "role": "SUPER_ADMIN"
-    }
-  ],
-  "reviews": [],
-  "leads": []
+﻿{
+    "users":  [
+
+              ],
+    "sessions":  [
+
+                 ],
+    "bookings":  [
+
+                 ],
+    "drivers":  [
+                    {
+                        "id":  "drv_101",
+                        "name":  "Ramesh Kumar Sharma",
+                        "phone":  "+91 94310 12345",
+                        "pin":  "1234",
+                        "vehicleNumber":  "BR 01 PA 4921",
+                        "vehicleModel":  "Swift Dzire (White)",
+                        "fleetTier":  "sedan",
+                        "rating":  4.9,
+                        "totalTrips":  342,
+                        "status":  "Available"
+                    },
+                    {
+                        "id":  "drv_102",
+                        "name":  "Amit Kumar Singh",
+                        "phone":  "+91 98350 67890",
+                        "pin":  "5678",
+                        "vehicleNumber":  "BR 01 PB 7712",
+                        "vehicleModel":  "Maruti Ertiga (Silver)",
+                        "fleetTier":  "suv",
+                        "rating":  4.85,
+                        "totalTrips":  286,
+                        "status":  "Available"
+                    },
+                    {
+                        "id":  "drv_103",
+                        "name":  "Rajesh Ranjan",
+                        "phone":  "+91 70041 22334",
+                        "pin":  "2468",
+                        "vehicleNumber":  "BR 01 PC 3189",
+                        "vehicleModel":  "WagonR (Grey)",
+                        "fleetTier":  "hatchback",
+                        "rating":  4.8,
+                        "totalTrips":  195,
+                        "status":  "Available"
+                    },
+                    {
+                        "id":  "drv_104",
+                        "name":  "Sanjay Paswan",
+                        "phone":  "+91 82103 44556",
+                        "pin":  "1357",
+                        "vehicleNumber":  "BR 01 PD 6024",
+                        "vehicleModel":  "Honda City (Brown)",
+                        "fleetTier":  "sedan_prime",
+                        "rating":  4.95,
+                        "totalTrips":  412,
+                        "status":  "Available"
+                    }
+                ],
+    "payments":  [
+
+                 ],
+    "wallet_ledger":  [
+
+                      ],
+    "audit_logs":  [
+
+                   ],
+    "admins":  [
+                   {
+                       "id":  "adm_01",
+                       "username":  "admin",
+                       "passwordHash":  "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+                       "name":  "Patna Central Dispatch",
+                       "role":  "SUPER_ADMIN"
+                   }
+               ],
+    "reviews":  [
+
+                ],
+    "leads":  [
+
+              ],
+    "vehicles":  [
+
+                 ],
+    "payment_transactions":  [
+
+                             ],
+    "wallet":  [
+
+               ],
+    "wallet_transactions":  [
+
+                            ],
+    "routes":  [
+
+               ],
+    "fare_rules":  [
+
+                   ],
+    "invoices":  [
+
+                 ],
+    "notifications":  [
+
+                      ]
 }

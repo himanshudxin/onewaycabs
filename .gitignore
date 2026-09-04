@@ -14,3 +14,11 @@ PREVIEW_URL.txt
 
 # Cloudflared binary if ever downloaded locally
 cloudflared.exe
+
+# Environment & Secrets
+.env
+.env.local
+.env.production
+
+# Backups
+data/backups/

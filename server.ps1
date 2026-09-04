@@ -25,6 +25,11 @@ function Send-JsonResponse($response, $statusCode, $object) {
         $response.AddHeader("Access-Control-Allow-Origin", "*")
         $response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
         $response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        $response.AddHeader("X-Content-Type-Options", "nosniff")
+        $response.AddHeader("X-Frame-Options", "SAMEORIGIN")
+        $response.AddHeader("X-XSS-Protection", "1; mode=block")
+        $response.AddHeader("Referrer-Policy", "strict-origin-when-cross-origin")
+        $response.AddHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:; font-src 'self' https: data:; img-src 'self' https: data: blob:;")
         $response.ContentLength64 = $bytes.Length
         $response.OutputStream.Write($bytes, 0, $bytes.Length)
     } catch {
@@ -461,6 +466,27 @@ try {
                             continue
                         }
 
+                        # Deduplication: check if same passenger requested identical route within 15 seconds (Req 292, 293, 294)
+                        $recentCutoff = (Get-Date).AddSeconds(-15)
+                        $existingRecent = $db.bookings | Where-Object {
+                            $bPhoneClean = ($_.passengerPhone -replace '\D', '')
+                            $bPhoneClean -like "*$cleanPhone" -and
+                            $_.originCity -eq $body.originCity -and
+                            $_.destCity -eq $body.destCity -and
+                            ([DateTime]$_.createdAt) -gt $recentCutoff
+                        } | Select-Object -First 1
+
+                        if ($existingRecent) {
+                            Send-JsonResponse $response 200 @{
+                                success = $true
+                                booking = $existingRecent
+                                ride = $existingRecent
+                                message = "Booking request already received. Dispatch will call in 5 mins."
+                                deduplicated = $true
+                            }
+                            continue
+                        }
+
                         # Server-side fare recalculation (tamper-proof)
                         $fareData = Calculate-ServerFare $body.originCity $body.destCity $body.cabTier "oneway"
                         $baseTotal = $fareData.totalFare
@@ -559,6 +585,32 @@ try {
                         }
 
                         $db.bookings = @($newBooking) + @($db.bookings)
+
+                        # Notification Pipeline (Req 299, 300)
+                        if ($db.PSObject.Properties.Match('notifications').Count -eq 0) {
+                            $db | Add-Member -MemberType NoteProperty -Name "notifications" -Value @() -Force
+                        }
+                        $db.notifications += @{
+                            id = "NOTIF_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                            bookingId = $bookingId
+                            recipient = "admin"
+                            type = "NEW_BOOKING_REQUEST"
+                            title = "New Booking: $bookingId"
+                            message = "New cab request from $($body.originCity) to $($body.destCity) for $($body.passengerName) (+91 $cleanPhone)."
+                            createdAt = (Get-Date).ToString("o")
+                            read = $false
+                        }
+                        $db.notifications += @{
+                            id = "NOTIF_" + ([DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() + 1)
+                            bookingId = $bookingId
+                            recipient = "+91 $cleanPhone"
+                            type = "BOOKING_REQUESTED"
+                            title = "Booking Request Received"
+                            message = "Your Bihar outstation cab request $bookingId is received. Agent will call in 5 mins."
+                            createdAt = (Get-Date).ToString("o")
+                            read = $false
+                        }
+
                         Save-Db $db
 
                         Send-JsonResponse $response 201 @{
@@ -895,15 +947,133 @@ try {
                 }
 
                 if ($urlPath -eq "/api/driver/status" -and $httpMethod -eq "POST") {
+                    $header = $request.Headers["Authorization"]
+                    $token = if ($header) { $header -replace '^Bearer\s+', '' } else { "" }
+                    $sess = $db.sessions | Where-Object { $_.token -eq $token -and $_.role -eq "driver" } | Select-Object -First 1
+                    if (-not $sess) {
+                        Send-JsonResponse $response 401 @{ success = $false; message = "Driver unauthorized" }
+                        continue
+                    }
+
                     $body = Read-RequestBody $request
                     $b = $db.bookings | Where-Object { $_.bookingId -eq $body.bookingId } | Select-Object -First 1
-                    if ($b) {
-                        $b | Add-Member -MemberType NoteProperty -Name "bookingStatus" -Value $body.newStatus -Force
-                        Save-Db $db
-                        Send-JsonResponse $response 200 @{ success = $true; booking = $b }
-                    } else {
+                    if (-not $b) {
                         Send-JsonResponse $response 404 @{ success = $false; message = "Trip not found" }
+                        continue
                     }
+
+                    # Enforce trip ownership (Req 176, 214)
+                    if ($b.assignedDriverId -ne $sess.driverId) {
+                        Send-JsonResponse $response 403 @{ success = $false; message = "Forbidden: trip not assigned to you" }
+                        continue
+                    }
+
+                    # Enforce allowed driver statuses only (Req 49, 53, 175)
+                    # State Machine: DRIVER ON THE WAY -> ARRIVED -> TRIP STARTED -> COMPLETED
+                    $allowedDriverStatuses = @("DRIVER ON THE WAY", "ARRIVED", "TRIP STARTED", "COMPLETED", "ACCEPTED")
+                    $reqRaw = if ($body.newStatus) { $body.newStatus.ToString() } else { "" }
+                    $requestedStatus = $reqRaw.ToUpper()
+                    if ($allowedDriverStatuses -notcontains $requestedStatus) {
+                        Send-JsonResponse $response 403 @{
+                            success = $false
+                            message = "Forbidden: drivers cannot set status to '$requestedStatus'. Permitted driver statuses: $($allowedDriverStatuses -join ', ')"
+                        }
+                        continue
+                    }
+
+                    $drv = $db.drivers | Where-Object { $_.id -eq $sess.driverId } | Select-Object -First 1
+                    $drvName = if ($drv) { $drv.name } else { "Driver" }
+
+                    $b | Add-Member -MemberType NoteProperty -Name "bookingStatus" -Value $requestedStatus -Force
+                    if (-not $b.statusHistory) { $b.statusHistory = @() }
+                    $b.statusHistory += @{
+                        status = $requestedStatus
+                        timestamp = (Get-Date).ToString("o")
+                        actor = "Driver ($drvName)"
+                        note = if ($body.note) { $body.note } else { "Status updated by chauffeur" }
+                    }
+
+                    $db.audit_logs += @{
+                        id = "AUD_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                        entity = "BOOKING"
+                        entityId = $b.bookingId
+                        action = "DRIVER_STATUS_UPDATE"
+                        actor = "driver_$($sess.driverId)"
+                        details = "Status changed to $requestedStatus by $drvName"
+                        createdAt = (Get-Date).ToString("o")
+                    }
+
+                    Save-Db $db
+                    Send-JsonResponse $response 200 @{ success = $true; booking = $b }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/admin/status" -and $httpMethod -eq "POST") {
+                    $body = Read-RequestBody $request
+                    $b = $db.bookings | Where-Object { $_.bookingId -eq $body.bookingId } | Select-Object -First 1
+                    if (-not $b) {
+                        Send-JsonResponse $response 404 @{ success = $false; message = "Booking not found" }
+                        continue
+                    }
+
+                    $rawStatus = if ($body.newStatus) { $body.newStatus.ToString() } else { "" }
+                    $newStatus = $rawStatus.ToUpper()
+                    $b | Add-Member -MemberType NoteProperty -Name "bookingStatus" -Value $newStatus -Force
+                    if (-not $b.statusHistory) { $b.statusHistory = @() }
+                    $noteMsg = if ($body.note) { $body.note } else { "Status updated by admin dispatch desk" }
+                    $b.statusHistory += @{
+                        status = $newStatus
+                        timestamp = (Get-Date).ToString("o")
+                        actor = "Admin Dispatcher"
+                        note = $noteMsg
+                    }
+
+                    # If status is CANCELLED or REJECTED, refund wallet if deducted (Req 151)
+                    if (($newStatus -eq "CANCELLED" -or $newStatus -eq "REJECTED") -and $b.walletUsed -gt 0) {
+                        $u = $db.users | Where-Object { $_.id -eq $b.customerId } | Select-Object -First 1
+                        if ($u) {
+                            $u.walletBalance = ($u.walletBalance + $b.walletUsed)
+                            $db.wallet_ledger += @{
+                                id = "WLT_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                                userId = $u.id
+                                phone = $u.phone
+                                type = "REFUND"
+                                amount = $b.walletUsed
+                                balanceAfter = $u.walletBalance
+                                description = "Refund for $newStatus booking " + $b.bookingId
+                                createdAt = (Get-Date).ToString("o")
+                            }
+                        }
+                    }
+
+                    $db.audit_logs += @{
+                        id = "AUD_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                        entity = "BOOKING"
+                        entityId = $b.bookingId
+                        action = "ADMIN_STATUS_UPDATE"
+                        actor = "admin"
+                        details = "Status set to $newStatus ($noteMsg)"
+                        createdAt = (Get-Date).ToString("o")
+                    }
+
+                    Save-Db $db
+                    Send-JsonResponse $response 200 @{ success = $true; booking = $b }
+                    continue
+                }
+
+                if ($urlPath -eq "/api/logs/client-error" -and $httpMethod -eq "POST") {
+                    $body = Read-RequestBody $request
+                    $db.audit_logs += @{
+                        id = "LOG_" + [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+                        entity = "CLIENT_ERROR"
+                        entityId = if ($body.url) { $body.url } else { "frontend" }
+                        action = "FRONTEND_ERROR"
+                        actor = "client"
+                        details = "$($body.message) at $($body.source):$($body.lineno)"
+                        createdAt = (Get-Date).ToString("o")
+                    }
+                    Save-Db $db
+                    Send-JsonResponse $response 200 @{ success = $true }
                     continue
                 }
 
@@ -946,15 +1116,31 @@ try {
                 $response.ContentLength64 = $bytes.Length
                 $response.StatusCode = 200
                 $response.AddHeader("Access-Control-Allow-Origin", "*")
+                $response.AddHeader("Cache-Control", "public, max-age=86400")
+                $response.AddHeader("X-Content-Type-Options", "nosniff")
+                $response.AddHeader("X-Frame-Options", "SAMEORIGIN")
+                $response.AddHeader("X-XSS-Protection", "1; mode=block")
+                $response.AddHeader("Referrer-Policy", "strict-origin-when-cross-origin")
+                $response.AddHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:; font-src 'self' https: data:; img-src 'self' https: data: blob:;")
                 if ($httpMethod -ne "HEAD") {
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
                 }
                 $response.Close()
             } else {
-                $response.StatusCode = 404
-                $msg = [System.Text.Encoding]::UTF8.GetBytes("404 Not Found: $localPath")
-                $response.ContentLength64 = $msg.Length
-                $response.OutputStream.Write($msg, 0, $msg.Length)
+                # Serve custom 404.html if available (Req 395)
+                $custom404 = Join-Path $workspacePath "404.html"
+                if (Test-Path $custom404) {
+                    $bytes = [System.IO.File]::ReadAllBytes($custom404)
+                    $response.ContentType = "text/html; charset=utf-8"
+                    $response.StatusCode = 404
+                    $response.ContentLength64 = $bytes.Length
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                } else {
+                    $response.StatusCode = 404
+                    $msg = [System.Text.Encoding]::UTF8.GetBytes("404 Not Found: $localPath")
+                    $response.ContentLength64 = $msg.Length
+                    $response.OutputStream.Write($msg, 0, $msg.Length)
+                }
                 $response.Close()
             }
         } catch {

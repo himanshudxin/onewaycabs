@@ -537,8 +537,64 @@ window.openMyTripsModal = async () => {
   const cancelledRides = rides.filter(r => r.bookingStatus === 'CANCELLED');
 
   const renderRideCard = (r, isUpcoming = false) => {
-    const statusColor = r.bookingStatus === 'REQUESTED' ? '#f59e0b' : (r.bookingStatus === 'CANCELLED' ? '#ef4444' : 'var(--owc-success)');
-    const statusBg = r.bookingStatus === 'REQUESTED' ? 'rgba(245, 158, 11, 0.12)' : (r.bookingStatus === 'CANCELLED' ? 'rgba(239, 68, 68, 0.12)' : 'rgba(16, 185, 129, 0.12)');
+    let statusLabel = r.bookingStatus || 'REQUESTED';
+    let statusColor = '#059669';
+    let statusBg = 'rgba(5, 150, 105, 0.12)';
+
+    switch(statusLabel) {
+      case 'REQUESTED':
+        statusLabel = 'REQUESTED (Call in 5m)';
+        statusColor = '#d97706';
+        statusBg = 'rgba(217, 119, 6, 0.12)';
+        break;
+      case 'CONFIRMED':
+        statusLabel = 'CONFIRMED';
+        statusColor = '#0284c7';
+        statusBg = 'rgba(2, 132, 199, 0.12)';
+        break;
+      case 'DRIVER ASSIGNED':
+        statusLabel = 'DRIVER ASSIGNED';
+        statusColor = '#9333ea';
+        statusBg = 'rgba(147, 51, 234, 0.12)';
+        break;
+      case 'DRIVER ON THE WAY':
+      case 'ON THE WAY':
+        statusLabel = 'CHAUFFEUR ON THE WAY';
+        statusColor = '#ea580c';
+        statusBg = 'rgba(234, 88, 12, 0.12)';
+        break;
+      case 'ARRIVED':
+        statusLabel = 'CHAUFFEUR ARRIVED AT PICKUP';
+        statusColor = '#4f46e5';
+        statusBg = 'rgba(79, 70, 229, 0.12)';
+        break;
+      case 'TRIP STARTED':
+        statusLabel = 'TRIP IN PROGRESS';
+        statusColor = '#059669';
+        statusBg = 'rgba(5, 150, 105, 0.15)';
+        break;
+      case 'COMPLETED':
+        statusLabel = 'TRIP COMPLETED';
+        statusColor = '#059669';
+        statusBg = 'rgba(5, 150, 105, 0.12)';
+        break;
+      case 'CANCELLED':
+        statusLabel = 'CANCELLED (₹0 FEE)';
+        statusColor = '#dc2626';
+        statusBg = 'rgba(220, 38, 38, 0.12)';
+        break;
+      case 'REJECTED':
+        statusLabel = 'REJECTED (NO FLEET)';
+        statusColor = '#b91c1c';
+        statusBg = 'rgba(185, 28, 28, 0.12)';
+        break;
+      case 'NO SHOW':
+        statusLabel = 'NO SHOW';
+        statusColor = '#64748b';
+        statusBg = 'rgba(100, 116, 139, 0.12)';
+        break;
+    }
+
     const payStatusColor = (r.paymentStatus && r.paymentStatus.includes('PAID')) ? '#059669' : '#d97706';
 
     return `
@@ -550,7 +606,7 @@ window.openMyTripsModal = async () => {
                 ${r.bookingId}
               </span>
               <span style="background: ${statusBg}; color: ${statusColor}; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px;">
-                ${r.bookingStatus === 'REQUESTED' ? 'REQUESTED (Call in 5m)' : r.bookingStatus}
+                ${statusLabel}
               </span>
             </div>
             <h4 style="font-size: 16px; font-weight: 800; color: var(--owc-text); margin-top: 4px; margin-bottom: 2px;">
@@ -1118,6 +1174,129 @@ window.openFareChartModal = () => {
   modal.classList.add("open");
 };
 
+window.openPrivacyModal = () => {
+  window.closeAllModals();
+  const modal = document.getElementById("modal-info-doc");
+  const title = document.getElementById("modal-info-title");
+  const body = document.getElementById("modal-info-body");
+  if (!modal || !title || !body) return;
+
+  title.textContent = "Privacy & Data Protection Policy";
+  body.innerHTML = `
+    <div style="font-size: 13.5px; color: var(--owc-text); line-height: 1.7;">
+      <p style="color: var(--owc-text-muted); font-size: 12px; margin-bottom: 16px;">Last Updated: September 2026 • OneWayTaxiBihar Mobility (Boring Road, Patna, Bihar - 800001)</p>
+      
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">1. Information We Collect</h4>
+      <p>We only collect information strictly required to coordinate and operate your intercity outstation ride: your name, 10-digit Indian mobile number, pickup and drop addresses, and travel dates. We do not require or collect passwords from passengers.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">2. Chauffeur Contact Privacy</h4>
+      <p>Your mobile phone number is strictly shielded and only disclosed to your assigned driver after dispatch confirmation for pickup coordination. Drivers are prohibited from retaining customer numbers after trip completion.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">3. Zero Spam & Data Monetization</h4>
+      <p>We do not sell, rent, or trade your personal data with third-party advertisers or lead brokers. All communications are strictly transactional regarding your booked rides, driver details, and billing receipts.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">4. Data Security & Storage</h4>
+      <p>All data is transmitted via industry-standard TLS encryption. Payment transactions are executed directly through authorized UPI payment gateways (Beneficiary: HIMANSHU KUMAR DUBEY). We never store debit/credit card numbers or UPI PINs.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">5. Data Deletion Requests</h4>
+      <p>You may request deletion of your account, ride history, and personal contact info by contacting dispatch at <strong>+91 80021 41816</strong> or WhatsApp <strong>+91 72818 51011</strong>.</p>
+    </div>
+  `;
+  modal.classList.add("open");
+};
+
+window.openTermsModal = () => {
+  window.closeAllModals();
+  const modal = document.getElementById("modal-info-doc");
+  const title = document.getElementById("modal-info-title");
+  const body = document.getElementById("modal-info-body");
+  if (!modal || !title || !body) return;
+
+  title.textContent = "Terms & Conditions of Service";
+  body.innerHTML = `
+    <div style="font-size: 13.5px; color: var(--owc-text); line-height: 1.7;">
+      <p style="color: var(--owc-text-muted); font-size: 12px; margin-bottom: 16px;">Effective: September 2026 • OneWayTaxiBihar Mobility (Patna, Bihar)</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">1. Nature of Service</h4>
+      <p>OneWayTaxiBihar operates as an outstation point-to-point mobility coordinator connecting verified commercial drivers and vehicle owners across Bihar's 38 districts with passengers seeking dedicated one-way and roundtrip cab services.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">2. Booking Lifecycle</h4>
+      <p>Placing an enquiry creates a <strong>REQUESTED</strong> booking. Our Patna central dispatch team or assigned partner will call you within 5 minutes to confirm flight/train timings and doorstep pickup landmarks before confirming the trip.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">3. Fare Inclusions & Fastag Tolls</h4>
+      <p>All published one-way fares include vehicle hire, fuel, driver allowance, and standard highway Fastag tolls on the designated direct route. Non-standard diversions or extra local waiting exceeding 45 minutes may incur additional charges payable directly to the chauffeur.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">4. Passenger Safety & Vehicle Standards</h4>
+      <p>All assigned vehicles are commercial yellow-plate tourist cabs equipped with commercial insurance, GPS speed governors, and clean air-conditioned interiors. Smoking, consumption of alcohol, or transport of contraband is strictly prohibited under Bihar state laws.</p>
+    </div>
+  `;
+  modal.classList.add("open");
+};
+
+window.openCancellationModal = () => {
+  window.closeAllModals();
+  const modal = document.getElementById("modal-info-doc");
+  const title = document.getElementById("modal-info-title");
+  const body = document.getElementById("modal-info-body");
+  if (!modal || !title || !body) return;
+
+  title.textContent = "Cancellation & 100% Refund Policy";
+  body.innerHTML = `
+    <div style="font-size: 13.5px; color: var(--owc-text); line-height: 1.7;">
+      <p style="color: var(--owc-text-muted); font-size: 12px; margin-bottom: 16px;">Zero Cancellation Fee Guarantee • Patna Central Dispatch</p>
+
+      <div style="background: rgba(5, 150, 105, 0.08); border: 1.5px solid var(--owc-success); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
+        <strong style="color: #059669; font-size: 14px;">✓ ₹0 Cancellation Fee Promise</strong>
+        <p style="margin: 4px 0 0 0; font-size: 12.5px; color: var(--owc-text);">Plans change, train schedules get rescheduled. Cancel your ride up to 2 hours prior to scheduled departure for a 100% full refund with zero cancellation charges.</p>
+      </div>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">1. Cancellation Timelines</h4>
+      <ul style="padding-left: 20px; margin: 6px 0;">
+        <li><strong>Before Driver En Route (&gt; 2 hours):</strong> 100% Free Cancellation. Zero fees deducted.</li>
+        <li><strong>Chauffeur En Route to Doorstep (&lt; 1 hour):</strong> A nominal dry-run fuel allowance of ₹300 may be deducted to compensate the partner driver.</li>
+        <li><strong>Passenger No-Show:</strong> In case the passenger is unreachable for &gt; 45 minutes past the scheduled pickup time, the booking is marked as NO SHOW.</li>
+      </ul>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">2. Refund Speed & Disbursement</h4>
+      <ul style="padding-left: 20px; margin: 6px 0;">
+        <li><strong>Customer Wallet Cash:</strong> 100% Instant credit to your OneWayTaxiBihar wallet balance with zero waiting period.</li>
+        <li><strong>UPI / Bank Account / QR:</strong> Processed within 3 to 5 business working days directly to the original funding account.</li>
+      </ul>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">3. How to Cancel</h4>
+      <p>Simply tap <strong>My Trips</strong> on the website, select your active trip, and tap <strong>"Cancel Ride"</strong>. Alternatively, call our 24x7 helpdesk at <strong>+91 80021 41816</strong>.</p>
+    </div>
+  `;
+  modal.classList.add("open");
+};
+
+window.openDriverTermsModal = () => {
+  window.closeAllModals();
+  const modal = document.getElementById("modal-info-doc");
+  const title = document.getElementById("modal-info-title");
+  const body = document.getElementById("modal-info-body");
+  if (!modal || !title || !body) return;
+
+  title.textContent = "Driver Partner Terms & Chauffeur Code of Conduct";
+  body.innerHTML = `
+    <div style="font-size: 13.5px; color: var(--owc-text); line-height: 1.7;">
+      <p style="color: var(--owc-text-muted); font-size: 12px; margin-bottom: 16px;">OneWayTaxiBihar Fleet & Chauffeur Standards</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">1. Partner Eligibility & Documentation</h4>
+      <p>Drivers must hold a valid commercial transport driving license, police background clearance certificate, vehicle fitness certificate, and commercial tourist permit. Private white-plate vehicles are strictly disallowed.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">2. Zero Extra Cash Demands</h4>
+      <p>Drivers are strictly prohibited from demanding extra cash over the agreed system fare from passengers for AC usage, luggage loading, or normal highway toll gates.</p>
+
+      <h4 style="color: var(--owc-primary); margin-top: 16px; margin-bottom: 6px;">3. Payouts & Disbursements</h4>
+      <p>Payments for online advance collections are settled within 24 hours of trip completion via UPI or NEFT. Cash-to-driver collections remain with the chauffeur with commission adjusted against platform credit balance.</p>
+
+      <p style="margin-top: 16px;">To register your cab in Patna, Muzaffarpur, Gaya, or Bhagalpur, contact partner onboarding at <strong>+91 80021 41816</strong>.</p>
+    </div>
+  `;
+  modal.classList.add("open");
+};
+
 window.openInvoiceModal = () => {
   window.closeAllModals();
   const modal = document.getElementById("modal-invoice");
@@ -1135,25 +1314,28 @@ window.lookupTaxInvoice = async () => {
   }
 
   const rides = await ApiClient.getRides();
-  const found = rides.find(r => r.bookingId.toUpperCase() === bookingId.toUpperCase()) || rides[0];
+  const found = rides.find(r => r.bookingId.toUpperCase() === bookingId.toUpperCase());
 
   if (!found) {
-    slot.innerHTML = `<div style="text-align: center; color: var(--owc-danger); padding: 20px;">No invoice found for ${bookingId}.</div>`;
+    slot.innerHTML = `<div style="text-align: center; color: var(--owc-danger); padding: 20px; font-weight: 700;">No booking found with ID "${bookingId}". Please check the ID in My Trips.</div>`;
     return;
   }
+
+  const invNumber = `INV-2026-${(found.bookingId.replace(/\D/g, '') || '0000').slice(-4)}`;
 
   slot.innerHTML = `
     <div style="border: 1px solid var(--owc-border); border-radius: var(--radius-lg); padding: 24px; background: var(--owc-card-bg);">
       <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--owc-primary); padding-bottom: 16px; margin-bottom: 20px;">
         <div>
           <h2 style="font-size: 22px; font-weight: 900; color: var(--owc-primary); margin-bottom: 2px;">OneWayTaxiBihar</h2>
-          <div style="font-size: 11.5px; color: var(--owc-text-muted);">OneWay Mobility Solutions Private Limited • GSTIN: 10AAECO1234F1Z8</div>
-          <div style="font-size: 11.5px; color: var(--owc-text-muted);">Boring Road, Patna, Bihar - 800001 • Contact: +91 72818 51011</div>
+          <div style="font-size: 11.5px; color: var(--owc-text-muted);">OneWayTaxiBihar Mobility (Beneficiary: HIMANSHU KUMAR DUBEY)</div>
+          <div style="font-size: 11.5px; color: var(--owc-text-muted);">Boring Road, Patna, Bihar - 800001 • 24x7 Helpdesk: +91 80021 41816</div>
         </div>
         <div style="text-align: right;">
-          <div style="font-size: 11px; font-weight: 700; color: var(--owc-text-dim);">TAX INVOICE</div>
-          <strong style="font-size: 15px; color: var(--owc-text);">${found.bookingId}</strong>
-          <div style="font-size: 11.5px; color: var(--owc-text-muted); margin-top: 2px;">Date: ${found.pickupDate || '2026-09-01'}</div>
+          <div style="font-size: 11px; font-weight: 800; color: #059669; background: rgba(5, 150, 105, 0.1); padding: 2px 8px; border-radius: 4px; display: inline-block;">TAX INVOICE</div>
+          <div style="font-size: 15px; font-weight: 800; color: var(--owc-text); margin-top: 4px;">${invNumber}</div>
+          <div style="font-size: 11.5px; color: var(--owc-text-muted); margin-top: 2px;">Booking: ${found.bookingId}</div>
+          <div style="font-size: 11.5px; color: var(--owc-text-muted);">Date: ${found.pickupDate || new Date().toISOString().split('T')[0]}</div>
         </div>
       </div>
 

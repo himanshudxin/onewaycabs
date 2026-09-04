@@ -720,7 +720,7 @@
             </td>
             <td>${driverName}</td>
             <td>
-              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
                 ${b.bookingStatus === 'REQUESTED' ? `
                   <button type="button" class="btn-action-sm btn-confirm" onclick="confirmRide('${b.bookingId}')">✓ Confirm</button>
                 ` : ''}
@@ -730,6 +730,18 @@
                 ${!isPaid ? `
                   <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${b.bookingId}')">Verify Pay</button>
                 ` : ''}
+                <select class="btn-action-sm" style="background: #0f172a; border: 1px solid #475569; color: #38bdf8; font-weight: 700; cursor: pointer;" onchange="adminUpdateStatusSubmit('${b.bookingId}', this)">
+                  <option value="" disabled selected>Status ▾</option>
+                  <option value="CONFIRMED">CONFIRMED</option>
+                  <option value="DRIVER ASSIGNED">DRIVER ASSIGNED</option>
+                  <option value="DRIVER ON THE WAY">DRIVER ON THE WAY</option>
+                  <option value="ARRIVED">ARRIVED</option>
+                  <option value="TRIP STARTED">TRIP STARTED</option>
+                  <option value="COMPLETED">COMPLETED</option>
+                  <option value="CANCELLED">CANCELLED</option>
+                  <option value="REJECTED">REJECTED</option>
+                  <option value="NO SHOW">NO SHOW</option>
+                </select>
                 ${b.bookingStatus !== 'CANCELLED' ? `
                   <button type="button" class="btn-action-sm btn-cancel" onclick="cancelRideAdmin('${b.bookingId}')">✕ Cancel</button>
                 ` : ''}
@@ -739,6 +751,23 @@
           </tr>
         `;
       }).join("");
+    }
+
+    async function adminUpdateStatusSubmit(bookingId, selectEl) {
+      const newStatus = selectEl.value;
+      if (!newStatus) return;
+      const note = prompt(`Enter dispatcher note for setting booking ${bookingId} to ${newStatus}:`, `Status updated to ${newStatus} by central dispatch`);
+      if (note === null) {
+        await loadBookings();
+        return;
+      }
+      const res = await ApiClient.adminUpdateBookingStatus(bookingId, newStatus, note, _adminToken);
+      if (res && res.success) {
+        await loadBookings();
+      } else {
+        alert(res?.message || "Failed to update status");
+        await loadBookings();
+      }
     }
 
     async function confirmRide(bookingId) {

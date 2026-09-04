@@ -1033,6 +1033,72 @@ module.exports = async (req, res) => {
       return sendJson(200, { success: true, driver: newDrv });
     }
 
+    if (pathname === '/admin/status' && method === 'POST') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      const { bookingId, newStatus, note } = body;
+      const booking = (db.bookings || []).find(b => b.bookingId === bookingId);
+      if (!booking) return sendJson(404, { success: false, message: 'Booking not found' });
+
+      const statusUpper = (newStatus || '').toUpperCase();
+      booking.bookingStatus = statusUpper;
+      if (!booking.statusHistory) booking.statusHistory = [];
+      booking.statusHistory.push({
+        status: statusUpper,
+        timestamp: new Date().toISOString(),
+        actor: 'Admin Dispatcher',
+        note: note || 'Status updated by admin desk'
+      });
+
+      if ((statusUpper === 'CANCELLED' || statusUpper === 'REJECTED') && booking.walletUsed > 0) {
+        const u = (db.users || []).find(x => x.id === booking.customerId);
+        if (u) {
+          u.walletBalance = (u.walletBalance || 0) + booking.walletUsed;
+          if (!db.wallet_ledger) db.wallet_ledger = [];
+          db.wallet_ledger.push({
+            id: `WLT_${Date.now()}`,
+            userId: u.id,
+            phone: u.phone,
+            type: 'REFUND',
+            amount: booking.walletUsed,
+            balanceAfter: u.walletBalance,
+            description: `Refund for ${statusUpper} booking ${booking.bookingId}`,
+            createdAt: new Date().toISOString()
+          });
+        }
+      }
+
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'BOOKING',
+        entityId: booking.bookingId,
+        action: 'ADMIN_STATUS_UPDATE',
+        actor: admin.username || 'admin',
+        details: `Status set to ${statusUpper} (${note || ''})`,
+        createdAt: new Date().toISOString()
+      });
+
+      saveDb(db);
+      return sendJson(200, { success: true, booking });
+    }
+
+    if (pathname === '/logs/client-error' && method === 'POST') {
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `LOG_${Date.now()}`,
+        entity: 'CLIENT_ERROR',
+        entityId: body.url || 'frontend',
+        action: 'FRONTEND_ERROR',
+        actor: 'client',
+        details: `${body.message} at ${body.source}:${body.lineno}`,
+        createdAt: new Date().toISOString()
+      });
+      saveDb(db);
+      return sendJson(200, { success: true });
+    }
+
     // -------------------------------------------------------------
     // 10. DRIVER PARTNER APIS
     // -------------------------------------------------------------
@@ -1083,21 +1149,34 @@ module.exports = async (req, res) => {
       const driverAuth = getSessionDriver(req, db);
       if (!driverAuth) return sendJson(401, { success: false, message: 'Driver authentication required' });
 
-      const { bookingId, newStatus } = body;
-      const allowedStatuses = ['ACCEPTED', 'ON THE WAY', 'ARRIVED', 'TRIP STARTED', 'COMPLETED'];
-      if (!allowedStatuses.includes(newStatus)) {
-        return sendJson(400, { success: false, message: 'Invalid driver status' });
+      const { bookingId, newStatus, note } = body;
+      const allowedStatuses = ['ACCEPTED', 'ON THE WAY', 'DRIVER ON THE WAY', 'ARRIVED', 'TRIP STARTED', 'COMPLETED'];
+      const statusUpper = (newStatus || '').toUpperCase();
+      if (!allowedStatuses.includes(statusUpper)) {
+        return sendJson(403, { success: false, message: `Forbidden: driver cannot set status to ${statusUpper}` });
       }
 
       const booking = (db.bookings || []).find(b => b.bookingId === bookingId && b.assignedDriverId === driverAuth.driver.id);
       if (!booking) return sendJson(404, { success: false, message: 'Trip not found or not assigned to you' });
 
-      booking.bookingStatus = newStatus;
+      booking.bookingStatus = statusUpper;
+      if (!booking.statusHistory) booking.statusHistory = [];
       booking.statusHistory.push({
-        status: newStatus,
+        status: statusUpper,
         timestamp: new Date().toISOString(),
-        actor: `Driver ${driverAuth.driver.name}`,
-        note: `Driver updated status to ${newStatus}`
+        actor: `Driver (${driverAuth.driver.name})`,
+        note: note || `Chauffeur updated status to ${statusUpper}`
+      });
+
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'BOOKING',
+        entityId: booking.bookingId,
+        action: 'DRIVER_STATUS_UPDATE',
+        actor: `driver_${driverAuth.driver.id}`,
+        details: `Status set to ${statusUpper}`,
+        createdAt: new Date().toISOString()
       });
 
       saveDb(db);

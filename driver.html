@@ -77,11 +77,38 @@
       margin-bottom: 16px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+    
+    /* Stepper Bar */
+    .driver-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      background: #090d16;
+      border: 1px solid var(--driver-border);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .step-item {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .step-item.active {
+      color: #38bdf8;
+    }
+    .step-item.completed {
+      color: #34d399;
+    }
+
     .driver-step-btn {
       width: 100%;
       padding: 14px;
       border-radius: 10px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       border: none;
       cursor: pointer;
@@ -102,10 +129,10 @@
       background: #10b981;
       color: white;
       text-decoration: none;
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 8px;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12.5px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -114,13 +141,28 @@
       background: #0284c7;
       color: white;
       text-decoration: none;
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 8px;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12.5px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+    }
+    .driver-tab-pill {
+      background: var(--driver-card);
+      border: 1px solid var(--driver-border);
+      color: #94a3b8;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .driver-tab-pill.active {
+      background: #059669;
+      color: white;
+      border-color: #34d399;
     }
   </style>
 </head>
@@ -174,8 +216,11 @@
     </header>
 
     <main class="driver-container">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 17px; font-weight: 800; margin: 0;">My Assigned Trips</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="driver-tab-pill active" id="btn-tab-active" onclick="switchDriverTab('active')">Active Trips</button>
+          <button type="button" class="driver-tab-pill" id="btn-tab-history" onclick="switchDriverTab('history')">Completed History</button>
+        </div>
         <button type="button" onclick="loadDriverTrips()" style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
           🔄 Refresh
         </button>
@@ -191,6 +236,8 @@
   <script>
     let _driverToken = localStorage.getItem("otb_driver_token");
     let _driverProfile = null;
+    let _currentTab = "active";
+    let _allDriverTrips = [];
 
     try {
       _driverProfile = JSON.parse(localStorage.getItem("otb_driver_profile") || "null");
@@ -237,82 +284,125 @@
       initDriver();
     }
 
+    function switchDriverTab(tab) {
+      _currentTab = tab;
+      document.getElementById("btn-tab-active").classList.toggle("active", tab === "active");
+      document.getElementById("btn-tab-history").classList.toggle("active", tab === "history");
+      renderTrips();
+    }
+
     async function loadDriverTrips() {
       const res = await ApiClient.driverGetTrips(_driverToken);
-      const listEl = document.getElementById("driver-trips-list");
-
       if (res && res.success && Array.isArray(res.trips)) {
-        if (res.trips.length === 0) {
-          listEl.innerHTML = `
-            <div style="text-align: center; padding: 40px 16px; background: var(--driver-card); border-radius: 14px; border: 1px dashed var(--driver-border);">
-              <div style="font-size: 32px; margin-bottom: 8px;">🛣️</div>
-              <h4 style="margin: 0 0 6px 0; font-size: 16px; color: #f8fafc;">No active trips assigned</h4>
-              <p style="font-size: 13px; color: #94a3b8; margin: 0;">Patna central dispatch will notify you when a new ride is assigned to your vehicle.</p>
-            </div>
-          `;
-          return;
-        }
-
-        listEl.innerHTML = res.trips.map(t => {
-          const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(t.pickupAddress || t.originCity)}`;
-          
-          let actionBtn = '';
-          if (t.bookingStatus === 'DRIVER ASSIGNED') {
-            actionBtn = `<button type="button" class="driver-step-btn btn-step-accept" onclick="updateTripStatus('${t.bookingId}', 'ACCEPTED')">Accept Trip</button>`;
-          } else if (t.bookingStatus === 'ACCEPTED') {
-            actionBtn = `<button type="button" class="driver-step-btn btn-step-way" onclick="updateTripStatus('${t.bookingId}', 'ON THE WAY')">On the Way to Pickup</button>`;
-          } else if (t.bookingStatus === 'ON THE WAY') {
-            actionBtn = `<button type="button" class="driver-step-btn btn-step-arrived" onclick="updateTripStatus('${t.bookingId}', 'ARRIVED')">Arrived at Doorstep</button>`;
-          } else if (t.bookingStatus === 'ARRIVED') {
-            actionBtn = `<button type="button" class="driver-step-btn btn-step-start" onclick="updateTripStatus('${t.bookingId}', 'TRIP STARTED')">Start Trip</button>`;
-          } else if (t.bookingStatus === 'TRIP STARTED') {
-            actionBtn = `<button type="button" class="driver-step-btn btn-step-complete" onclick="updateTripStatus('${t.bookingId}', 'COMPLETED')">Complete Trip</button>`;
-          } else {
-            actionBtn = `<div style="text-align: center; font-weight: 800; color: #34d399; font-size: 14px;">Trip ${t.bookingStatus}</div>`;
-          }
-
-          return `
-            <div class="driver-trip-card">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px dashed var(--driver-border); padding-bottom: 10px;">
-                <div>
-                  <span style="font-size: 11px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 4px;">${t.bookingId}</span>
-                  <h4 style="margin: 6px 0 0 0; font-size: 17px; font-weight: 800; color: #f8fafc;">${t.originCity} → ${t.destCity}</h4>
-                </div>
-                <div style="text-align: right;">
-                  <span style="font-size: 18px; font-weight: 900; color: #34d399;">₹${(t.totalFare || 0).toLocaleString('en-IN')}</span>
-                  <div style="font-size: 11px; color: #94a3b8;">${t.paymentMethod || 'Cash'}</div>
-                </div>
-              </div>
-
-              <!-- Pickup & Drop Details -->
-              <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 14px;">
-                <div><strong>📍 Pickup:</strong> ${t.pickupAddress}</div>
-                <div><strong>🏁 Drop:</strong> ${t.dropAddress}</div>
-                <div><strong>⏰ Time:</strong> ${t.pickupDate} at ${t.pickupTime} (~${t.distanceKm} KM)</div>
-              </div>
-
-              <!-- Passenger Contact & Navigation Actions -->
-              <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-                <a href="tel:${t.passengerPhone}" class="btn-call-customer" style="flex: 1; justify-content: center;">
-                  📞 Call Passenger (${t.passengerPhone})
-                </a>
-                <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="btn-nav-map">
-                  🗺️ Maps
-                </a>
-              </div>
-
-              <!-- Trip Status Progression Button -->
-              <div>${actionBtn}</div>
-            </div>
-          `;
-        }).join("");
+        _allDriverTrips = res.trips;
+        renderTrips();
       } else if (res && res.status === 401) {
         handleDriverLogout();
       }
     }
 
-    async function updateTripStatus(bookingId, newStatus) {
-      const res = await ApiClient.driverUpdateStatus(bookingId, newStatus, _driverToken);
+    function renderTrips() {
+      const listEl = document.getElementById("driver-trips-list");
+      const filtered = _allDriverTrips.filter(t => {
+        if (_currentTab === "active") return t.bookingStatus !== "COMPLETED" && t.bookingStatus !== "CANCELLED";
+        return t.bookingStatus === "COMPLETED" || t.bookingStatus === "CANCELLED";
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align: center; padding: 40px 16px; background: var(--driver-card); border-radius: 14px; border: 1px dashed var(--driver-border);">
+            <div style="font-size: 32px; margin-bottom: 8px;">🛣️</div>
+            <h4 style="margin: 0 0 6px 0; font-size: 16px; color: #f8fafc;">
+              ${_currentTab === 'active' ? 'No active trips assigned' : 'No completed trips in history'}
+            </h4>
+            <p style="font-size: 13px; color: #94a3b8; margin: 0;">
+              ${_currentTab === 'active' ? 'Patna central dispatch will notify you when a new ride is assigned to your vehicle.' : 'Your finished trips will appear here with fare receipts.'}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(t => {
+        const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(t.pickupAddress || t.originCity)}`;
+        const isAssigned = t.bookingStatus === "DRIVER ASSIGNED" || t.bookingStatus === "CONFIRMED";
+        const isWay = t.bookingStatus === "DRIVER ON THE WAY" || t.bookingStatus === "ON THE WAY";
+        const isArrived = t.bookingStatus === "ARRIVED";
+        const isStarted = t.bookingStatus === "TRIP STARTED";
+        const isCompleted = t.bookingStatus === "COMPLETED";
+
+        // OneWay.Cab status lifecycle action buttons (Req 49, 175)
+        let actionBtn = '';
+        if (isAssigned) {
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-accept" onclick="updateTripStatus('${t.bookingId}', 'DRIVER ON THE WAY', 'Chauffeur accepted and started moving to pickup')">Accept &amp; Depart (On the Way) →</button>`;
+        } else if (isWay) {
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-arrived" onclick="updateTripStatus('${t.bookingId}', 'ARRIVED', 'Chauffeur arrived at passenger pickup location')">Arrived at Doorstep →</button>`;
+        } else if (isArrived) {
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-start" onclick="updateTripStatus('${t.bookingId}', 'TRIP STARTED', 'Passenger boarded, journey started')">Start Journey →</button>`;
+        } else if (isStarted) {
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-complete" onclick="updateTripStatus('${t.bookingId}', 'COMPLETED', 'Passenger safely reached destination')">Complete Journey →</button>`;
+        } else {
+          actionBtn = `<div style="text-align: center; font-weight: 800; color: #34d399; font-size: 14px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">✓ Journey Finished (${t.bookingStatus})</div>`;
+        }
+
+        return `
+          <div class="driver-trip-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px dashed var(--driver-border); padding-bottom: 10px;">
+              <div>
+                <span style="font-size: 11px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 4px; font-family: monospace;">${t.bookingId}</span>
+                <h4 style="margin: 6px 0 0 0; font-size: 17px; font-weight: 800; color: #f8fafc;">${t.originCity} ➔ ${t.destCity}</h4>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 18px; font-weight: 900; color: #34d399;">₹${(t.totalFare || 0).toLocaleString('en-IN')}</span>
+                <div style="font-size: 11px; color: #94a3b8;">${t.paymentMethod || 'UPI'} • ${t.paymentStatus || 'Pending'}</div>
+              </div>
+            </div>
+
+            <!-- Stepper Progression Visualizer (Req 49) -->
+            <div class="driver-stepper">
+              <div class="step-item ${isAssigned ? 'active' : 'completed'}">1. Assigned</div>
+              <span>➔</span>
+              <div class="step-item ${isWay ? 'active' : (isArrived || isStarted || isCompleted ? 'completed' : '')}">2. On Way</div>
+              <span>➔</span>
+              <div class="step-item ${isArrived ? 'active' : (isStarted || isCompleted ? 'completed' : '')}">3. Arrived</div>
+              <span>➔</span>
+              <div class="step-item ${isStarted ? 'active' : (isCompleted ? 'completed' : '')}">4. In Trip</div>
+              <span>➔</span>
+              <div class="step-item ${isCompleted ? 'completed active' : ''}">5. Done</div>
+            </div>
+
+            <!-- Pickup & Drop Details -->
+            <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 14px; background: #090d16; padding: 12px; border-radius: 8px; border: 1px solid #1e293b;">
+              <div>📍 <strong>Pickup:</strong> ${t.pickupAddress}</div>
+              <div>🏁 <strong>Drop:</strong> ${t.dropAddress}</div>
+              <div style="margin-top: 4px; color: #94a3b8; font-size: 12px;">⏰ <strong>Schedule:</strong> ${t.pickupDate} at ${t.pickupTime} (~${t.distanceKm} KM)</div>
+            </div>
+
+            <!-- Passenger Contact & Navigation (Req 171, 172, 173) -->
+            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+              ${isAssigned ? `
+                <div style="flex: 1; font-size: 12px; color: #94a3b8; display: flex; align-items: center; justify-content: center; background: #090d16; border-radius: 8px; padding: 8px;">
+                  👤 Passenger: <strong>${t.passengerName}</strong> (Contact revealed on accept)
+                </div>
+              ` : `
+                <a href="tel:${t.passengerPhone}" class="btn-call-customer" style="flex: 1; justify-content: center;">
+                  📞 Call ${t.passengerName} (${t.passengerPhone})
+                </a>
+              `}
+              <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="btn-nav-map">
+                🗺️ Maps
+              </a>
+            </div>
+
+            <!-- Trip Status Progression Button -->
+            <div>${actionBtn}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function updateTripStatus(bookingId, newStatus, note) {
+      const res = await ApiClient.driverUpdateStatus(bookingId, newStatus, _driverToken, note);
       if (res && res.success) {
         await loadDriverTrips();
       } else {

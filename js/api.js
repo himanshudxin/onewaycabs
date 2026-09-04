@@ -181,6 +181,14 @@ class ApiClient {
     });
   }
 
+  static async adminUpdateBookingStatus(bookingId, newStatus, note, token) {
+    return await this.request("/api/admin/status", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId, newStatus, note })
+    });
+  }
+
   static async adminCancelBooking(bookingId, reason, token) {
     return await this.request("/api/admin/cancel-booking", {
       method: "POST",
@@ -243,11 +251,11 @@ class ApiClient {
     });
   }
 
-  static async driverUpdateStatus(bookingId, newStatus, token) {
+  static async driverUpdateStatus(bookingId, newStatus, token, note = "") {
     return await this.request("/api/driver/status", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ bookingId, newStatus })
+      body: JSON.stringify({ bookingId, newStatus, note })
     });
   }
 
