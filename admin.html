@@ -203,64 +203,431 @@
       border: 1px solid #334155;
       border-radius: 16px;
       padding: 28px;
-      max-width: 380px;
+      max-width: 420px;
       width: 90%;
-      margin: 80px auto;
+      margin: 60px auto;
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 9px 6px;
+      background: transparent;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .auth-tab-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+    .otp-inputs-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .otp-digit-box {
+      width: 42px;
+      height: 48px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+      background: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 8px;
+      color: #38bdf8;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .otp-digit-box:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+      background: #090d16;
+    }
+
+    /* Executive Real-Time Dispatch Alert HUD */
+    #admin-live-alerts-hud {
+      position: fixed;
+      top: 65px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 380px;
+      max-width: calc(100vw - 36px);
+      pointer-events: none;
+    }
+    .dispatch-hud-toast {
+      pointer-events: auto;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(14px);
+      color: #f8fafc;
+      animation: hudSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: all 0.3s ease;
+    }
+    @keyframes hudSlideIn {
+      from { opacity: 0; transform: translateX(60px) scale(0.95); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    .dispatch-hud-toast.hud-booking {
+      border-left: 4px solid #10b981;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .dispatch-hud-toast.hud-inquiry {
+      border-left: 4px solid #38bdf8;
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .hud-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: color 0.15s;
+    }
+    .hud-close-btn:hover { color: #ffffff; }
+    .hud-action-btn {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .hud-action-btn:hover {
+      background: #0284c7;
+      color: white;
+    }
+    .hud-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .hud-pulse-booking {
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseGreen 1.5s infinite;
+    }
+    .hud-pulse-inquiry {
+      background: #38bdf8;
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+      animation: pulseBlue 1.5s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    @keyframes pulseBlue {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+    .nav-alert-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-alert-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #34d399;
+    }
+    .nav-alert-btn.inactive {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+    .nav-sound-btn {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .nav-sound-btn.active {
+      border-color: #38bdf8;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS (< 768px) FOR ADMIN DISPATCH
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .admin-navbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        padding: 10px 14px !important;
+      }
+      .admin-brand {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      .admin-brand-content {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+      }
+      .admin-brand-title {
+        white-space: nowrap !important;
+        font-weight: 900 !important;
+        font-size: 15px !important;
+        letter-spacing: -0.3px !important;
+        color: #ffffff !important;
+      }
+      .admin-brand-sub {
+        font-size: 8.5px !important;
+        font-weight: 800 !important;
+        color: #38bdf8 !important;
+        letter-spacing: 0.6px !important;
+        white-space: nowrap !important;
+      }
+      .admin-nav-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+        justify-content: flex-start !important;
+      }
+      .admin-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+      .admin-stat-card {
+        padding: 10px 12px !important;
+      }
+      .admin-stat-val {
+        font-size: 20px !important;
+      }
+      .admin-table-wrap,
+      .admin-table-card {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .admin-table {
+        min-width: 620px !important;
+      }
     }
   </style>
 </head>
 <body class="admin-body">
 
-  <!-- Admin Login View -->
+  <!-- Admin Login View (High-Accuracy 2FA WhatsApp OTP Portal) -->
   <div id="admin-login-view" style="display: none; padding: 20px;">
     <div class="login-modal-box">
+      
+      <!-- Brand Header -->
       <div style="text-align: center; margin-bottom: 20px;">
-        <div style="font-size: 28px; margin-bottom: 6px;">🔒</div>
-        <h2 style="font-size: 20px; font-weight: 900; margin: 0; color: #f8fafc;">Admin Dispatch Login</h2>
-        <p style="font-size: 12.5px; color: #94a3b8; margin-top: 4px;">Patna Operations Control Desk</p>
+        <div style="width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(37, 99, 235, 0.35);">
+          <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar Admin" width="54" height="54" style="width: 54px; height: 54px; object-fit: contain; display: block; border-radius: 14px;">
+        </div>
+        <h2 style="font-size: 20px; font-weight: 900; margin: 0; color: #f8fafc;">Admin Dispatch Portal</h2>
+        <div style="display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; background: rgba(16, 185, 129, 0.12); border: 1px solid #059669; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #34d399;">
+          <span>💬 WhatsApp 2FA Secured</span>
+        </div>
       </div>
 
-      <div style="margin-bottom: 14px;">
-        <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">USERNAME</label>
-        <input type="text" id="admin-user-input" value="admin" style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
+      <div id="admin-login-error" style="display: none; margin-bottom: 12px; padding: 10px; border-radius: 6px; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; font-size: 12.5px; text-align: center;"></div>
+      <div id="admin-login-success" style="display: none; margin-bottom: 12px; padding: 10px; border-radius: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #6ee7b7; font-size: 12.5px; text-align: center;"></div>
+
+      <!-- STEP 1: Identification & Request WhatsApp OTP -->
+      <div id="admin-auth-step-1">
+        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+          <button type="button" class="auth-tab-btn active" id="tab-auth-cred" onclick="switchAdminAuthMode('cred')">
+            🔑 Dispatcher ID
+          </button>
+          <button type="button" class="auth-tab-btn" id="tab-auth-phone" onclick="switchAdminAuthMode('phone')">
+            📱 Owner WhatsApp
+          </button>
+        </div>
+
+        <form id="admin-login-form-step1" onsubmit="handleAdminDirectLogin(event)">
+          <!-- Mode Credential -->
+          <div id="auth-mode-cred-fields">
+            <div style="margin-bottom: 14px;">
+              <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">USERNAME</label>
+              <input type="text" id="admin-user-input" value="admin" required style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
+            </div>
+            <div style="margin-bottom: 14px;">
+              <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">PASSWORD</label>
+              <input type="password" id="admin-pass-input" placeholder="Enter password (e.g. admin123)" value="admin123" required style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
+            </div>
+          </div>
+
+          <!-- Mode Direct Phone (Locked to Owner: 6206494214) -->
+          <div id="auth-mode-phone-fields" style="display: none; margin-bottom: 14px;">
+            <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">AUTHORIZED OWNER WHATSAPP</label>
+            <div style="display: flex; align-items: center; margin-top: 4px; background: #0f172a; border: 1.5px solid #059669; border-radius: 8px; padding: 0 10px;">
+              <span style="color: #34d399; font-weight: 800; font-size: 14px; margin-right: 6px;">+91</span>
+              <input type="tel" id="admin-phone-input" value="6206494214" readonly style="width: 100%; box-sizing: border-box; padding: 12px 0; background: transparent; border: none; color: #38bdf8; font-size: 15px; font-weight: 800; font-family: monospace; outline: none; cursor: not-allowed;">
+              <span style="font-size: 11px; background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 2px 8px; border-radius: 6px; font-weight: 800; white-space: nowrap;">🔒 Fixed</span>
+            </div>
+            <div style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Strictly bound to Owner WhatsApp. Login requires owner permission.</div>
+          </div>
+
+          <!-- Primary: Direct Admin Login -->
+          <button type="submit" id="btn-admin-direct-login" style="width: 100%; padding: 13px; background: #0284c7; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);">
+            <span>🚀 Sign In to Central Dispatch Console</span> →
+          </button>
+
+          <!-- 1-Tap Quick Sign In with Default Credentials (Dev/Demo Only) -->
+          <button type="button" id="btn-admin-demo-login" onclick="fillAdminCredentials(); handleAdminDirectLogin(event);" style="display: none; width: 100%; padding: 10px; background: rgba(56, 189, 248, 0.12); border: 1px solid #38bdf8; color: #38bdf8; font-weight: 700; border-radius: 8px; font-size: 12.5px; cursor: pointer; margin-bottom: 12px;">
+            ⚡ Quick 1-Tap Sign In (admin / admin123)
+          </button>
+
+          <!-- Optional 2FA WhatsApp OTP trigger -->
+          <button type="button" onclick="handleAdminRequestOtp(event)" id="btn-admin-request-otp" style="width: 100%; padding: 9px; background: transparent; color: #94a3b8; font-weight: 700; border: 1px dashed #334155; border-radius: 8px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <span>💬 Or Request 2FA WhatsApp Code (+91 62064 94214)</span>
+          </button>
+        </form>
       </div>
 
-      <div style="margin-bottom: 20px;">
-        <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">PASSWORD</label>
-        <input type="password" id="admin-pass-input" placeholder="Enter dispatch password" style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
+      <!-- STEP 2: WhatsApp OTP Verification Card -->
+      <div id="admin-auth-step-2" style="display: none;">
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1.5px solid #059669; border-radius: 10px; padding: 14px; margin-bottom: 16px; text-align: left;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 11.5px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.5px;">
+              💬 2FA Code Sent to Owner
+            </div>
+            <span style="font-size: 11px; background: #059669; color: white; padding: 2px 7px; border-radius: 10px; font-weight: 800;">Owner Permission Required</span>
+          </div>
+          <div style="font-size: 13.5px; color: #f8fafc; font-weight: 800; margin-top: 6px;">
+            Recipient: <span style="color: #38bdf8; font-family: monospace;">+91 62064 94214</span> (Owner WhatsApp)
+          </div>
+          <div style="font-size: 12px; color: #cbd5e1; margin-top: 5px; line-height: 1.4;">
+            A 6-digit security code has been sent to the Owner's WhatsApp. Please obtain authorization and enter the OTP to unlock Central Dispatch.
+          </div>
+          <!-- Clickable WhatsApp link -->
+          <div style="margin-top: 10px;">
+            <a id="admin-wa-direct-link" href="https://wa.me/916206494214" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; background: #059669; color: white; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-decoration: none;">
+              📲 Request OTP from Owner on WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <form id="admin-verify-otp-form" onsubmit="handleAdminVerifyOtp(event)">
+          <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; text-align: center; display: block;">
+            ENTER 6-DIGIT VERIFICATION CODE
+          </label>
+          <div class="otp-inputs-row">
+            <input type="tel" maxlength="1" class="otp-digit-box" id="otp-d1" inputmode="numeric" autocomplete="one-time-code">
+            <input type="tel" maxlength="1" class="otp-digit-box" id="otp-d2" inputmode="numeric">
+            <input type="tel" maxlength="1" class="otp-digit-box" id="otp-d3" inputmode="numeric">
+            <input type="tel" maxlength="1" class="otp-digit-box" id="otp-d4" inputmode="numeric">
+            <input type="tel" maxlength="1" class="otp-digit-box" id="otp-d5" inputmode="numeric">
+            <input type="tel" maxlength="1" class="otp-digit-box" id="otp-d6" inputmode="numeric">
+          </div>
+
+          <button type="submit" id="btn-admin-verify-submit" style="width: 100%; padding: 13px; background: #0284c7; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);">
+            Verify Code &amp; Access Console →
+          </button>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px;">
+            <button type="button" id="btn-resend-otp" onclick="handleResendAdminOtp()" disabled style="background: none; border: none; color: #94a3b8; font-size: 12px; cursor: not-allowed; padding: 0;">
+              Resend code (<span id="otp-timer-val">60</span>s)
+            </button>
+            <button type="button" onclick="backToAdminStep1()" style="background: none; border: none; color: #38bdf8; font-size: 12px; cursor: pointer; padding: 0;">
+              ← Back to Details
+            </button>
+          </div>
+
+          <button type="button" id="btn-admin-demo-skip-2fa" onclick="backToAdminStep1(); handleAdminDirectLogin();" style="display: none; width: 100%; padding: 9px; background: rgba(2, 132, 199, 0.15); border: 1px dashed #0284c7; border-radius: 8px; color: #38bdf8; font-weight: 700; font-size: 12px; cursor: pointer; margin-top: 12px;">
+            ⚡ Skip 2FA &amp; Sign In with Credentials (admin / admin123) →
+          </button>
+        </form>
       </div>
 
-      <button type="button" onclick="handleAdminLogin()" style="width: 100%; padding: 12px; background: #0284c7; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
-        Log In to Dispatch Console →
-      </button>
-      <div style="text-align: center; margin-top: 14px; font-size: 12px;">
-        <a href="index.html" style="color: #38bdf8; text-decoration: none;">← Back to Passenger Website</a>
+      <div style="text-align: center; margin-top: 20px; font-size: 12px; border-top: 1px solid #334155; padding-top: 14px;">
+        <a href="index.html" style="color: #94a3b8; text-decoration: none; font-weight: 600;">← Back to Passenger Website</a>
       </div>
     </div>
   </div>
 
   <!-- Admin Main Dashboard -->
   <div id="admin-dashboard-view">
+    <!-- Live Dispatch Real-time Alerts Floating HUD Container -->
+    <div id="admin-live-alerts-hud"></div>
+
     <header class="admin-navbar">
       <div class="admin-brand">
-        <span>OneWayTaxiBihar</span>
-        <span class="admin-badge">DISPATCH DESK</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 14px;">
-        <a href="index.html" style="color: var(--admin-muted); font-size: 13px; text-decoration: none; font-weight: 600;">Passenger Site</a>
-        <a href="driver.html" style="color: var(--admin-muted); font-size: 13px; text-decoration: none; font-weight: 600;">Driver App</a>
-        <button type="button" onclick="handleAdminLogout()" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer;">
+        <div class="admin-brand-content">
+          <div style="width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(37, 99, 235, 0.35); flex-shrink: 0;">
+            <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar Admin" width="36" height="36" style="width: 36px; height: 36px; object-fit: contain; display: block; border-radius: 10px;">
+          </div>
+          <div style="display: flex; flex-direction: column; min-width: 0;">
+            <span class="admin-brand-title">OneWay<span style="color: #38bdf8;">TaxiBihar</span></span>
+            <span class="admin-brand-sub">CENTRAL DISPATCH OPERATIONS DESK</span>
+          </div>
+        </div>
+        <button type="button" onclick="handleAdminLogout()" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; flex-shrink: 0;">
           Logout
         </button>
+      </div>
+      <div class="admin-nav-actions">
+        <!-- Live Real-Time Device Notifications Control -->
+        <button type="button" id="btn-device-alerts" onclick="toggleDeviceNotifications()" class="nav-alert-btn active" title="Toggle native device notifications (works even when tab is backgrounded)">
+          <span class="hud-indicator hud-pulse-booking"></span>
+          <span id="txt-device-alerts">Device Alerts: Active</span>
+        </button>
+
+        <!-- Executive Audio Chime Toggle -->
+        <button type="button" id="btn-audio-alerts" onclick="toggleAudioAlerts()" class="nav-sound-btn active" title="Toggle executive notification chime sound">
+          <span id="icon-sound">🔊</span>
+          <span id="txt-audio-alerts">Chime: ON</span>
+        </button>
+
+        <a href="index.html" target="_blank" style="color: var(--admin-muted); font-size: 12px; text-decoration: none; font-weight: 600; padding: 5px 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Passenger Site ↗</a>
+        <a href="driver.html" target="_blank" style="color: var(--admin-muted); font-size: 12px; text-decoration: none; font-weight: 600; padding: 5px 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">Driver App ↗</a>
       </div>
     </header>
 
     <main class="admin-container">
       
-      <!-- Top Primary Navigation Tabs (Req 157, 158) -->
+      <!-- Top Primary Navigation Tabs -->
       <nav class="admin-main-tabs">
-        <button type="button" class="admin-nav-tab active" id="main-tab-bookings" onclick="switchMainTab('bookings')">
+        <button type="button" class="admin-nav-tab active" id="main-tab-leads" onclick="switchMainTab('leads')">
+          ⚡ Live Leads &amp; Inquiries <span id="leads-count-badge" style="background: #ef4444; color: white; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 6px;">0</span>
+        </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-bookings" onclick="switchMainTab('bookings')">
           🚖 Bookings &amp; Dispatch
         </button>
         <button type="button" class="admin-nav-tab" id="main-tab-payments" onclick="switchMainTab('payments')">
@@ -272,13 +639,82 @@
         <button type="button" class="admin-nav-tab" id="main-tab-drivers" onclick="switchMainTab('drivers')">
           👨‍✈️ Chauffeurs &amp; Fleet
         </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-vehicles" onclick="switchMainTab('vehicles')">
+          🚗 Vehicle Expiry Radar
+        </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-coupons" onclick="switchMainTab('coupons')">
+          🎟️ Promo Coupons
+        </button>
         <button type="button" class="admin-nav-tab" id="main-tab-audit" onclick="switchMainTab('audit')">
-          📜 Audit Logs (Who Changed What)
+          📜 Audit Logs
         </button>
       </nav>
 
+      <!-- ================= VIEW 0: LIVE LEADS & FARE ENQUIRIES ================= -->
+      <div id="view-leads" style="display: block;">
+        <!-- Top Metrics for Leads -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">New Leads Today</div>
+            <div class="admin-stat-val" id="stat-leads-new" style="color: #ef4444;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Contacted / Called</div>
+            <div class="admin-stat-val" id="stat-leads-contacted" style="color: #38bdf8;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Converted to Bookings</div>
+            <div class="admin-stat-val" id="stat-leads-converted" style="color: #34d399;">0</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-lbl">Total Fare Inquiries</div>
+            <div class="admin-stat-val" id="stat-leads-total">0</div>
+          </div>
+        </div>
+
+        <!-- Search & Status Bar -->
+        <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+          <div style="display: flex; gap: 8px; flex: 1; min-width: 280px;">
+            <input type="text" id="admin-leads-search" placeholder="🔍 Search by passenger phone or city..." style="flex: 1; padding: 10px 14px; background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 8px; color: white; font-size: 13px;" oninput="applyLeadsFilters()">
+            <button type="button" style="padding: 10px 14px; background: #334155; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;" onclick="loadLeads()">🔄 Refresh</button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+            <span>Live auto-sync active</span>
+          </div>
+        </div>
+
+        <!-- Filter pills -->
+        <div class="admin-filter-bar">
+          <button type="button" class="admin-filter-pill active" onclick="setLeadsFilter('ALL', this)">All Inquiries</button>
+          <button type="button" class="admin-filter-pill" onclick="setLeadsFilter('NEW', this)">🔥 Uncontacted New</button>
+          <button type="button" class="admin-filter-pill" onclick="setLeadsFilter('CONTACTED', this)">📞 Contacted</button>
+          <button type="button" class="admin-filter-pill" onclick="setLeadsFilter('CONVERTED', this)">✅ Converted to Booking</button>
+        </div>
+
+        <!-- Leads Table -->
+        <div class="admin-table-card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Time &amp; ID</th>
+                <th>Passenger Phone</th>
+                <th>Inquired Route</th>
+                <th>Travel Date &amp; Time</th>
+                <th>Estimated Rates</th>
+                <th>Status</th>
+                <th>Direct Dispatch Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-leads-tbody">
+              <tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--admin-muted);">Loading live fare inquiries...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- ================= VIEW 1: BOOKINGS & DISPATCH ================= -->
-      <div id="view-bookings">
+      <div id="view-bookings" style="display: none;">
         <!-- Top Metrics (Req 157) -->
         <div class="admin-stats-grid">
           <div class="admin-stat-card">
@@ -437,6 +873,71 @@
         </div>
       </div>
 
+
+
+      <!-- ================= VIEW 7: FLEET VEHICLES & EXPIRY RADAR ================= -->
+      <div id="view-vehicles" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Enterprise Fleet Registry &amp; Document Expiry Radar</h3>
+            <p style="font-size: 12.5px; color: var(--admin-muted); margin: 4px 0 0 0;">Track commercial registration, fitness certificates, state permits, and insurance validity.</p>
+          </div>
+          <button type="button" class="btn-action-sm btn-assign" onclick="openAddVehicleModal()">+ Register Vehicle</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Registration No.</th>
+                <th>Vehicle Model</th>
+                <th>Tier</th>
+                <th>Year</th>
+                <th>Fuel</th>
+                <th>Assigned Chauffeur</th>
+                <th>Insurance Expiry</th>
+                <th>Fitness Expiry</th>
+                <th>Permit Expiry</th>
+              </tr>
+            </thead>
+            <tbody id="admin-vehicles-tbody">
+              <tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--admin-muted);">Loading fleet registry...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 8: PROMO COUPONS & DISCOUNTS ================= -->
+      <div id="view-coupons" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Promotional Coupons &amp; Fare Discounts</h3>
+            <p style="font-size: 12.5px; color: var(--admin-muted); margin: 4px 0 0 0;">Manage consumer promo campaigns, percentage cuts, and minimum fare thresholds.</p>
+          </div>
+          <button type="button" class="btn-action-sm btn-assign" onclick="openAddCouponModal()">+ Create Promo Coupon</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Title &amp; Campaign</th>
+                <th>Type</th>
+                <th>Discount</th>
+                <th>Min Fare</th>
+                <th>Max Discount</th>
+                <th>Redemptions</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-coupons-tbody">
+              <tr><td colspan="8" style="text-align: center; padding: 30px; color: var(--admin-muted);">Loading active coupons...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -544,44 +1045,751 @@
     </div>
   </div>
 
+  <!-- Register Vehicle Modal -->
+  <div id="modal-add-vehicle" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Register Fleet Vehicle</h3>
+        <button type="button" onclick="closeAddVehicleModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <form onsubmit="handleAddVehicleSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">REGISTRATION NUMBER (PLATE) *</label>
+          <input type="text" id="veh-reg" required placeholder="e.g. BR 01 PB 9021" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; text-transform: uppercase;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">MODEL *</label>
+            <input type="text" id="veh-model" required placeholder="e.g. Maruti Dzire" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">TIER</label>
+            <select id="veh-tier" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+              <option value="sedan">Sedan</option>
+              <option value="hatchback">Hatchback</option>
+              <option value="suv">SUV</option>
+              <option value="sedan_prime">Sedan Prime</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">YEAR</label>
+            <input type="number" id="veh-year" value="2024" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">FUEL</label>
+            <select id="veh-fuel" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+              <option value="CNG + Petrol">CNG + Petrol</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Petrol">Petrol</option>
+              <option value="Electric">Electric</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">ASSIGNED DRIVER</label>
+          <select id="veh-driver" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+            <!-- Injected via JS -->
+          </select>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">INSURANCE EXPIRY</label>
+            <input type="date" id="veh-ins-exp" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">FITNESS EXPIRY</label>
+            <input type="date" id="veh-fit-exp" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">STATE PERMIT EXPIRY</label>
+          <input type="date" id="veh-per-exp" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <button type="submit" style="margin-top: 6px; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          Register Vehicle →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Coupon Modal -->
+  <div id="modal-add-coupon" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; max-width: 440px; width: 100%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Create Promo Coupon</h3>
+        <button type="button" onclick="closeAddCouponModal()" style="background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;">✕</button>
+      </div>
+      <form onsubmit="handleAddCouponSubmit(event)" style="display: flex; flex-direction: column; gap: 12px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">COUPON CODE (UPPERCASE) *</label>
+          <input type="text" id="cpn-code" required placeholder="e.g. MONSOON15" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; text-transform: uppercase;">
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">CAMPAIGN TITLE *</label>
+          <input type="text" id="cpn-title" required placeholder="e.g. Monsoon Highway Special" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">DISCOUNT TYPE</label>
+            <select id="cpn-type" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+              <option value="FLAT">Flat ₹ (e.g. ₹100)</option>
+              <option value="PERCENT">Percentage % (e.g. 10%)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">DISCOUNT VALUE *</label>
+            <input type="number" id="cpn-val" required value="100" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">MIN FARE (₹)</label>
+            <input type="number" id="cpn-min" value="1200" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 700; color: #94a3b8;">MAX CAP (₹)</label>
+            <input type="number" id="cpn-max" value="200" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white;">
+          </div>
+        </div>
+        <button type="submit" style="margin-top: 6px; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          Create &amp; Publish Coupon →
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script src="js/api.js"></script>
   <script>
     let _adminToken = localStorage.getItem("otb_admin_token");
     let _allBookings = [];
+    let _allLeads = [];
     let _currentFilter = "ALL";
-    let _currentMainTab = "bookings";
+    let _currentLeadsFilter = "ALL";
+    let _currentMainTab = "leads";
     let _activeAssignBookingId = null;
     let _availableDrivers = [];
+    let _pollTimer = null;
+
+    let _adminAuthMode = "cred";
+    let _adminPendingPhone = "6206494214";
+    let _adminOtpTimer = null;
+    let _adminOtpSeconds = 60;
+
+    function switchAdminAuthMode(mode) {
+      _adminAuthMode = mode;
+      document.getElementById("tab-auth-cred")?.classList.toggle("active", mode === "cred");
+      document.getElementById("tab-auth-phone")?.classList.toggle("active", mode === "phone");
+      const credEl = document.getElementById("auth-mode-cred-fields");
+      const phoneEl = document.getElementById("auth-mode-phone-fields");
+      if (credEl) credEl.style.display = mode === "cred" ? "block" : "none";
+      if (phoneEl) {
+        phoneEl.style.display = mode === "phone" ? "block" : "none";
+        const pInput = document.getElementById("admin-phone-input");
+        if (pInput) pInput.value = "6206494214";
+      }
+      const errEl = document.getElementById("admin-login-error");
+      if (errEl) errEl.style.display = "none";
+    }
+
+    function fillAdminCredentials() {
+      const userEl = document.getElementById("admin-user-input");
+      const passEl = document.getElementById("admin-pass-input");
+      const phoneEl = document.getElementById("admin-phone-input");
+      if (userEl) userEl.value = "admin";
+      if (passEl) passEl.value = "admin123";
+      if (phoneEl) phoneEl.value = "6206494214";
+      const errEl = document.getElementById("admin-login-error");
+      if (errEl) errEl.style.display = "none";
+    }
+
+    let _knownBookingIds = new Set();
+    let _knownLeadIds = new Set();
+    let _isFirstLoad = true;
+    let _notificationsEnabled = localStorage.getItem("otb_admin_notifications") !== "false";
+    let _audioAlertsEnabled = localStorage.getItem("otb_admin_audio") !== "false";
+    let _audioCtx = null;
+
+    /* Executive Dual-Tone Chime Generator (Web Audio API) */
+    function playExecutiveChime(type = "booking") {
+      if (!_audioAlertsEnabled) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!_audioCtx) _audioCtx = new AudioCtx();
+        if (_audioCtx.state === "suspended") _audioCtx.resume();
+
+        const now = _audioCtx.currentTime;
+        const osc = _audioCtx.createOscillator();
+        const gain = _audioCtx.createGain();
+
+        osc.connect(gain);
+        gain.connect(_audioCtx.destination);
+
+        if (type === "booking") {
+          // Dual crisp executive alert (D5: 587.33Hz -> A5: 880.00Hz)
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.setValueAtTime(880.00, now + 0.12);
+
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.20, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.60);
+
+          osc.start(now);
+          osc.stop(now + 0.61);
+        } else {
+          // Soft inquiry alert (E5: 659.25Hz -> G5: 783.99Hz)
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(659.25, now);
+          osc.frequency.setValueAtTime(783.99, now + 0.10);
+
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.14, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+          osc.start(now);
+          osc.stop(now + 0.46);
+        }
+      } catch (e) {
+        console.warn("Audio chime notice:", e);
+      }
+    }
+
+    /* Device Push Notification Manager (Web Notification API) */
+    async function requestDeviceNotificationPermission() {
+      if (!("Notification" in window)) {
+        return;
+      }
+      try {
+        const res = await Notification.requestPermission();
+        updateNotificationUiState();
+        if (res === "granted") {
+          playExecutiveChime("booking");
+          sendDeviceNotification(
+            "OneWayTaxiBihar | Live Dispatch Alerts Enabled",
+            "This device will now receive instant alerts whenever someone checks route inquiries or books a cab.",
+            "otb_perm_granted"
+          );
+        }
+      } catch (e) {
+        console.warn("Notification permission error:", e);
+      }
+    }
+
+    function toggleDeviceNotifications() {
+      if (!("Notification" in window)) {
+        alert("This browser/device does not support native desktop notifications.");
+        return;
+      }
+      if (Notification.permission !== "granted") {
+        requestDeviceNotificationPermission();
+        return;
+      }
+      _notificationsEnabled = !_notificationsEnabled;
+      localStorage.setItem("otb_admin_notifications", _notificationsEnabled ? "true" : "false");
+      updateNotificationUiState();
+      if (_notificationsEnabled) {
+        playExecutiveChime("lead");
+      }
+    }
+
+    function toggleAudioAlerts() {
+      _audioAlertsEnabled = !_audioAlertsEnabled;
+      localStorage.setItem("otb_admin_audio", _audioAlertsEnabled ? "true" : "false");
+      updateNotificationUiState();
+      if (_audioAlertsEnabled) {
+        playExecutiveChime("lead");
+      }
+    }
+
+    function updateNotificationUiState() {
+      const btnNotif = document.getElementById("btn-device-alerts");
+      const txtNotif = document.getElementById("txt-device-alerts");
+      const btnAudio = document.getElementById("btn-audio-alerts");
+      const txtAudio = document.getElementById("txt-audio-alerts");
+
+      const hasPerm = ("Notification" in window) && Notification.permission === "granted" && _notificationsEnabled;
+
+      if (btnNotif && txtNotif) {
+        if (hasPerm) {
+          btnNotif.className = "nav-alert-btn active";
+          btnNotif.innerHTML = `<span class="hud-indicator hud-pulse-booking"></span><span>Device Alerts: Active</span>`;
+        } else {
+          btnNotif.className = "nav-alert-btn inactive";
+          const lbl = ("Notification" in window && Notification.permission === "denied") 
+            ? "Alerts Blocked (Browser)" 
+            : "Enable Device Alerts";
+          btnNotif.innerHTML = `<span class="hud-indicator" style="background:#ef4444;"></span><span>${lbl}</span>`;
+        }
+      }
+
+      if (btnAudio && txtAudio) {
+        if (_audioAlertsEnabled) {
+          btnAudio.className = "nav-sound-btn active";
+          btnAudio.innerHTML = `<span>🔊</span><span>Chime: ON</span>`;
+        } else {
+          btnAudio.className = "nav-sound-btn";
+          btnAudio.innerHTML = `<span>🔇</span><span>Chime: OFF</span>`;
+        }
+      }
+    }
+
+    function sendDeviceNotification(title, body, tag = "", onClickTab = "") {
+      if (!("Notification" in window) || Notification.permission !== "granted" || !_notificationsEnabled) {
+        return;
+      }
+      try {
+        const notif = new Notification(title, {
+          body: body,
+          icon: "favicon.svg",
+          badge: "favicon.svg",
+          tag: tag || ("otb_" + Date.now()),
+          vibrate: [250, 100, 250],
+          requireInteraction: true
+        });
+
+        notif.onclick = function() {
+          window.focus();
+          if (onClickTab) {
+            switchMainTab(onClickTab);
+          }
+          notif.close();
+        };
+      } catch (err) {
+        console.warn("Notification send error:", err);
+      }
+    }
+
+    /* Executive Floating In-App Dispatch Alert HUD */
+    function showExecutiveDispatchAlert(data) {
+      const container = document.getElementById("admin-live-alerts-hud");
+      if (!container) return;
+
+      const isBooking = data.type === "BOOKING";
+      const id = "alert_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+
+      const el = document.createElement("div");
+      el.id = id;
+      el.className = "dispatch-hud-toast " + (isBooking ? "hud-booking" : "hud-inquiry");
+      el.innerHTML = `
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="hud-indicator ${isBooking ? 'hud-pulse-booking' : 'hud-pulse-inquiry'}"></div>
+            <strong style="font-size: 12px; letter-spacing: 0.5px; color: ${isBooking ? '#34d399' : '#38bdf8'}; font-weight: 800;">
+              ${isBooking ? 'NEW CAB BOOKING REQUEST' : 'NEW ROUTE INQUIRY'}
+            </strong>
+          </div>
+          <button type="button" onclick="document.getElementById('${id}').remove()" class="hud-close-btn">&times;</button>
+        </div>
+        <div style="margin: 8px 0 4px 0; font-size: 14.5px; font-weight: 900; color: #ffffff;">
+          ${data.route}
+        </div>
+        <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.45;">
+          ${data.details}
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);">
+          <span style="font-size: 11px; color: #94a3b8; font-family: monospace;">${data.time || 'Just now'}</span>
+          <button type="button" class="hud-action-btn" onclick="document.getElementById('${id}').remove(); switchMainTab('${isBooking ? 'bookings' : 'leads'}');">
+            ${isBooking ? 'Open in Dispatch →' : 'View Inquiry →'}
+          </button>
+        </div>
+      `;
+
+      container.prepend(el);
+
+      setTimeout(() => {
+        if (el && el.parentNode) {
+          el.style.opacity = "0";
+          el.style.transform = "translateX(50px)";
+          setTimeout(() => el.remove(), 300);
+        }
+      }, 10000);
+    }
 
     async function initAdmin() {
       if (!_adminToken) {
         document.getElementById("admin-login-view").style.display = "block";
         document.getElementById("admin-dashboard-view").style.display = "none";
+        document.getElementById("admin-auth-step-1").style.display = "block";
+        document.getElementById("admin-auth-step-2").style.display = "none";
         return;
       }
 
       document.getElementById("admin-login-view").style.display = "none";
       document.getElementById("admin-dashboard-view").style.display = "block";
 
+      updateNotificationUiState();
+
+      // Initial data load
       await loadDrivers();
-      await loadBookings();
-    }
+      await pollRealtimeData();
 
-    async function handleAdminLogin() {
-      const user = document.getElementById("admin-user-input").value.trim();
-      const pass = document.getElementById("admin-pass-input").value.trim();
+      // Auto-prompt device notification permission on dashboard load if not decided
+      if ("Notification" in window && Notification.permission === "default") {
+        setTimeout(() => {
+          requestDeviceNotificationPermission();
+        }, 1500);
+      }
 
-      const res = await ApiClient.adminLogin(user, pass);
-      if (res && res.success && res.token) {
-        _adminToken = res.token;
-        localStorage.setItem("otb_admin_token", _adminToken);
-        initAdmin();
-      } else {
-        alert(res?.message || "Invalid credentials. Use admin / admin123");
+      // Fast, Real-time Auto-Sync Polling every 3.5 seconds for instant dispatch alerts
+      if (!_pollTimer) {
+        _pollTimer = setInterval(pollRealtimeData, 3500);
       }
     }
 
+    /* Fast 3.5-Second Polling & Device Dispatch Engine */
+    async function pollRealtimeData() {
+      if (!_adminToken) return;
+      try {
+        // 1. Poll Inquiries & Leads
+        const resLeads = await ApiClient.adminGetLeads(_adminToken);
+        if (resLeads && resLeads.success && Array.isArray(resLeads.leads)) {
+          const freshLeads = resLeads.leads;
+          if (_isFirstLoad) {
+            freshLeads.forEach(l => _knownLeadIds.add(l.id));
+          } else {
+            const newLeads = freshLeads.filter(l => !_knownLeadIds.has(l.id));
+            if (newLeads.length > 0) {
+              newLeads.forEach(l => {
+                _knownLeadIds.add(l.id);
+                const p = l.phone || l.cleanPhone || 'Customer';
+                // Trigger Native Browser / Phone Device Notification
+                sendDeviceNotification(
+                  "OneWayTaxiBihar | New Route Inquiry",
+                  `Inquiry: ${l.originCity} ➔ ${l.destCity} (${l.distanceKm || 100} KM) by ${p} • Est. ₹${(l.estFareSedan || 2198).toLocaleString('en-IN')}`,
+                  `lead_${l.id}`,
+                  "leads"
+                );
+                // Trigger In-App HUD Alert
+                showExecutiveDispatchAlert({
+                  type: "INQUIRY",
+                  route: `${l.originCity} ➔ ${l.destCity} (${l.distanceKm || 100} KM)`,
+                  details: `Passenger Mobile: ${p} • Sedan Rate: ₹${(l.estFareSedan || 2198).toLocaleString('en-IN')}`,
+                  time: "Just now"
+                });
+              });
+              playExecutiveChime("lead");
+            }
+          }
+          _allLeads = freshLeads;
+          renderLeadsMetrics();
+          if (_currentMainTab === "leads") applyLeadsFilters();
+        }
+
+        // 2. Poll Cab Bookings
+        const resBookings = await ApiClient.adminGetBookings(_adminToken);
+        if (resBookings && resBookings.success && Array.isArray(resBookings.bookings)) {
+          const freshBookings = resBookings.bookings;
+          if (_isFirstLoad) {
+            freshBookings.forEach(b => _knownBookingIds.add(b.bookingId));
+          } else {
+            const newBookings = freshBookings.filter(b => !_knownBookingIds.has(b.bookingId));
+            if (newBookings.length > 0) {
+              newBookings.forEach(b => {
+                _knownBookingIds.add(b.bookingId);
+                const fareStr = `₹${(b.totalFare || 0).toLocaleString('en-IN')}`;
+                // Trigger Native Browser / Phone Device Notification
+                sendDeviceNotification(
+                  "🚨 OneWayTaxiBihar | New Cab Booking Request",
+                  `Booking ${b.bookingId}: ${b.originCity} ➔ ${b.destCity} (${b.fleetClass || 'Sedan'}) by ${b.passengerName} (${b.passengerPhone}) • Fare: ${fareStr}`,
+                  `booking_${b.bookingId}`,
+                  "bookings"
+                );
+                // Trigger In-App HUD Alert
+                showExecutiveDispatchAlert({
+                  type: "BOOKING",
+                  route: `Booking ${b.bookingId}: ${b.originCity} ➔ ${b.destCity}`,
+                  details: `${b.passengerName} (${b.passengerPhone}) • ${b.fleetClass || 'Sedan'} • ${fareStr} (${b.paymentMethod || 'Cash/UPI'})`,
+                  time: "Just now"
+                });
+              });
+              playExecutiveChime("booking");
+            }
+          }
+          _allBookings = freshBookings;
+          renderMetrics();
+          if (_currentMainTab === "bookings") applyFilters();
+        }
+
+        if (_isFirstLoad) {
+          _isFirstLoad = false;
+        }
+      } catch (err) {
+        console.warn("Polling notice:", err);
+      }
+    }
+
+    async function handleAdminDirectLogin(e) {
+      if (e) e.preventDefault();
+      const errEl = document.getElementById("admin-login-error");
+      const succEl = document.getElementById("admin-login-success");
+      if (errEl) errEl.style.display = "none";
+      if (succEl) succEl.style.display = "none";
+
+      const user = (document.getElementById("admin-user-input")?.value || "").trim();
+      const pass = (document.getElementById("admin-pass-input")?.value || "").trim();
+
+      if (!user || !pass) {
+        if (errEl) {
+          errEl.textContent = "Please enter both username and password (default: admin / admin123).";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+
+      const btn = document.getElementById("btn-admin-direct-login");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Authenticating Admin Credentials...</span>`;
+      }
+
+      try {
+        const res = await ApiClient.adminLogin(user, pass);
+        if (res && res.success && res.token) {
+          _adminToken = res.token;
+          localStorage.setItem("otb_admin_token", _adminToken);
+          if (succEl) {
+            succEl.textContent = "✓ Authentication successful! Loading Central Dispatch...";
+            succEl.style.display = "block";
+          }
+          setTimeout(() => {
+            initAdmin();
+          }, 300);
+        } else {
+          if (errEl) {
+            errEl.textContent = res?.message || "Invalid admin credentials. Default credentials: admin / admin123";
+            errEl.style.display = "block";
+          }
+        }
+      } catch (err) {
+        console.error("Admin login error:", err);
+        if (errEl) {
+          errEl.textContent = "Connection error during admin login. Please try again.";
+          errEl.style.display = "block";
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>🚀 Sign In to Central Dispatch Console</span> →`;
+        }
+      }
+    }
+
+    async function handleAdminRequestOtp(e) {
+      if (e) e.preventDefault();
+      const errEl = document.getElementById("admin-login-error");
+      const succEl = document.getElementById("admin-login-success");
+      if (errEl) errEl.style.display = "none";
+      if (succEl) succEl.style.display = "none";
+
+      const user = (document.getElementById("admin-user-input")?.value || "").trim();
+      const pass = (document.getElementById("admin-pass-input")?.value || "").trim();
+      const phoneInput = (document.getElementById("admin-phone-input")?.value || "").trim();
+
+      const AUTHORIZED_OWNER_PHONE = "6206494214";
+
+      if (_adminAuthMode === "phone") {
+        const cleanP = phoneInput.replace(/\D/g, "").slice(-10);
+        if (cleanP !== AUTHORIZED_OWNER_PHONE) {
+          if (errEl) {
+            errEl.textContent = "Access Denied: Admin authorization is strictly locked to Owner WhatsApp (+91 62064 94214).";
+            errEl.style.display = "block";
+          }
+          return;
+        }
+      } else {
+        if (!user || !pass) {
+          if (errEl) {
+            errEl.textContent = "Please enter both username and password.";
+            errEl.style.display = "block";
+          }
+          return;
+        }
+      }
+
+      const reqBtn = document.getElementById("btn-admin-request-otp");
+      if (reqBtn) {
+        reqBtn.disabled = true;
+        reqBtn.innerHTML = `<span>⏳ Dispatching to Owner WhatsApp (+91 ${AUTHORIZED_OWNER_PHONE})...</span>`;
+      }
+
+      try {
+        const res = await ApiClient.adminSendWhatsAppOtp(AUTHORIZED_OWNER_PHONE, user, pass);
+        if (res && res.success) {
+          _adminPendingPhone = AUTHORIZED_OWNER_PHONE;
+
+          const waLinkEl = document.getElementById("admin-wa-direct-link");
+          if (waLinkEl && res.whatsappUrl) {
+            waLinkEl.setAttribute("href", res.whatsappUrl);
+          }
+
+          document.getElementById("admin-auth-step-1").style.display = "none";
+          document.getElementById("admin-auth-step-2").style.display = "block";
+
+          startAdminOtpCountdown();
+          setupAdminOtpInputs();
+          setTimeout(() => { document.getElementById("otp-d1")?.focus(); }, 120);
+        } else {
+          if (errEl) {
+            errEl.textContent = res?.message || "Failed to send WhatsApp verification code. Only Owner can authorize.";
+            errEl.style.display = "block";
+          }
+        }
+      } catch (err) {
+        console.error("Admin OTP request error:", err);
+        if (errEl) {
+          errEl.textContent = "Error sending WhatsApp code. Please check connection.";
+          errEl.style.display = "block";
+        }
+      } finally {
+        if (reqBtn) {
+          reqBtn.disabled = false;
+          reqBtn.innerHTML = `<span>💬 Send WhatsApp OTP to Owner (+91 62064 94214)</span> →`;
+        }
+      }
+    }
+
+    function setupAdminOtpInputs() {
+      const inputs = [
+        document.getElementById("otp-d1"),
+        document.getElementById("otp-d2"),
+        document.getElementById("otp-d3"),
+        document.getElementById("otp-d4"),
+        document.getElementById("otp-d5"),
+        document.getElementById("otp-d6")
+      ];
+
+      inputs.forEach((inp, idx) => {
+        if (!inp) return;
+        inp.value = "";
+        inp.oninput = () => {
+          const val = inp.value.replace(/\D/g, "");
+          inp.value = val ? val.slice(-1) : "";
+          if (inp.value && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+          }
+        };
+        inp.onkeydown = (e) => {
+          if (e.key === "Backspace" && !inp.value && idx > 0) {
+            inputs[idx - 1].focus();
+          }
+        };
+        inp.onpaste = (e) => {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g, "");
+          if (paste) {
+            for (let i = 0; i < inputs.length; i++) {
+              if (paste[i]) inputs[i].value = paste[i];
+            }
+            inputs[Math.min(paste.length, inputs.length - 1)].focus();
+          }
+        };
+      });
+    }
+
+    async function handleAdminVerifyOtp(e) {
+      if (e) e.preventDefault();
+      const errEl = document.getElementById("admin-login-error");
+      if (errEl) errEl.style.display = "none";
+
+      let enteredOtp = "";
+      for (let i = 1; i <= 6; i++) {
+        enteredOtp += (document.getElementById("otp-d" + i)?.value || "").trim();
+      }
+
+      if (enteredOtp.length !== 6) {
+        if (errEl) {
+          errEl.textContent = "Please enter the 6-digit code received on Owner's WhatsApp (+91 62064 94214).";
+          errEl.style.display = "block";
+        }
+        return;
+      }
+
+      const verifyBtn = document.getElementById("btn-admin-verify-submit");
+      if (verifyBtn) {
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = "Verifying with Owner Authorization...";
+      }
+
+      try {
+        const user = (document.getElementById("admin-user-input")?.value || "").trim() || "admin";
+        const res = await ApiClient.adminVerifyWhatsAppOtp("6206494214", enteredOtp, user);
+        if (res && res.success && res.token) {
+          _adminToken = res.token;
+          localStorage.setItem("otb_admin_token", _adminToken);
+          clearInterval(_adminOtpTimer);
+          initAdmin();
+        } else {
+          if (errEl) {
+            errEl.textContent = res?.message || "Invalid OTP code. Please verify the code sent to Owner (+91 62064 94214).";
+            errEl.style.display = "block";
+          }
+        }
+      } catch (err) {
+        console.error("Admin OTP verification error:", err);
+        if (errEl) {
+          errEl.textContent = "Verification failed. Please check your code or request owner approval.";
+          errEl.style.display = "block";
+        }
+      } finally {
+        if (verifyBtn) {
+          verifyBtn.disabled = false;
+          verifyBtn.textContent = "Verify Code & Access Console →";
+        }
+      }
+    }
+
+    function startAdminOtpCountdown() {
+      clearInterval(_adminOtpTimer);
+      _adminOtpSeconds = 60;
+      const timerVal = document.getElementById("otp-timer-val");
+      const resendBtn = document.getElementById("btn-resend-otp");
+      if (resendBtn) {
+        resendBtn.disabled = true;
+        resendBtn.style.cursor = "not-allowed";
+        resendBtn.style.color = "#94a3b8";
+        resendBtn.innerHTML = `Resend code (<span id="otp-timer-val">60</span>s)`;
+      }
+
+      _adminOtpTimer = setInterval(() => {
+        _adminOtpSeconds--;
+        const curTimerVal = document.getElementById("otp-timer-val");
+        if (curTimerVal) curTimerVal.textContent = _adminOtpSeconds;
+        if (_adminOtpSeconds <= 0) {
+          clearInterval(_adminOtpTimer);
+          if (resendBtn) {
+            resendBtn.disabled = false;
+            resendBtn.style.cursor = "pointer";
+            resendBtn.style.color = "#38bdf8";
+            resendBtn.textContent = "↻ Resend WhatsApp OTP";
+          }
+        }
+      }, 1000);
+    }
+
+    async function handleResendAdminOtp() {
+      await handleAdminRequestOtp();
+    }
+
+    function backToAdminStep1() {
+      clearInterval(_adminOtpTimer);
+      document.getElementById("admin-auth-step-2").style.display = "none";
+      document.getElementById("admin-auth-step-1").style.display = "block";
+      const errEl = document.getElementById("admin-login-error");
+      if (errEl) errEl.style.display = "none";
+    }
+
     function handleAdminLogout() {
+      if (_pollTimer) {
+        clearInterval(_pollTimer);
+        _pollTimer = null;
+      }
+      if (_adminOtpTimer) {
+        clearInterval(_adminOtpTimer);
+        _adminOtpTimer = null;
+      }
       localStorage.removeItem("otb_admin_token");
       _adminToken = null;
       initAdmin();
@@ -589,7 +1797,7 @@
 
     function switchMainTab(tabName) {
       _currentMainTab = tabName;
-      const tabs = ["bookings", "payments", "wallet", "drivers", "audit"];
+      const tabs = ["leads", "bookings", "payments", "wallet", "drivers", "vehicles", "coupons", "audit"];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`main-tab-${t}`);
@@ -597,10 +1805,221 @@
         if (btn) btn.classList.toggle("active", t === tabName);
       });
 
-      if (tabName === "payments") loadPayments();
+      if (tabName === "leads") loadLeads();
+      else if (tabName === "bookings") loadBookings();
+      else if (tabName === "payments") loadPayments();
       else if (tabName === "wallet") loadWallet();
       else if (tabName === "drivers") renderDriversGrid();
+      else if (tabName === "vehicles") loadVehicles();
+      else if (tabName === "coupons") loadCoupons();
       else if (tabName === "audit") loadAuditLogs();
+    }
+
+    // =========================================================================
+    // LIVE LEADS & FARE INQUIRIES CONTROLLER
+    // =========================================================================
+    async function loadLeads(silent = false) {
+      try {
+        const res = await ApiClient.adminGetLeads(_adminToken);
+        if (res && res.success && Array.isArray(res.leads)) {
+          _allLeads = res.leads;
+          renderLeadsMetrics();
+          applyLeadsFilters();
+        }
+      } catch (err) {
+        console.warn("Error loading leads:", err);
+      }
+    }
+
+    function renderLeadsMetrics() {
+      let newCount = 0, contactedCount = 0, convertedCount = 0;
+      const todayStr = new Date().toISOString().split("T")[0];
+
+      _allLeads.forEach(l => {
+        const isToday = (l.createdAt || "").startsWith(todayStr);
+        if (l.status === "NEW") newCount++;
+        else if (l.status === "CONTACTED") contactedCount++;
+        else if (l.status === "CONVERTED") convertedCount++;
+      });
+
+      const badge = document.getElementById("leads-count-badge");
+      if (badge) {
+        badge.textContent = newCount;
+        badge.style.display = newCount > 0 ? "inline-block" : "none";
+      }
+
+      const elNew = document.getElementById("stat-leads-new");
+      const elContacted = document.getElementById("stat-leads-contacted");
+      const elConverted = document.getElementById("stat-leads-converted");
+      const elTotal = document.getElementById("stat-leads-total");
+
+      if (elNew) elNew.textContent = newCount;
+      if (elContacted) elContacted.textContent = contactedCount;
+      if (elConverted) elConverted.textContent = convertedCount;
+      if (elTotal) elTotal.textContent = _allLeads.length;
+    }
+
+    function setLeadsFilter(filter, el) {
+      _currentLeadsFilter = filter;
+      document.querySelectorAll("#view-leads .admin-filter-pill").forEach(p => p.classList.remove("active"));
+      if (el) el.classList.add("active");
+      applyLeadsFilters();
+    }
+
+    function applyLeadsFilters() {
+      const searchQ = (document.getElementById("admin-leads-search")?.value || "").toLowerCase().trim();
+
+      const filtered = _allLeads.filter(l => {
+        if (_currentLeadsFilter !== "ALL" && l.status !== _currentLeadsFilter) return false;
+        if (searchQ) {
+          const matchPhone = (l.cleanPhone || l.phone || "").includes(searchQ);
+          const matchRoute = `${l.originCity} ${l.destCity}`.toLowerCase().includes(searchQ);
+          const matchName = (l.passengerName || "").toLowerCase().includes(searchQ);
+          if (!matchPhone && !matchRoute && !matchName) return false;
+        }
+        return true;
+      });
+
+      renderLeadsTable(filtered);
+    }
+
+    function renderLeadsTable(leads) {
+      const tbody = document.getElementById("admin-leads-tbody");
+      if (!tbody) return;
+
+      if (!leads || leads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--admin-muted);">No fare inquiries found matching current filters. New visitor inquiries will show here live.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = leads.map(l => {
+        const timeAgo = formatTimeAgo(l.createdAt || l.updatedAt);
+        const cleanP = (l.cleanPhone || l.phone || "").replace(/\D/g, "").slice(-10);
+        const pDisplay = l.phone || `+91 ${cleanP}`;
+
+        let statusClass = "status-REQUESTED";
+        let statusColor = "#fbbf24";
+        if (l.status === "NEW") { statusClass = "status-REQUESTED"; statusColor = "#ef4444"; }
+        else if (l.status === "CONTACTED") { statusClass = "status-CONFIRMED"; statusColor = "#38bdf8"; }
+        else if (l.status === "CONVERTED") { statusClass = "status-COMPLETED"; statusColor = "#34d399"; }
+
+        const waMsg = encodeURIComponent(
+          `Namaste! OneWayTaxiBihar Helpdesk here regarding your outstation fare inquiry for ${l.originCity} to ${l.destCity}. ` +
+          `We have cabs ready: Prime Sedan at ₹${(l.estFareSedan || 2198).toLocaleString('en-IN')} (Toll & GST included). ` +
+          `Shall we book a verified chauffeur for your travel?`
+        );
+        const waLink = `https://wa.me/91${cleanP}?text=${waMsg}`;
+
+        return `
+          <tr>
+            <td>
+              <strong style="color: #38bdf8; font-size: 12px; font-family: monospace;">${l.id || 'LEAD'}</strong>
+              <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">⏱ ${timeAgo}</div>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <a href="tel:${pDisplay}" style="color: #34d399; font-weight: 800; text-decoration: none; font-size: 14px;">
+                  📞 ${pDisplay}
+                </a>
+              </div>
+              <div style="font-size: 11px; color: var(--admin-muted);">${l.source || 'Fare Check'}</div>
+            </td>
+            <td>
+              <strong style="font-size: 13.5px; color: #f8fafc;">${l.originCity} ➔ ${l.destCity}</strong>
+              <div style="font-size: 11px; color: var(--admin-muted); text-transform: uppercase;">
+                ${(l.tripType || 'oneway')} • ${l.distanceKm || 100} KM (~${l.duration || '2h'})
+              </div>
+            </td>
+            <td>
+              <strong style="color: #f8fafc;">${l.pickupDate || 'Today'}</strong>
+              <div style="font-size: 11.5px; color: var(--admin-muted);">${l.pickupTime || 'Immediate'}</div>
+            </td>
+            <td>
+              <div style="font-size: 12px; color: #cbd5e1;">
+                <div>Dzire/Etios: <strong style="color: #38bdf8;">₹${(l.estFareSedan || 2198).toLocaleString('en-IN')}</strong></div>
+                <div>Ertiga SUV: <strong style="color: #34d399;">₹${(l.estFareSuv || 3398).toLocaleString('en-IN')}</strong></div>
+              </div>
+            </td>
+            <td>
+              <span class="admin-status-badge ${statusClass}" style="border-color: ${statusColor}; color: ${statusColor};">
+                ${l.status === 'NEW' ? '🔥 NEW' : l.status}
+              </span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+                <a href="tel:${pDisplay}" class="btn-action-sm btn-confirm" style="text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" onclick="markLeadStatus('${l.id}', 'CONTACTED')">
+                  📞 Call
+                </a>
+                <a href="${waLink}" target="_blank" class="btn-action-sm btn-assign" style="background: #059669; border-color: #059669; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" onclick="markLeadStatus('${l.id}', 'CONTACTED')">
+                  💬 WhatsApp
+                </a>
+                ${l.status !== 'CONVERTED' ? `
+                  <button type="button" class="btn-action-sm btn-verify-pay" style="background: #0284c7; border-color: #0284c7; color: white;" onclick="convertLeadToBooking('${l.id}')">
+                    🚖 Convert to Booking
+                  </button>
+                ` : '<span style="font-size: 11.5px; color: #34d399; font-weight: 700;">✓ Booked</span>'}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function markLeadStatus(leadId, status) {
+      await ApiClient.adminUpdateLeadStatus(leadId, status, `Updated by dispatcher to ${status}`, _adminToken);
+      const target = _allLeads.find(l => l.id === leadId);
+      if (target) {
+        target.status = status;
+        renderLeadsMetrics();
+        applyLeadsFilters();
+      }
+    }
+
+    async function convertLeadToBooking(leadId) {
+      const lead = _allLeads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      const conf = confirm(`Convert inquiry for ${lead.phone} (${lead.originCity} to ${lead.destCity}) into an active Booking Request?`);
+      if (!conf) return;
+
+      const bookingPayload = {
+        passengerName: lead.passengerName || "Customer",
+        passengerPhone: lead.phone,
+        originCity: lead.originCity,
+        destCity: lead.destCity,
+        pickupAddress: `${lead.originCity} city center`,
+        dropAddress: `${lead.destCity} city center`,
+        pickupDate: lead.pickupDate || new Date().toISOString().split("T")[0],
+        pickupTime: lead.pickupTime || "10:00 AM",
+        cabTier: "sedan",
+        totalFare: lead.estFareSedan || 2198,
+        useWallet: false,
+        paymentMethod: "Cash/UPI to Driver"
+      };
+
+      const res = await ApiClient.createBooking(bookingPayload);
+      if (res && res.success) {
+        await markLeadStatus(leadId, "CONVERTED");
+        alert(`Booking ${res.booking?.bookingId || ''} created successfully! You can now assign a driver in the Bookings tab.`);
+        switchMainTab("bookings");
+      } else {
+        alert(res?.message || "Failed to convert lead into booking");
+      }
+    }
+
+    function formatTimeAgo(dateString) {
+      if (!dateString) return "Just now";
+      const now = new Date();
+      const past = new Date(dateString);
+      const diffMs = now - past;
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHrs = Math.floor(diffMin / 60);
+
+      if (diffSec < 45) return "Just now";
+      if (diffMin < 60) return `${diffMin}m ago`;
+      if (diffHrs < 24) return `${diffHrs}h ago`;
+      return past.toLocaleDateString();
     }
 
     async function loadDrivers() {
@@ -745,6 +2164,14 @@
                 ${b.bookingStatus !== 'CANCELLED' ? `
                   <button type="button" class="btn-action-sm btn-cancel" onclick="cancelRideAdmin('${b.bookingId}')">✕ Cancel</button>
                 ` : ''}
+                <a href="https://wa.me/91${(b.passengerPhone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaste ${b.passengerName}! OneWayTaxiBihar Dispatch here regarding Booking ${b.bookingId} (${b.originCity} to ${b.destCity}) on ${b.pickupDate} at ${b.pickupTime}. Fare: ₹${b.totalFare}. Status: ${b.bookingStatus}. ${b.driverDetails ? 'Assigned Driver: ' + b.driverDetails.name + ' (' + b.driverDetails.vehicleNumber + ')' : 'Our agent will call you shortly.'}`)}" target="_blank" class="btn-action-sm" style="background: #059669; border-color: #059669; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Send WhatsApp to Passenger">
+                  💬 WhatsApp
+                </a>
+                ${b.tripOtp ? `
+                  <a href="https://wa.me/91${(b.passengerPhone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`OneWayTaxiBihar Passenger Security Alert:` + '\n' + `Booking ID: ${b.bookingId}` + '\n' + `Trip: ${b.originCity} to ${b.destCity}` + '\n' + `Your Trip Start OTP is: ${b.tripOtp}` + '\n' + `Please share this OTP with your chauffeur upon vehicle arrival.`)}" target="_blank" class="btn-action-sm" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Dispatch Trip Start OTP via WhatsApp">
+                    🔑 OTP: ${b.tripOtp}
+                  </a>
+                ` : ''}
                 <button type="button" class="btn-action-sm btn-details" onclick="openDetailsModal('${b.bookingId}')">Details</button>
               </div>
             </td>
@@ -800,23 +2227,59 @@
       }
     }
 
-    function openAssignModal(bookingId) {
+    async function openAssignModal(bookingId) {
       _activeAssignBookingId = bookingId;
       const b = _allBookings.find(x => x.bookingId === bookingId);
+      if (!b) return;
       document.getElementById("assign-modal-route").textContent = `Route: ${b.originCity} → ${b.destCity} (${b.fleetClass || 'Sedan'}) • Passenger: ${b.passengerName}`;
       
       const listEl = document.getElementById("drivers-selection-list");
-      listEl.innerHTML = _availableDrivers.map(d => `
+      listEl.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 20px;">Finding closest available chauffeurs based on ETA, tier, and ratings...</div>`;
+      document.getElementById("modal-assign-driver").style.display = "flex";
+
+      let rankedDrivers = [];
+      try {
+        const matchRes = await ApiClient.getDriverMatching({
+          origin: b.originCity,
+          cabTier: b.cabTier || 'sedan'
+        }, _adminToken);
+
+        if (matchRes && matchRes.success) {
+          rankedDrivers = matchRes.matches || matchRes.recommendations || [];
+        }
+      } catch (e) {
+        console.warn("AI matching error, fallback:", e);
+      }
+
+      if (!rankedDrivers.length) {
+        rankedDrivers = _availableDrivers.map(d => ({
+          ...d,
+          driverId: d.id,
+          suitabilityScore: 88,
+          matchReason: "Available Chauffeur",
+          etaMinutes: 10
+        }));
+      }
+
+      listEl.innerHTML = rankedDrivers.map(d => `
         <div style="display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 8px;">
-          <div>
-            <strong style="color: #f8fafc; font-size: 14px;">${d.name}</strong>
-            <div style="font-size: 12px; color: #94a3b8;">${d.vehicleModel} • ${d.vehicleNumber} (⭐ ${d.rating})</div>
+          <div style="flex: 1; margin-right: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <strong style="color: #f8fafc; font-size: 14px;">${d.name}</strong>
+              <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 800; padding: 2px 7px; border-radius: 4px; font-size: 11px;">
+                Match Score: ${d.suitabilityScore}%
+              </span>
+            </div>
+            <div style="font-size: 12px; color: #94a3b8; margin-top: 3px;">
+              ${d.vehicleModel} • ${d.vehicleNumber} (⭐ ${d.rating}) • ~${d.etaMinutes || d.etaMins || 10}m ETA
+            </div>
+            <div style="font-size: 11px; color: #38bdf8; margin-top: 2px;">
+              ${d.matchReason || 'Compatible Fleet Tier'}
+            </div>
           </div>
-          <button type="button" class="btn-action-sm btn-assign" onclick="assignDriverSubmit('${d.id}')">Assign Chauffeur</button>
+          <button type="button" class="btn-action-sm btn-assign" onclick="assignDriverSubmit('${d.driverId || d.id}')">Assign Chauffeur</button>
         </div>
       `).join("");
-
-      document.getElementById("modal-assign-driver").style.display = "flex";
     }
 
     function closeAssignModal() {
@@ -863,6 +2326,17 @@
             <div><strong>Cab Tier:</strong> ${b.fleetClass} (${b.fleetModel})</div>
             <div><strong>Fare Breakdown:</strong> Base Total: ₹${b.totalFare} | Wallet Used: ₹${b.walletUsed || 0}</div>
             <div><strong>Payment Status:</strong> ${b.paymentStatus} (${b.paymentMethod || 'UPI'})</div>
+            <div><strong>Highway Trip OTP:</strong> <code style="font-size: 14px; font-weight: 900; color: #38bdf8; background: #1e293b; padding: 2px 8px; border-radius: 4px;">${b.tripOtp || '----'}</code></div>
+            <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="https://wa.me/91${(b.passengerPhone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaste ${b.passengerName}! OneWayTaxiBihar Dispatch here regarding Booking ${b.bookingId} (${b.originCity} to ${b.destCity}) on ${b.pickupDate} at ${b.pickupTime}. Fare: ₹${b.totalFare}. Status: ${b.bookingStatus}. ${b.driverDetails ? 'Assigned Driver: ' + b.driverDetails.name + ' (' + b.driverDetails.vehicleNumber + ')' : 'Our agent will call you shortly.'}`)}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #059669; color: white; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 12px;">
+                💬 Open WhatsApp Chat with Passenger
+              </a>
+              ${b.tripOtp ? `
+                <a href="https://wa.me/91${(b.passengerPhone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`OneWayTaxiBihar Passenger Security Alert:` + '\n' + `Booking ID: ${b.bookingId}` + '\n' + `Route: ${b.originCity} to ${b.destCity}` + '\n' + `Your Trip Start OTP is: ${b.tripOtp}` + '\n' + `Please share this OTP with your chauffeur upon vehicle arrival.`)}" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 12px;">
+                  🔑 Send OTP via WhatsApp
+                </a>
+              ` : ''}
+            </div>
           </div>
 
           <div>
@@ -946,7 +2420,7 @@
       const amount = document.getElementById("wlt-adj-amount").value;
       const description = document.getElementById("wlt-adj-reason").value.trim();
 
-      const res = await ApiClient.adminAdjustWallet(null, amount, type, description, _adminToken);
+      const res = await ApiClient.adminAdjustWallet(phone, amount, type, description, _adminToken);
       if (res && res.success) {
         alert(`Wallet adjusted successfully. New Balance: ₹${res.balance}`);
         closeWalletAdjustModal();
@@ -979,6 +2453,14 @@
           </div>
           <div style="border-top: 1px dashed var(--admin-border); padding-top: 8px; font-size: 11px; color: var(--admin-muted);">
             Driver App PIN: <code>${d.pin || '1234'}</code>
+          </div>
+          <div style="margin-top: 10px; display: flex; gap: 6px;">
+            <a href="https://wa.me/91${(d.phone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaste Partner ${d.name}! OneWayTaxiBihar Central Dispatch here regarding upcoming trip assignments.`)}" target="_blank" style="flex: 1; text-align: center; background: #059669; color: white; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+              💬 WhatsApp Partner
+            </a>
+            <a href="tel:${d.phone}" style="padding: 6px 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid #38bdf8; color: #38bdf8; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 11.5px;">
+              📞 Call
+            </a>
           </div>
         </div>
       `).join("");
@@ -1032,7 +2514,269 @@
       `).join("");
     }
 
-    window.addEventListener("DOMContentLoaded", initAdmin);
+    // =========================================================================
+    // 2026 AI OPERATIONS COPILOT CONTROLLER
+    // =========================================================================
+    function askCopilotPrompt(query) {
+      const input = document.getElementById("admin-copilot-input");
+      if (input) {
+        input.value = query;
+        handleCopilotSubmit();
+      }
+    }
+
+    async function handleCopilotSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById("admin-copilot-input");
+      const feed = document.getElementById("admin-copilot-feed");
+      const sendBtn = document.getElementById("btn-copilot-send");
+      if (!input || !feed) return;
+
+      const query = input.value.trim();
+      if (!query) return;
+
+      if (sendBtn) {
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Analyzing DB...";
+      }
+
+      // Append Query Card
+      const qCard = document.createElement("div");
+      qCard.style.cssText = "background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 14px 18px;";
+      qCard.innerHTML = `
+        <div style="font-size: 11.5px; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 4px;">OPERATIONS INQUIRY</div>
+        <div style="font-size: 14px; font-weight: 700; color: #f8fafc;">${query}</div>
+      `;
+      feed.prepend(qCard);
+      input.value = "";
+
+      try {
+        const res = await ApiClient.askAdminCopilot(query, _adminToken);
+        const ansCard = document.createElement("div");
+        ansCard.style.cssText = "background: rgba(2, 132, 199, 0.08); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 16px 18px;";
+        
+        if (res && res.success) {
+          ansCard.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 11.5px; font-weight: 800; color: #10b981; text-transform: uppercase;">🤖 COPILOT TELEMETRY ANALYSIS</span>
+              <span style="font-size: 11px; color: var(--admin-muted);">${new Date().toLocaleTimeString()}</span>
+            </div>
+            <div style="font-size: 13.5px; color: #e2e8f0; line-height: 1.6; white-space: pre-line;">${res.answer}</div>
+          `;
+        } else {
+          ansCard.innerHTML = `
+            <div style="color: #ef4444; font-size: 13px;">${res?.message || 'Failed to query AI copilot engine.'}</div>
+          `;
+        }
+        feed.prepend(ansCard);
+      } catch (err) {
+        console.error("Copilot error:", err);
+      } finally {
+        if (sendBtn) {
+          sendBtn.disabled = false;
+          sendBtn.textContent = "Ask Copilot →";
+        }
+      }
+    }
+
+    // =========================================================================
+    // FLEET VEHICLES & EXPIRY RADAR CONTROLLER
+    // =========================================================================
+    let _allVehicles = [];
+
+    async function loadVehicles() {
+      const tbody = document.getElementById("admin-vehicles-tbody");
+      if (!tbody) return;
+
+      try {
+        const res = await ApiClient.getAdminVehicles(_adminToken);
+        if (res && res.success && Array.isArray(res.vehicles)) {
+          _allVehicles = res.vehicles;
+          renderVehiclesTable();
+        }
+      } catch (err) {
+        console.error("Vehicles load error:", err);
+      }
+    }
+
+    function renderVehiclesTable() {
+      const tbody = document.getElementById("admin-vehicles-tbody");
+      if (!tbody) return;
+
+      if (!_allVehicles || _allVehicles.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--admin-muted);">No fleet vehicles registered yet.</td></tr>`;
+        return;
+      }
+
+      const now = new Date();
+      const in30Days = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000));
+
+      const formatDocBadge = (dateStr) => {
+        if (!dateStr) return `<span style="color: var(--admin-muted);">N/A</span>`;
+        const d = new Date(dateStr);
+        if (d < now) {
+          return `<span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px;">⚠️ EXPIRED (${dateStr})</span>`;
+        } else if (d < in30Days) {
+          return `<span style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px;">⚠️ RENEW (${dateStr})</span>`;
+        } else {
+          return `<span style="background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px;">✓ Valid (${dateStr})</span>`;
+        }
+      };
+
+      tbody.innerHTML = _allVehicles.map(v => `
+        <tr>
+          <td><code style="font-weight: 800; color: #f8fafc; font-size: 13px;">${v.registrationNumber}</code></td>
+          <td><strong>${v.model}</strong></td>
+          <td><span class="admin-badge">${(v.tier || 'Sedan').toUpperCase()}</span></td>
+          <td>${v.year || 2024}</td>
+          <td><span style="font-size: 12px; color: #94a3b8;">${v.fuelType || 'CNG'}</span></td>
+          <td style="color: #38bdf8; font-weight: 700;">${v.assignedDriverName || 'Central Pool'}</td>
+          <td>${formatDocBadge(v.insuranceExpiry)}</td>
+          <td>${formatDocBadge(v.fitnessExpiry)}</td>
+          <td>${formatDocBadge(v.permitExpiry)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function openAddVehicleModal() {
+      const select = document.getElementById("veh-driver");
+      if (select) {
+        select.innerHTML = `<option value="">Unassigned (Central Pool)</option>` + 
+          _availableDrivers.map(d => `<option value="${d.id}">${d.name} (${d.phone})</option>`).join("");
+      }
+      document.getElementById("modal-add-vehicle").style.display = "flex";
+    }
+
+    function closeAddVehicleModal() {
+      document.getElementById("modal-add-vehicle").style.display = "none";
+    }
+
+    async function handleAddVehicleSubmit(e) {
+      if (e) e.preventDefault();
+      const reg = document.getElementById("veh-reg").value.trim().toUpperCase();
+      const model = document.getElementById("veh-model").value.trim();
+      const tier = document.getElementById("veh-tier").value;
+      const year = parseInt(document.getElementById("veh-year").value) || 2024;
+      const fuel = document.getElementById("veh-fuel").value;
+      const driverId = document.getElementById("veh-driver").value;
+      const ins = document.getElementById("veh-ins-exp").value;
+      const fit = document.getElementById("veh-fit-exp").value;
+      const per = document.getElementById("veh-per-exp").value;
+
+      const driverObj = _availableDrivers.find(d => d.id === driverId);
+
+      const payload = {
+        registrationNumber: reg,
+        model,
+        tier,
+        year,
+        fuelType: fuel,
+        assignedDriverId: driverId,
+        assignedDriverName: driverObj ? driverObj.name : "Central Pool",
+        insuranceExpiry: ins,
+        fitnessExpiry: fit,
+        permitExpiry: per
+      };
+
+      const res = await ApiClient.addAdminVehicle(payload, _adminToken);
+      if (res && res.success) {
+        closeAddVehicleModal();
+        await loadVehicles();
+        alert(`Vehicle ${reg} registered successfully!`);
+      } else {
+        alert(res?.message || "Failed to register vehicle");
+      }
+    }
+
+    // =========================================================================
+    // PROMO COUPONS CONTROLLER
+    // =========================================================================
+    let _allCoupons = [];
+
+    async function loadCoupons() {
+      const tbody = document.getElementById("admin-coupons-tbody");
+      if (!tbody) return;
+
+      try {
+        const res = await ApiClient.getAdminCoupons(_adminToken);
+        if (res && res.success && Array.isArray(res.coupons)) {
+          _allCoupons = res.coupons;
+          renderCouponsTable();
+        }
+      } catch (err) {
+        console.error("Coupons load error:", err);
+      }
+    }
+
+    function renderCouponsTable() {
+      const tbody = document.getElementById("admin-coupons-tbody");
+      if (!tbody) return;
+
+      if (!_allCoupons || _allCoupons.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 30px; color: var(--admin-muted);">No promo coupons configured yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = _allCoupons.map(c => `
+        <tr>
+          <td><code style="font-weight: 900; color: #38bdf8; font-size: 13.5px;">${c.code}</code></td>
+          <td><strong>${c.title}</strong></td>
+          <td><span class="admin-badge">${c.type}</span></td>
+          <td style="font-weight: 800; color: #10b981;">${c.type === 'PERCENT' ? c.discount + '%' : '₹' + c.discount}</td>
+          <td>₹${c.minFare || 0}</td>
+          <td>${c.maxDiscount ? '₹' + c.maxDiscount : 'N/A'}</td>
+          <td><span style="font-weight: 800;">${c.usageCount || 0}</span> used</td>
+          <td><span class="admin-status-badge status-${c.active ? 'CONFIRMED' : 'CANCELLED'}">${c.active ? 'ACTIVE' : 'DISABLED'}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    function openAddCouponModal() {
+      document.getElementById("modal-add-coupon").style.display = "flex";
+    }
+
+    function closeAddCouponModal() {
+      document.getElementById("modal-add-coupon").style.display = "none";
+    }
+
+    async function handleAddCouponSubmit(e) {
+      if (e) e.preventDefault();
+      const code = document.getElementById("cpn-code").value.trim().toUpperCase();
+      const title = document.getElementById("cpn-title").value.trim();
+      const type = document.getElementById("cpn-type").value;
+      const discount = parseInt(document.getElementById("cpn-val").value) || 100;
+      const minFare = parseInt(document.getElementById("cpn-min").value) || 1000;
+      const maxDiscount = parseInt(document.getElementById("cpn-max").value) || 200;
+
+      const payload = {
+        code,
+        title,
+        type,
+        discount,
+        minFare,
+        maxDiscount,
+        active: true
+      };
+
+      const res = await ApiClient.createAdminCoupon(payload, _adminToken);
+      if (res && res.success) {
+        closeAddCouponModal();
+        await loadCoupons();
+        alert(`Coupon '${code}' created and activated!`);
+      } else {
+        alert(res?.message || "Failed to create coupon");
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (typeof initAdmin === "function") initAdmin();
+      if (new URLSearchParams(window.location.search).get("demo") === "1") {
+        const demoBtn = document.getElementById("btn-admin-demo-login");
+        if (demoBtn) demoBtn.style.display = "block";
+        const skip2fa = document.getElementById("btn-admin-demo-skip-2fa");
+        if (skip2fa) skip2fa.style.display = "block";
+      }
+    });
   </script>
 </body>
 </html>

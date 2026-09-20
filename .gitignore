@@ -11,6 +11,10 @@ tunnel_out.log
 # Temporary & Local files
 *.tmp
 PREVIEW_URL.txt
+scratch/
+data/tunnel.json
+
+
 
 # Cloudflared binary if ever downloaded locally
 cloudflared.exe
@@ -20,5 +24,12 @@ cloudflared.exe
 .env.local
 .env.production
 
+# Dependencies
+node_modules/
+
 # Backups
 data/backups/
+
+# Vercel
+.vercel/
+

@@ -89,11 +89,11 @@
   <script>
     (function() {
       try {
-        const savedTheme = localStorage.getItem('owc_theme_preference') || 'system';
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const activeTheme = savedTheme === 'system' ? (systemPrefersDark ? 'dark' : 'light') : savedTheme;
+        const savedTheme = localStorage.getItem('owc_theme_preference');
+        // Default to dark mode on initial visit; respect saved preference if client changed it
+        const activeTheme = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
         document.documentElement.setAttribute('data-theme', activeTheme);
-        document.documentElement.setAttribute('data-theme-mode', savedTheme);
+        document.documentElement.setAttribute('data-theme-mode', activeTheme);
       } catch (e) {
         console.warn('Theme init error:', e);
       }
@@ -135,15 +135,13 @@
     </div>
 
     <div class="container nav-content">
-      <a href="#" class="brand-wrapper" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="OneWayTaxiBihar - Bihar's Dedicated Intercity Mobility">
-        <div class="brand-badge-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11 2 11.5 2 12v4c0 .6.4 1 1 1h2"/>
-            <circle cx="7" cy="17" r="2"/>
-            <circle cx="17" cy="17" r="2"/>
-          </svg>
+      <a href="#" class="brand-wrapper" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="OneWayTaxiBihar - Dedicated Intercity Taxi Service">
+        <div class="brand-badge-icon" aria-label="OneWayTaxiBihar Brand Emblem">
+          <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar" width="40" height="40" class="brand-logo-img">
         </div>
-        <div class="brand-text-logo">OneWay<span class="brand-highlight">TaxiBihar</span></div>
+        <div class="brand-text-group">
+          <div class="brand-text-logo">OneWay<span class="brand-highlight">TaxiBihar</span></div>
+        </div>
       </a>
 
       <!-- Desktop Nav Links -->
@@ -152,8 +150,8 @@
         <li><a href="javascript:void(0)" onclick="window.openRoutesModal()">Routes</a></li>
         <li><a href="javascript:void(0)" onclick="window.openCorporateModal()">Corporate</a></li>
         <li><a href="javascript:void(0)" onclick="window.openFriendsReviewModal()">Reviews</a></li>
-        <li><a href="javascript:void(0)" onclick="window.openFareChartModal()">Fare Chart</a></li>
         <li><a href="javascript:void(0)" onclick="window.openInvoiceModal()">Request Invoice</a></li>
+        <li><a href="driver.html" style="color: #10b981; font-weight: 800;">Drive With Us ↗</a></li>
       </ul>
 
       <!-- Nav Actions -->
@@ -200,82 +198,159 @@
     </div>
   </header>
 
-  <!-- Mobile Navigation Drawer (Three Line Menu) -->
-  <div class="mobile-nav-drawer" id="mobile-drawer">
-    <!-- Top Back / Close Header inside Drawer -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--owc-border); background: var(--owc-card-bg);">
-      <button type="button" class="modal-back-btn" onclick="window.closeMobileDrawer()" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--owc-slate-100); border: 1px solid var(--owc-border); border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; color: var(--owc-text);">
-        ← Back
-      </button>
-      <span style="font-weight: 800; font-size: 13px; color: var(--owc-text);">Menu &amp; Portals</span>
-      <button type="button" onclick="window.closeMobileDrawer()" style="background: none; border: none; font-size: 18px; color: var(--owc-text-muted); cursor: pointer; padding: 4px;">
-        ✕
-      </button>
+  <!-- Backdrop Overlay for Mobile Drawer -->
+  <div class="drawer-backdrop" id="drawer-backdrop" onclick="window.closeMobileDrawer(true)" aria-hidden="true"></div>
+
+  <!-- Mobile Navigation Drawer (Executive Slide-out Menu) -->
+  <aside class="mobile-nav-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="OneWayTaxiBihar Navigation Menu">
+    <!-- Drawer Header -->
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <div class="drawer-brand-badge">
+          <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar" width="34" height="34" class="brand-logo-img" style="width: 34px; height: 34px; object-fit: contain; display: block; border-radius: 8px;">
+        </div>
+        <div class="drawer-brand-text">
+          OneWay<span>TaxiBihar</span>
+        </div>
+      </div>
+      <div class="drawer-header-actions">
+        <!-- Theme Toggle Button inside Drawer -->
+        <button type="button" class="drawer-theme-btn" id="mobile-theme-switch-btn" aria-label="Toggle Dark / Light Mode" title="Toggle Theme">
+          <span class="drawer-theme-icon" id="mobile-theme-switch-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </span>
+        </button>
+        <!-- Close Drawer Button -->
+        <button type="button" class="drawer-close-btn" onclick="window.closeMobileDrawer(true)" aria-label="Close navigation menu" title="Close Menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
     </div>
 
-    <!-- Top Call Bar inside Drawer -->
-    <div class="drawer-top-help-bar">
-      <a href="tel:+918002141816" class="drawer-help-link" onclick="window.closeMobileDrawer()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-        </svg>
+    <!-- Scrollable Drawer Body -->
+    <div class="drawer-body">
+      <!-- User Account Slot (Injected via JS) -->
+      <div class="drawer-user-section" id="mobile-auth-slot">
+        <!-- Injected dynamically via JS: renderNavAuth() -->
+      </div>
+
+      <!-- Quick Booking Action Hero Card -->
+      <a href="#booking-hero" class="drawer-hero-cta" onclick="window.closeMobileDrawer()">
+        <div class="drawer-hero-cta-content">
+          <span class="drawer-hero-cta-title">Book One-Way Cab</span>
+          <span class="drawer-hero-cta-desc">38 Bihar Districts • Zero Return Fare</span>
+        </div>
+        <span class="drawer-hero-cta-arrow">→</span>
+      </a>
+
+      <!-- Navigation Category 1: Ride Services -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">RIDE SERVICES</div>
+        <nav class="drawer-nav-list">
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openMyTripsModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </span>
+            <span class="drawer-nav-text">My Trips &amp; Bookings</span>
+            <span class="drawer-nav-badge">Active</span>
+          </a>
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openRoutesModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span class="drawer-nav-text">38 Districts &amp; Fixed Fares</span>
+          </a>
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openServicesModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            </span>
+            <span class="drawer-nav-text">Services &amp; Rental Packages</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Navigation Category 2: Pricing & Corporate -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">PRICING &amp; BUSINESS</div>
+        <nav class="drawer-nav-list">
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openFareChartModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </span>
+            <span class="drawer-nav-text">Fare &amp; Rate Chart</span>
+          </a>
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openCorporateModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </span>
+            <span class="drawer-nav-text">Corporate Travel Desk</span>
+            <span class="drawer-nav-badge">GST Billing</span>
+          </a>
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openInvoiceModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </span>
+            <span class="drawer-nav-text">Request GST Tax Invoice</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Navigation Category 3: Trust & Rewards -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">REVIEWS &amp; REWARDS</div>
+        <nav class="drawer-nav-list">
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openFriendsReviewModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#facc15" stroke="#facc15"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </span>
+            <span class="drawer-nav-text">Passenger Reviews</span>
+            <span class="drawer-nav-badge gold">4.9 ★</span>
+          </a>
+          <a href="javascript:void(0)" class="drawer-nav-item" onclick="window.closeMobileDrawer(); window.openReferModal();">
+            <span class="drawer-nav-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+            </span>
+            <span class="drawer-nav-text">Refer Friends &amp; Earn</span>
+            <span class="drawer-nav-badge green">₹150 Cash</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Navigation Category 4: Operator & Fleet Consoles -->
+      <div class="drawer-section">
+        <div class="drawer-section-title">CREW &amp; FLEET</div>
+        <div class="drawer-portal-grid">
+          <a href="admin.html" class="drawer-portal-card admin">
+            <span class="drawer-portal-icon">⚙️</span>
+            <div>
+              <div class="drawer-portal-title">Admin Console ↗</div>
+              <div class="drawer-portal-sub">Dispatch Desk</div>
+            </div>
+          </a>
+          <a href="driver.html" class="drawer-portal-card driver">
+            <span class="drawer-portal-icon">📱</span>
+            <div>
+              <div class="drawer-portal-title">Driver Partner ↗</div>
+              <div class="drawer-portal-sub">Chauffeur Desk</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Contact Bar -->
+    <div class="drawer-footer-actions">
+      <a href="https://wa.me/917281851011?text=Hi%20OneWayTaxiBihar,%20I%20need%20a%20cab" target="_blank" rel="noopener noreferrer" class="drawer-btn-wa" aria-label="Chat on WhatsApp" onclick="window.closeMobileDrawer()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.541 1.944.827 2.801.827 3.18 0 5.767-2.586 5.768-5.766 0-3.18-2.587-5.814-5.773-5.814zm0-2.172c4.418 0 8 3.582 8 8 0 4.418-3.582 8-8 8-1.397 0-2.716-.364-3.869-1.002l-4.162 1.09 1.109-4.053c-.707-1.196-1.078-2.573-1.078-4.035 0-4.418 3.582-8 8-8z"/></svg>
+        <span>WhatsApp Helpdesk</span>
+      </a>
+      <a href="tel:+918002141816" class="drawer-btn-call" aria-label="Call 24x7 Helpdesk" onclick="window.closeMobileDrawer()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <span>Call: +91 80021 41816</span>
       </a>
+      <div class="drawer-bottom-credit">Boring Road, Patna, Bihar • 24x7 Direct Dispatch</div>
     </div>
-
-    <!-- User Profile / Auth Slot in Drawer -->
-    <div class="drawer-user-section" id="mobile-auth-slot">
-      <!-- Injected via JavaScript -->
-    </div>
-
-    <!-- Drawer Quick Contact Pills -->
-    <div class="drawer-contact-row">
-      <a href="https://wa.me/917281851011?text=Hi%20OneWayTaxiBihar,%20I%20need%20a%20cab" target="_blank" rel="noopener noreferrer" class="drawer-contact-pill wa" onclick="window.closeMobileDrawer()">
-        WhatsApp Helpdesk
-      </a>
-      <a href="tel:+918002141816" class="drawer-contact-pill call" onclick="window.closeMobileDrawer()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        Call: +91 80021 41816
-      </a>
-    </div>
-
-    <!-- Mobile Theme Switcher Bar -->
-    <div class="mobile-theme-bar">
-      <span class="mobile-theme-label" id="mobile-theme-label">
-        Dark Theme
-      </span>
-      <button type="button" class="theme-switch-btn" id="mobile-theme-switch-btn" aria-label="Toggle Dark Theme" title="Toggle Light / Dark Mode">
-        <span class="theme-switch-track">
-          <span class="theme-switch-thumb">
-            <span class="theme-switch-icon" id="mobile-theme-switch-icon">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
-            </span>
-          </span>
-        </span>
-      </button>
-    </div>
-
-
-    <!-- Full Navigation Links List -->
-    <ul class="mobile-nav-links">
-      <li><a href="#booking-hero" onclick="window.closeMobileDrawer()">Book One-Way Cab</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openMyTripsModal();">My Trips & Invoices</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openServicesModal();">Services & Rental Packages</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openRoutesModal();">38 Districts & Fixed Rates</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openCorporateModal();">Corporate Travel Desk</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openFriendsReviewModal();">Passenger Reviews & Ratings</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openFareChartModal();">Fare & Rate Chart</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openInvoiceModal();">Request Official GST Invoice</a></li>
-      <li><a href="javascript:void(0)" onclick="window.closeMobileDrawer(); window.openReferModal();">Refer Friends &amp; Earn ₹150</a></li>
-      <li><a href="admin.html" style="color: #38bdf8; font-weight: 700;">Admin Dispatch Console ↗</a></li>
-      <li><a href="driver.html" style="color: #34d399; font-weight: 700;">Driver Partner App ↗</a></li>
-    </ul>
-
-    <div class="drawer-footer-info">
-      <div><strong>Central Hub:</strong> Boring Road, Patna, Bihar</div>
-      <div style="margin-top: 4px; color: var(--owc-primary); font-weight: 700;">24x7 Helpline: +91 80021 41816</div>
-    </div>
-  </div>
+  </aside>
 
   <main class="site-main">
 
@@ -507,7 +582,7 @@
             </div>
             <div class="input-content phone-input-content">
               <div class="phone-label-row">
-                <label for="input-fare-phone">MOBILE NUMBER</label>
+                <label for="input-fare-phone">MOBILE NUMBER (REQUIRED TO VIEW FARE) *</label>
                 <span class="phone-trust-tag">
                   <span class="trust-pulse-dot"></span>
                   <span>Instant Fare on WhatsApp</span>
@@ -524,7 +599,7 @@
                   </svg>
                   <span class="phone-country-code">+91</span>
                 </div>
-                <input type="tel" id="input-fare-phone" maxlength="10" placeholder="Enter 10-digit mobile number" autocomplete="tel" inputmode="numeric" class="phone-native-input" spellcheck="false">
+                <input type="tel" id="input-fare-phone" maxlength="10" placeholder="Enter 10-digit mobile number to view fares" autocomplete="tel" inputmode="numeric" class="phone-native-input" spellcheck="false">
                 <span class="phone-valid-badge" id="phone-valid-badge" title="Valid Mobile Number">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -538,7 +613,7 @@
           </div>
 
           <!-- Primary "Check Fare" Action Button -->
-          <button type="button" class="check-fare-primary-btn" id="btn-check-fare" title="Enter pickup, drop and mobile number to calculate fare">
+          <button type="button" class="check-fare-primary-btn" id="btn-check-fare" onclick="window.bookingManager && window.bookingManager.handleCheckFare()" title="Enter pickup, drop and mobile number to calculate fare">
             <span>Check Fares &amp; Availability</span>
             <svg class="btn-check-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="9 18 15 12 9 6"></polyline>
@@ -619,7 +694,75 @@
     </section>
 
     <!-- ======================================================================
-         2. VERIFIED PASSENGER REVIEWS SECTION (OneWayTaxiBihar)
+         2. CAB FLEET & FARE SELECTION SECTION (IMMEDIATELY BELOW SEARCH HERO)
+         ====================================================================== -->
+    <section class="app-section fare-section-closed" id="cab-selection-section">
+      <div class="container">
+        
+        <!-- 7-Step Multi-Step Booking Wizard Stepper Bar -->
+        <div class="booking-stepper-bar" id="main-booking-stepper">
+          <div class="stepper-node completed" id="step-node-1"><span class="stepper-num">1</span><span>Trip Config</span></div>
+          <span class="stepper-arrow">➔</span>
+          <div class="stepper-node completed" id="step-node-2"><span class="stepper-num">2</span><span>Route Confirm</span></div>
+          <span class="stepper-arrow">➔</span>
+          <div class="stepper-node active" id="step-node-3"><span class="stepper-num">3</span><span>Fleet Select</span></div>
+          <span class="stepper-arrow">➔</span>
+          <div class="stepper-node" id="step-node-4"><span class="stepper-num">4</span><span>Passenger Info</span></div>
+          <span class="stepper-arrow">➔</span>
+          <div class="stepper-node" id="step-node-5"><span class="stepper-num">5</span><span>Fare &amp; Promo</span></div>
+          <span class="stepper-arrow">➔</span>
+          <div class="stepper-node" id="step-node-6"><span class="stepper-num">6</span><span>Payment</span></div>
+          <span class="stepper-arrow">➔</span>
+          <div class="stepper-node" id="step-node-7"><span class="stepper-num">7</span><span>Confirmed</span></div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-pill-tag blue">FLEET &amp; PRICING</span>
+          <h2 class="section-title">Select Your Outstation Cab Category</h2>
+          <p class="section-subtitle">Guaranteed all-inclusive pricing with Tolls, Fastag, GST, and Driver Allowance included. Zero return fares.</p>
+        </div>
+
+        <!-- Selected Route Info Bar -->
+        <div class="route-fare-bar-container" id="route-fare-bar">
+          <div class="rf-route-title" id="rf-display-route">
+            <span>Patna → Gaya (Bodh Gaya)</span>
+          </div>
+          <div class="rf-meta-badges" id="rf-display-meta">
+            <span class="rf-badge" id="rf-dist-badge">104 KM</span>
+            <span class="rf-badge" id="rf-time-badge">2h 15m</span>
+            <span class="rf-badge" id="rf-toll-badge">Toll Included</span>
+          </div>
+        </div>
+
+        <!-- Cab Cards Grid -->
+        <div class="cab-cards-grid" id="cab-cards-grid">
+          <!-- Injected via JavaScript -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. INTERACTIVE LEAFLET ROUTE MAP SECTION
+         ====================================================================== -->
+    <section class="app-section alt-bg fare-section-closed" id="route-map-section">
+      <div class="container">
+        
+        <div class="section-header">
+          <span class="section-pill-tag">LIVE HIGHWAY RADAR</span>
+          <h2 class="section-title">Bihar Highway Route &amp; Live GPS Radar</h2>
+          <p class="section-subtitle">Real-time highway routing, Setu expressways, verified captain network, and live highway tracking.</p>
+        </div>
+
+        <div style="background: var(--owc-card-bg); border: 1px solid var(--owc-border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-lg);">
+          <div id="oneway-route-map" style="height: 380px; width: 100%;"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. VERIFIED PASSENGER REVIEWS SECTION (OneWayTaxiBihar)
          ====================================================================== -->
     <section class="app-section alt-bg" id="friends-review-section">
       <div class="container">
@@ -674,57 +817,6 @@
               <!-- Injected via JavaScript with authentic quotes & route pills -->
             </div>
           </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         3. CAB FLEET & FARE SELECTION SECTION (OPENED AFTER CHECK FARE)
-         ====================================================================== -->
-    <section class="app-section fare-section-closed" id="cab-selection-section">
-      <div class="container">
-        
-        <div class="section-header">
-          <span class="section-pill-tag blue">FLEET & PRICING</span>
-          <h2 class="section-title">Select Your Outstation Cab Category</h2>
-          <p class="section-subtitle">Guaranteed all-inclusive pricing with Tolls, Fastag, GST, and Driver Allowance included. Zero return fares.</p>
-        </div>
-
-        <!-- Selected Route Info Bar -->
-        <div class="route-fare-bar-container" id="route-fare-bar">
-          <div class="rf-route-title" id="rf-display-route">
-            <span>Patna → Gaya (Bodh Gaya)</span>
-          </div>
-          <div class="rf-meta-badges" id="rf-display-meta">
-            <span class="rf-badge" id="rf-dist-badge">104 KM</span>
-            <span class="rf-badge" id="rf-time-badge">2h 15m</span>
-            <span class="rf-badge" id="rf-toll-badge">Toll Included</span>
-          </div>
-        </div>
-
-        <!-- Cab Cards Grid -->
-        <div class="cab-cards-grid" id="cab-cards-grid">
-          <!-- Injected via JavaScript -->
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         4. INTERACTIVE LEAFLET ROUTE MAP SECTION (OPENED AFTER CHECK FARE)
-         ====================================================================== -->
-    <section class="app-section alt-bg fare-section-closed" id="route-map-section">
-      <div class="container">
-        
-        <div class="section-header">
-          <span class="section-pill-tag">LIVE HIGHWAY RADAR</span>
-          <h2 class="section-title">Bihar Highway Route & Live GPS Radar</h2>
-          <p class="section-subtitle">Real-time highway routing, Setu expressways, verified captain network, and live highway tracking.</p>
-        </div>
-
-        <div style="background: var(--owc-card-bg); border: 1px solid var(--owc-border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-lg);">
-          <div id="oneway-route-map" style="height: 380px; width: 100%;"></div>
         </div>
 
       </div>
@@ -1150,60 +1242,135 @@
     </div>
   </div>
 
-  <!-- Modal 9: Direct Passenger Login & Wallet Bonus Modal (No OTP Required) -->
+  <!-- Modal 9: Passenger Login, Real Number Verification & ₹100 Welcome Reward Modal -->
   <div class="modal-overlay" id="modal-auth">
     <div class="modal-dialog-box small">
       <div class="modal-header">
         <div style="display: flex; align-items: center; gap: 8px;">
           <button type="button" class="modal-back-btn" onclick="window.handleBackNavigation()" aria-label="Go Back">← Back</button>
-          <div class="modal-title">Passenger Login &amp; Wallet Bonus</div>
+          <div class="modal-title" id="auth-modal-header-title">Passenger Login &amp; ₹100 Reward</div>
         </div>
         <button type="button" class="modal-close-btn" onclick="window.closeAllModals()">✕</button>
       </div>
       <div class="modal-body">
-        <div class="auth-flow-container" id="auth-phone-step">
+        <div class="auth-flow-container">
+          
+          <!-- Booking Context Banner (Shown when user taps a cab to book) -->
+          <div id="auth-booking-context-banner" style="display: none; background: rgba(0, 154, 244, 0.08); border: 1.5px dashed #0284c7; border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 14px; text-align: left;">
+            <div style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase;">BOOKING RESERVATION</div>
+            <div style="font-size: 13.5px; font-weight: 800; color: var(--owc-text);" id="auth-booking-cab-title">Prime Sedan Cab</div>
+            <div style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 2px;" id="auth-booking-discount-note">🎁 ₹100 Welcome Reward will apply directly to this ride!</div>
+          </div>
+
           <div class="auth-logo-badge">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--owc-primary)" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
           </div>
-          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Login &amp; Claim ₹100 in Wallet</h3>
-          <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 18px;">Instant access to Bihar outstation bookings, tax invoices &amp; ₹100 bonus wallet credit.</p>
-          
-          <!-- Full Name Field -->
-          <div class="input-field-group" style="margin-bottom: 14px;">
-            <span class="input-icon-clean">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </span>
-            <div class="input-content">
-              <label style="font-size: 10px; font-weight: 800; color: var(--owc-text-dim); text-transform: uppercase; letter-spacing: 0.5px;">YOUR FULL NAME</label>
-              <input type="text" id="auth-name-input" placeholder="e.g. Himanshu Kumar Dubey" value="" autocomplete="name" style="width: 100%; border: none; outline: none; background: transparent; font-weight: 700; font-size: 14px; color: var(--owc-text);">
+          <h3 id="auth-modal-title" style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Login &amp; Claim ₹100 in Wallet</h3>
+          <p id="auth-modal-sub" style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 18px;">Get ₹100 Welcome Bonus on your first cab booking with real mobile number verification.</p>
+
+          <!-- Step 1: Name and Phone Input -->
+          <div id="auth-step-phone">
+            <!-- Full Name Field -->
+            <div class="input-field-group" style="margin-bottom: 14px;">
+              <span class="input-icon-clean">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </span>
+              <div class="input-content">
+                <label style="font-size: 10px; font-weight: 800; color: var(--owc-text-dim); text-transform: uppercase; letter-spacing: 0.5px;">YOUR FULL NAME *</label>
+                <input type="text" id="auth-name-input" placeholder="e.g. Himanshu Kumar" value="" autocomplete="name" style="width: 100%; border: none; outline: none; background: transparent; font-weight: 700; font-size: 14px; color: var(--owc-text);">
+              </div>
+            </div>
+
+            <!-- 10-Digit Mobile Number Field -->
+            <div class="input-field-group" id="auth-mobile-group" style="margin-bottom: 18px;">
+              <div class="phone-country-pill" style="padding: 0 8px; border-right: 1px solid var(--owc-border); display: inline-flex; align-items: center; gap: 4px;">
+                <svg width="18" height="13" viewBox="0 0 30 20" style="border-radius: 2px;">
+                  <rect width="30" height="6.67" fill="#FF9933"/>
+                  <rect y="6.67" width="30" height="6.67" fill="#FFFFFF"/>
+                  <rect y="13.33" width="30" height="6.67" fill="#138808"/>
+                  <circle cx="15" cy="10" r="2.6" fill="none" stroke="#000080" stroke-width="0.7"/>
+                </svg>
+                <span style="font-weight: 700; font-size: 13px; color: var(--owc-text);">+91</span>
+              </div>
+              <div class="input-content">
+                <label style="font-size: 10px; font-weight: 800; color: var(--owc-text-dim); text-transform: uppercase; letter-spacing: 0.5px;">10-DIGIT MOBILE NUMBER *</label>
+                <input type="tel" id="auth-mobile-input" maxlength="10" placeholder="e.g. 8002141816" value="" autocomplete="tel" inputmode="numeric" style="width: 100%; border: none; outline: none; background: transparent; font-weight: 700; font-size: 14px; color: var(--owc-text);">
+              </div>
+            </div>
+
+            <!-- Primary Direct Login Action (Criteria 1: Zero OTP Needed) -->
+            <button type="button" class="check-fare-primary-btn" id="btn-auth-direct-login" onclick="window.handleDirectLogin()" style="width: 100%; margin-bottom: 10px; font-size: 15px; font-weight: 800; padding: 13px;">
+              Instant 1-Click Login &amp; Claim ₹100 →
+            </button>
+
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 0 8px 0;">
+              <span style="height: 1px; flex: 1; background: var(--owc-border);"></span>
+              <span style="font-size: 11px; color: var(--owc-text-dim); text-transform: uppercase; font-weight: 700;">or verify via code</span>
+              <span style="height: 1px; flex: 1; background: var(--owc-border);"></span>
+            </div>
+
+            <!-- Optional OTP code verification -->
+            <button type="button" class="btn-nav-outline" id="btn-auth-send-code" onclick="window.handleSendVerificationCode()" style="width: 100%; margin-bottom: 12px; font-size: 13px; font-weight: 700; padding: 9px; justify-content: center;">
+              Request SMS / WhatsApp OTP Code
+            </button>
+
+            <div style="font-size: 11.5px; color: var(--owc-text-dim); text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Instant login with verified mobile &bull; ₹100 credited to wallet</span>
             </div>
           </div>
 
-          <!-- 10-Digit Mobile Number Field -->
-          <div class="input-field-group" style="margin-bottom: 18px;">
-            <div class="phone-country-pill" style="padding: 0 8px; border-right: 1px solid var(--owc-border); display: inline-flex; align-items: center; gap: 4px;">
-              <svg width="18" height="13" viewBox="0 0 30 20" style="border-radius: 2px;">
-                <rect width="30" height="6.67" fill="#FF9933"/>
-                <rect y="6.67" width="30" height="6.67" fill="#FFFFFF"/>
-                <rect y="13.33" width="30" height="6.67" fill="#138808"/>
-                <circle cx="15" cy="10" r="2.6" fill="none" stroke="#000080" stroke-width="0.7"/>
-              </svg>
-              <span style="font-weight: 700; font-size: 13px; color: var(--owc-text);">+91</span>
+          <!-- Step 2: Real Number Verification (OTP) -->
+          <div id="auth-step-otp" style="display: none;">
+            <p style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 10px;">
+              Enter 4-digit verification code sent to <strong id="auth-target-phone-label" style="color: var(--owc-text);">+91</strong>
+            </p>
+
+            <!-- Delivered Code Alert Banner (Genuine delivery preview for instant testing) -->
+            <div id="auth-otp-delivery-notice" style="background: rgba(16, 185, 129, 0.1); border: 1.5px solid #059669; border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 14px; font-size: 12.5px; color: #047857; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <span style="font-weight: 600; display: block; font-size: 11.5px; text-transform: uppercase;">SMS &amp; WhatsApp Code:</span>
+                <span style="font-size: 11.5px; color: #065f46;">Auto-generated verification code:</span>
+              </div>
+              <strong id="auth-delivered-code" style="font-size: 20px; letter-spacing: 3px; color: #047857; font-weight: 900; background: #ffffff; padding: 2px 8px; border-radius: 4px; border: 1px solid #10b981;"></strong>
             </div>
-            <div class="input-content">
-              <label style="font-size: 10px; font-weight: 800; color: var(--owc-text-dim); text-transform: uppercase; letter-spacing: 0.5px;">10-DIGIT MOBILE NUMBER</label>
-              <input type="tel" id="auth-mobile-input" maxlength="10" placeholder="e.g. 8002141816" value="" autocomplete="tel" inputmode="numeric" style="width: 100%; border: none; outline: none; background: transparent; font-weight: 700; font-size: 14px; color: var(--owc-text);">
+
+            <!-- 4-Digit Input Boxes -->
+            <div class="auth-otp-inputs-row">
+              <input type="tel" maxlength="1" class="otp-box-digit" id="otp-digit-1" inputmode="numeric" autocomplete="one-time-code">
+              <input type="tel" maxlength="1" class="otp-box-digit" id="otp-digit-2" inputmode="numeric">
+              <input type="tel" maxlength="1" class="otp-box-digit" id="otp-digit-3" inputmode="numeric">
+              <input type="tel" maxlength="1" class="otp-box-digit" id="otp-digit-4" inputmode="numeric">
+            </div>
+
+            <!-- 1-Tap WhatsApp Verification Button -->
+            <a id="auth-wa-verify-link" href="https://wa.me/917281851011" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid #10b981; color: #047857; background: #ecfdf5; font-size: 13px; font-weight: 800; text-decoration: none; margin-bottom: 12px; box-sizing: border-box;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
+              Verify via WhatsApp (72818 51011)
+            </a>
+
+            <button type="button" class="check-fare-primary-btn" id="btn-auth-verify-code" onclick="window.handleVerifyOtpCode()" style="width: 100%; margin-bottom: 10px;">
+              Verify Code &amp; Claim ₹100 →
+            </button>
+
+            <!-- Direct bypass option if SMS code not received -->
+            <button type="button" onclick="window.handleDirectLogin()" style="width: 100%; padding: 8px; background: rgba(2, 132, 199, 0.1); border: 1px dashed #0284c7; border-radius: var(--radius-md); color: #0284c7; font-weight: 800; font-size: 12.5px; cursor: pointer; margin-bottom: 14px;">
+              ⚡ Skip Verification &amp; Login Directly →
+            </button>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 0 4px;">
+              <button type="button" onclick="window.showAuthPhoneStep()" style="background: none; border: none; color: var(--owc-primary); font-weight: 700; cursor: pointer; padding: 4px;">
+                ← Change Number
+              </button>
+              <span id="auth-resend-wrap" style="color: var(--owc-text-muted);">
+                Resend in <span id="auth-countdown" style="font-weight: 700; color: var(--owc-text);">30</span>s
+              </span>
+              <button type="button" id="auth-resend-btn" onclick="window.handleSendVerificationCode(true)" style="display: none; background: none; border: none; color: var(--owc-primary); font-weight: 800; cursor: pointer; padding: 4px;">
+                Resend Code
+              </button>
             </div>
           </div>
 
-          <button type="button" class="check-fare-primary-btn" onclick="window.handleDirectLogin()" style="width: 100%; margin-bottom: 12px;">
-            Continue &amp; Claim ₹100 Bonus →
-          </button>
-
-          <div style="font-size: 11.5px; color: var(--owc-text-dim); text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Direct instant login • Zero OTP waiting • 100% Secure</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1537,6 +1704,8 @@
       </div>
     </div>
   </div>
+
+
 
 
 

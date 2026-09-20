@@ -45,6 +45,14 @@ This project is a high-performance, responsive web application ready for instant
 
 ---
 
+### Option E: Node.js / Docker / Render / Railway / AWS / DigitalOcean
+1. Run `npm install` to install dependencies.
+2. Run `npm start` (which executes `node server.js`).
+3. The app serves both high-performance static web assets and routes `/api/*` to the serverless REST engine.
+4. Set environment variables (`PORT=8080`, `NODE_ENV=production`, `MONGODB_URI`) in your hosting dashboard or `.env`.
+
+---
+
 ## 2. Pre-Configured Production Assets Included
 
 | File | Purpose |

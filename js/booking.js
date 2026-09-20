@@ -11,7 +11,12 @@ class BookingManager {
     this.destCity = null;   // Blank initially - set by user
     
     const today = new Date();
-    const formatYMD = (d) => d.toISOString().split("T")[0];
+    const formatYMD = (d) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    };
     this.pickupDate = formatYMD(today); // Only current date is filled initially
     this.pickupTime = "10:00 AM";
     this.returnDate = "";
@@ -39,6 +44,8 @@ class BookingManager {
 
     this.activeBooking = null;
     this.paymentMethod = "Cash / UPI to Driver";
+    this.appliedCouponCode = "";
+    this.appliedCouponDiscount = 0;
   }
 
   init() {
@@ -53,20 +60,16 @@ class BookingManager {
     this.renderFAQs();
     this.renderFooterRoutes();
 
-    // Default route preset so the platform is ready and interactive immediately
-    if (!this.originCity) {
-      this.originCity = OTB_CITIES.find(c => c.id === "patna") || OTB_CITIES[0];
-      const pickupInput = document.getElementById("input-pickup");
-      if (pickupInput && !pickupInput.value) {
-        pickupInput.value = `${this.originCity.name}${this.originCity.district && this.originCity.district !== this.originCity.name ? ', ' + this.originCity.district : ''} (${this.originCity.hindiName || ''}), ${this.originCity.state}`;
-      }
+    // Do not feed data at first - client enters location and receives smart time-saving suggestions
+    this.originCity = null;
+    this.destCity = null;
+    const pickupInput = document.getElementById("input-pickup");
+    const dropInput = document.getElementById("input-drop");
+    if (pickupInput && !this.originCity) {
+      pickupInput.value = "";
     }
-    if (!this.destCity) {
-      this.destCity = OTB_CITIES.find(c => c.id === "gaya") || OTB_CITIES[1];
-      const dropInput = document.getElementById("input-drop");
-      if (dropInput && !dropInput.value) {
-        dropInput.value = `${this.destCity.name}${this.destCity.district && this.destCity.district !== this.destCity.name ? ', ' + this.destCity.district : ''} (${this.destCity.hindiName || ''}), ${this.destCity.state}`;
-      }
+    if (dropInput && !this.destCity) {
+      dropInput.value = "";
     }
 
     // Auto-fill logged in user phone if available
@@ -83,19 +86,33 @@ class BookingManager {
       }
     }
 
-    this.isFareUnlocked = true;
+    // Fares remain locked until passenger enters a valid 10-digit mobile number!
     const section = document.getElementById("cab-selection-section");
     const mapSection = document.getElementById("route-map-section");
-    if (section) {
-      section.classList.remove("fare-section-closed");
-      section.classList.add("fare-section-open");
-    }
-    if (mapSection) {
-      mapSection.classList.remove("fare-section-closed");
-      mapSection.classList.add("fare-section-open");
+
+    if (this.userPhone && this.userPhone.length === 10) {
+      this.isFareUnlocked = true;
+      if (section) {
+        section.classList.remove("fare-section-closed");
+        section.classList.add("fare-section-open");
+      }
+      if (mapSection) {
+        mapSection.classList.remove("fare-section-closed");
+        mapSection.classList.add("fare-section-open");
+      }
+      this.calculateAndRenderFares();
+    } else {
+      this.isFareUnlocked = false;
+      if (section) {
+        section.classList.add("fare-section-closed");
+        section.classList.remove("fare-section-open");
+      }
+      if (mapSection) {
+        mapSection.classList.add("fare-section-closed");
+        mapSection.classList.remove("fare-section-open");
+      }
     }
 
-    this.calculateAndRenderFares();
     this.restoreState();
   }
 
@@ -181,7 +198,12 @@ class BookingManager {
 
   setDefaultDates() {
     const today = new Date();
-    const formatYMD = (d) => d.toISOString().split("T")[0];
+    const formatYMD = (d) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    };
     this.pickupDate = formatYMD(today); // ONLY CURRENT DATE FILLED INITIALLY
     this.returnDate = "";
 
@@ -230,14 +252,25 @@ class BookingManager {
     const setupInputEvents = (input, dropdown, type) => {
       if (!input || !dropdown) return;
 
-      // Fast real-time keystroke filtering with micro-debounce (eliminates frame drops on low-end devices)
+      // Fast real-time keystroke filtering with micro-debounce
       let searchDebounceTimer = null;
       input.addEventListener("input", (e) => {
         clearTimeout(searchDebounceTimer);
         const val = e.target.value;
         searchDebounceTimer = setTimeout(() => {
           this.handleCitySearch(type, val.trim(), dropdown, false);
-        }, 30);
+          this.autoResolveCityFromInput(type, val.trim(), false);
+        }, 40);
+      });
+
+      input.addEventListener("change", (e) => {
+        this.autoResolveCityFromInput(type, e.target.value.trim(), false);
+      });
+
+      input.addEventListener("blur", () => {
+        setTimeout(() => {
+          this.autoResolveCityFromInput(type, input.value.trim(), false);
+        }, 200);
       });
 
       // Instant dropdown opening on focus or click
@@ -283,6 +316,9 @@ class BookingManager {
             items[activeIdx].click();
           } else if (items.length > 0) {
             items[0].click();
+          } else {
+            this.autoResolveCityFromInput(type, input.value.trim(), true);
+            dropdown.style.display = "none";
           }
         } else if (e.key === "Escape") {
           dropdown.style.display = "none";
@@ -361,6 +397,61 @@ class BookingManager {
         if (dropDropdown) dropDropdown.style.display = "none";
       }
     });
+  }
+
+  autoResolveCityFromInput(type, rawVal, updateInputFormatted = false) {
+    if (!rawVal || rawVal.trim().length < 2) {
+      if (type === "pickup") this.originCity = null;
+      else this.destCity = null;
+      this.updateCheckFareButtonState();
+      return;
+    }
+
+    const q = rawVal.toLowerCase().replace(/[()[\]{}]/g, " ").trim();
+    // Try exact or clean match
+    let match = OTB_CITIES.find(c => c.name.toLowerCase() === q || c.id === q);
+    if (!match) {
+      match = OTB_CITIES.find(c => c.name.toLowerCase().startsWith(q) || (c.hindiName && c.hindiName === q));
+    }
+    if (!match && q.length >= 3) {
+      match = OTB_CITIES.find(c => q.includes(c.name.toLowerCase()) || c.name.toLowerCase().includes(q) || (c.hindiName && q.includes(c.hindiName)));
+    }
+
+    if (match) {
+      if (type === "pickup") {
+        const changed = !this.originCity || this.originCity.id !== match.id;
+        this.originCity = match;
+        if (updateInputFormatted) {
+          const pInput = document.getElementById("input-pickup");
+          if (pInput) pInput.value = `${match.name}${match.district && match.district !== match.name && match.type !== 'airport' ? ', ' + match.district : ''} (${match.hindiName || ''}), ${match.state}`;
+        }
+        if (changed) {
+          try { ApiClient.getCitiesDrop(match.name); } catch(e) {}
+        }
+      } else {
+        this.destCity = match;
+        if (updateInputFormatted) {
+          const dInput = document.getElementById("input-drop");
+          if (dInput) dInput.value = `${match.name}${match.district && match.district !== match.name && match.type !== 'airport' ? ', ' + match.district : ''} (${match.hindiName || ''}), ${match.state}`;
+        }
+      }
+
+      if (this.originCity && this.destCity) {
+        this.isFareUnlocked = true;
+        const section = document.getElementById("cab-selection-section");
+        const mapSection = document.getElementById("route-map-section");
+        if (section) {
+          section.classList.remove("fare-section-closed");
+          section.classList.add("fare-section-open");
+        }
+        if (mapSection) {
+          mapSection.classList.remove("fare-section-closed");
+          mapSection.classList.add("fare-section-open");
+        }
+        this.calculateAndRenderFares();
+      }
+      this.updateCheckFareButtonState();
+    }
   }
 
   /* ==========================================================================
@@ -545,7 +636,7 @@ class BookingManager {
         return { dist: popular.distanceKm, duration: popular.duration };
       }
 
-      if (this.originCity.lat && dest.lat) {
+      if (this.originCity && this.originCity.lat && dest && dest.lat) {
         const d = this.calcHaversineDistance(this.originCity.lat, this.originCity.lng, dest.lat, dest.lng);
         const hours = (d / 48).toFixed(1);
         return { dist: d, duration: `~${hours}h` };
@@ -931,6 +1022,16 @@ class BookingManager {
       if (dd) dd.style.display = "none";
       this.clearGpsLocatingUI();
 
+      // Automatically prefetch connected drop cities for this origin
+      try { ApiClient.getCitiesDrop(city.name); } catch(e) {}
+
+      // If destination was identical to origin, reset destination
+      if (this.destCity && (this.destCity.id === city.id || this.destCity.name.toLowerCase() === city.name.toLowerCase())) {
+        this.destCity = null;
+        const dropInput = document.getElementById("input-drop");
+        if (dropInput) dropInput.value = "";
+      }
+
       // Smoothly transition to Drop if drop is currently empty
       const dropInput = document.getElementById("input-drop");
       if (dropInput && !dropInput.value.trim()) {
@@ -955,7 +1056,7 @@ class BookingManager {
       }
     }
 
-    if (this.originCity && this.destCity) {
+    if (this.originCity && this.destCity && this.userPhone && this.userPhone.length === 10) {
       this.isFareUnlocked = true;
       const section = document.getElementById("cab-selection-section");
       const mapSection = document.getElementById("route-map-section");
@@ -968,6 +1069,18 @@ class BookingManager {
         mapSection.classList.add("fare-section-open");
       }
       this.calculateAndRenderFares();
+    } else {
+      this.isFareUnlocked = false;
+      const section = document.getElementById("cab-selection-section");
+      const mapSection = document.getElementById("route-map-section");
+      if (section) {
+        section.classList.add("fare-section-closed");
+        section.classList.remove("fare-section-open");
+      }
+      if (mapSection) {
+        mapSection.classList.add("fare-section-closed");
+        mapSection.classList.remove("fare-section-open");
+      }
     }
     this.updateCheckFareButtonState();
   }
@@ -1011,6 +1124,13 @@ class BookingManager {
           phoneGroup.classList.toggle("is-valid", isValid);
           phoneGroup.style.borderColor = "";
           phoneGroup.style.boxShadow = "";
+          if (isValid) {
+            this.userPhone = val;
+            this.passengerDetails.phone = `+91 ${val}`;
+            if (this.originCity && this.destCity) {
+              this.transferLeadToHelpdesk(val, true);
+            }
+          }
         }
         this.updateCheckFareButtonState();
       };
@@ -1084,13 +1204,18 @@ class BookingManager {
     const phoneInput = document.getElementById("input-fare-phone");
 
     // 1. Resolve & Validate Pickup Location
-    if (!this.originCity && pickupInput && pickupInput.value.trim()) {
+    if (pickupInput && pickupInput.value.trim()) {
       const q = pickupInput.value.trim().toLowerCase().replace(/[()[\]{}]/g, " ");
-      this.originCity = OTB_CITIES.find(c =>
-        q.includes(c.name.toLowerCase()) ||
-        c.name.toLowerCase().includes(q) ||
-        (c.hindiName && (q.includes(c.hindiName) || c.hindiName.includes(q)))
-      ) || null;
+      if (!this.originCity || (!pickupInput.value.toLowerCase().includes(this.originCity.name.toLowerCase()) && !this.originCity.name.toLowerCase().includes(q))) {
+        this.originCity = OTB_CITIES.find(c =>
+          c.name.toLowerCase() === q ||
+          c.id === q ||
+          c.name.toLowerCase().startsWith(q) ||
+          q.includes(c.name.toLowerCase()) ||
+          c.name.toLowerCase().includes(q) ||
+          (c.hindiName && (q.includes(c.hindiName) || c.hindiName.includes(q)))
+        ) || null;
+      }
     }
     if (!this.originCity) {
       if (pickupInput) {
@@ -1108,13 +1233,18 @@ class BookingManager {
     }
 
     // 2. Resolve & Validate Drop Location
-    if (!this.destCity && dropInput && dropInput.value.trim()) {
+    if (dropInput && dropInput.value.trim()) {
       const q = dropInput.value.trim().toLowerCase().replace(/[()[\]{}]/g, " ");
-      this.destCity = OTB_CITIES.find(c =>
-        q.includes(c.name.toLowerCase()) ||
-        c.name.toLowerCase().includes(q) ||
-        (c.hindiName && (q.includes(c.hindiName) || c.hindiName.includes(q)))
-      ) || null;
+      if (!this.destCity || (!dropInput.value.toLowerCase().includes(this.destCity.name.toLowerCase()) && !this.destCity.name.toLowerCase().includes(q))) {
+        this.destCity = OTB_CITIES.find(c =>
+          c.name.toLowerCase() === q ||
+          c.id === q ||
+          c.name.toLowerCase().startsWith(q) ||
+          q.includes(c.name.toLowerCase()) ||
+          c.name.toLowerCase().includes(q) ||
+          (c.hindiName && (q.includes(c.hindiName) || c.hindiName.includes(q)))
+        ) || null;
+      }
     }
     if (!this.destCity) {
       if (dropInput) {
@@ -1131,13 +1261,47 @@ class BookingManager {
       return false;
     }
 
-    // 3. Save phone number if entered
-    const rawVal = phoneInput ? phoneInput.value.trim().replace(/\D/g, "") : (this.userPhone || "");
-    if (rawVal.length === 10) {
-      this.userPhone = rawVal;
-      this.passengerDetails.phone = `+91 ${rawVal}`;
-      this.transferLeadToHelpdesk(rawVal, true);
+    // 3. STRICT PHONE NUMBER REQUIREMENT: Without entering phone number, cannot get fare!
+    let phoneToRecord = "";
+    if (phoneInput && phoneInput.value) {
+      phoneToRecord = phoneInput.value.trim().replace(/\D/g, "");
     }
+    if (!phoneToRecord && this.userPhone) {
+      phoneToRecord = this.userPhone.replace(/\D/g, "");
+    }
+    if (!phoneToRecord && window.currentUser && window.currentUser.phone) {
+      phoneToRecord = window.currentUser.phone.replace(/\D/g, "");
+    }
+    if (!phoneToRecord) {
+      const cachedPhone = localStorage.getItem("oneway_fare_phone");
+      if (cachedPhone) phoneToRecord = cachedPhone.replace(/\D/g, "");
+    }
+
+    if (phoneToRecord.length > 10) {
+      phoneToRecord = phoneToRecord.slice(-10);
+    }
+
+    if (!phoneToRecord || phoneToRecord.length !== 10 || !/^[6-9]\d{9}$/.test(phoneToRecord)) {
+      const phoneGroup = document.getElementById("phone-check-group");
+      if (phoneGroup) {
+        phoneGroup.classList.add("shake-error");
+        setTimeout(() => phoneGroup.classList.remove("shake-error"), 600);
+      }
+      if (phoneInput) {
+        phoneInput.focus();
+      }
+      if (!silent) {
+        window.showToast("Please enter your 10-digit mobile number to view fares & availability", "warning");
+      }
+      return false;
+    }
+
+    // Valid 10-digit number provided!
+    const clean10 = phoneToRecord;
+    this.userPhone = clean10;
+    this.passengerDetails.phone = `+91 ${clean10}`;
+    localStorage.setItem("oneway_fare_phone", clean10);
+    this.transferLeadToHelpdesk(clean10, true, { source: "Check Fares & Availability Button" });
 
     // 4. Open and reveal Fare Details Section & Map Section
     this.isFareUnlocked = true;
@@ -1163,8 +1327,9 @@ class BookingManager {
 
     if (section && !silent) {
       setTimeout(() => {
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 120);
+        const topPos = section.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: Math.max(0, topPos), behavior: "smooth" });
+      }, 50);
       window.showToast(`Outstation Fares Calculated: ${this.originCity.name} to ${this.destCity.name}`, "success");
       history.pushState({ step: "cabs" }, "", "#cabs");
       this.saveState();
@@ -1202,7 +1367,12 @@ class BookingManager {
 
     // Reset date to today's current date only
     const today = new Date();
-    const formatYMD = (d) => d.toISOString().split("T")[0];
+    const formatYMD = (d) => {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    };
     this.pickupDate = formatYMD(today);
     const pickupDateInput = document.getElementById("pickup-date-input");
     if (pickupDateInput) pickupDateInput.value = this.pickupDate;
@@ -1210,9 +1380,12 @@ class BookingManager {
     localStorage.removeItem("oneway_fare_phone");
   }
 
-  async transferLeadToHelpdesk(phone, silent = false) {
+  async transferLeadToHelpdesk(phone, silent = false, extra = {}) {
     const helpdeskNumber = "917281851011"; // 24x7 WhatsApp Dispatch: 7281851011
-    const pFormat = `+91 ${phone}`;
+    const clean10 = (phone || "").replace(/\D/g, "").slice(-10);
+    if (!clean10 || clean10.length < 10) return;
+
+    const pFormat = `+91 ${clean10}`;
 
     const origName = this.originCity ? this.originCity.name : "Patna";
     const destName = this.destCity ? this.destCity.name : "Gaya";
@@ -1231,38 +1404,41 @@ class BookingManager {
 
     const leadData = {
       phone: pFormat,
-      rawPhone: phone,
+      rawPhone: clean10,
+      cleanPhone: clean10,
+      passengerName: extra.passengerName || this.passengerDetails.name || window.currentUser?.name || "Fare Check Visitor",
       originCity: origName,
       destCity: destName,
-      tripType: this.tripType,
-      pickupDate: this.pickupDate,
-      pickupTime: this.pickupTime,
-      distanceKm: this.calculatedDistanceKm,
-      duration: this.calculatedDuration,
+      tripType: this.tripType || "oneway",
+      pickupDate: this.pickupDate || new Date().toISOString().split("T")[0],
+      pickupTime: this.pickupTime || "10:00 AM",
+      distanceKm: this.calculatedDistanceKm || 100,
+      duration: this.calculatedDuration || "2h",
+      selectedCab: extra.selectedCab || this.selectedCabId || "sedan",
       estFareHatch: hatchPrice,
       estFareSedan: sedanPrice,
       estFareSuv: suvPrice,
-      source: "Fare Check Button",
+      source: extra.source || "Check Fare & Availability",
       helpdeskWhatsApp: `+${helpdeskNumber}`,
       createdAt: new Date().toISOString()
     };
 
-    // 1. Dispatch lead to server API
+    // 1. Dispatch lead to server API and Admin Desk in background
     try {
       if (window.ApiClient && ApiClient.sendLead) {
         await ApiClient.sendLead(leadData);
       }
     } catch (err) {
-      console.warn("Lead recorded locally", err);
+      console.warn("Lead recorded locally:", err);
     }
 
-    // 2. Prepare Helpdesk WhatsApp inquiry text
+    // 2. Prepare Helpdesk WhatsApp inquiry text for manual action
     const waText = 
       `*New Fare Inquiry - OneWayTaxiBihar*\n\n` +
       `*Customer Mobile:* ${pFormat}\n` +
-      `*Route:* ${origName} → ${destName} (${this.tripType.toUpperCase()})\n` +
-      `*Date & Time:* ${this.pickupDate} at ${this.pickupTime}\n` +
-      `*Distance:* ${this.calculatedDistanceKm} KM (~${this.calculatedDuration})\n` +
+      `*Route:* ${origName} → ${destName} (${(this.tripType || 'oneway').toUpperCase()})\n` +
+      `*Date & Time:* ${leadData.pickupDate} at ${leadData.pickupTime}\n` +
+      `*Distance:* ${leadData.distanceKm} KM (~${leadData.duration})\n` +
       `*Estimated Rates (Toll & GST incl.):*\n` +
       `  • Hatchback: ₹${hatchPrice.toLocaleString('en-IN')}\n` +
       `  • Prime Sedan: ₹${sedanPrice.toLocaleString('en-IN')}\n` +
@@ -1271,39 +1447,11 @@ class BookingManager {
 
     const waUrl = `https://wa.me/${helpdeskNumber}?text=${encodeURIComponent(waText)}`;
     this.currentWhatsAppLeadUrl = waUrl;
-
-    // 3. Update Route Bar with connection status
-    this.updateRouteBarHelpdeskConnect(pFormat, waUrl);
-
-    // 4. Keep user on page for smooth checkout; WhatsApp remains accessible via button
-    if (!silent) {
-      window.showToast(`Fare Enquiry logged with Patna Helpdesk (+91 72818 51011).`, "success");
-    }
   }
 
   updateRouteBarHelpdeskConnect(phone, waUrl) {
-    const bar = document.getElementById("route-fare-bar");
-    if (!bar) return;
-
-    let leadBadge = document.getElementById("rf-lead-badge");
-    if (!leadBadge) {
-      leadBadge = document.createElement("div");
-      leadBadge.id = "rf-lead-badge";
-      leadBadge.style.cssText = "display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; width: 100%; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--owc-border); font-size: 13px;";
-      bar.appendChild(leadBadge);
-    }
-
-    leadBadge.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 8px; color: var(--owc-text);">
-        <span style="background: #009af4; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <span>Mobile: <strong style="color: var(--owc-primary);">${phone}</strong> (Connected to Patna Helpdesk)</span>
-      </div>
-      <a href="${waUrl}" target="_blank" rel="noopener noreferrer" style="color: var(--owc-primary); font-weight: 700; text-decoration: none; font-size: 12.5px;">
-        Open WhatsApp Chat →
-      </a>
-    `;
+    // Pure silent operation - do not inject notification banner to customer
+    return;
   }
 
   updateTripTypeUI() {
@@ -1422,6 +1570,37 @@ class BookingManager {
       window.onewayMap.updateRoute(this.originCity, this.destCity, this.calculatedDistanceKm);
     }
     this.updateCheckFareButtonState();
+
+    // Fetch and display 2026 AI Mobility Intelligence
+    this.fetchAiIntelligence();
+  }
+
+  async fetchAiIntelligence() {
+    const strip = document.getElementById("ai-demand-strip");
+    const textEl = document.getElementById("ai-demand-text");
+    if (!strip || !textEl || !this.originCity || !this.destCity) return;
+
+    strip.style.display = "inline-flex";
+    textEl.textContent = "AI Demand Index: Analyzing highway demand & eco emissions...";
+
+    try {
+      const aiData = await ApiClient.getAiIntelligence({
+        origin: this.originCity.name,
+        destination: this.destCity.name,
+        tripType: this.tripType
+      });
+
+      if (aiData && aiData.success) {
+        textEl.innerHTML = `
+          ⚡ <strong>AI Demand Index: ${aiData.demandIndex}/100</strong> (${aiData.demandLevel || 'Optimal Booking Window'}) • 
+          🌱 <strong>Eco-Save:</strong> ~${aiData.carbonSavedKg || 16} kg CO₂ vs empty return • 
+          ${aiData.explanation || ''}
+        `;
+      }
+    } catch (e) {
+      console.warn("AI intelligence fetch skip:", e);
+      strip.style.display = "none";
+    }
   }
 
   renderFleetCards() {
@@ -1679,14 +1858,48 @@ class BookingManager {
   /* ==========================================================================
      CHECKOUT, PASSENGER DETAILS & TICKET CONFIRMATION
      ========================================================================== */
+  openCheckoutModal(cabId = "sedan", price = null) {
+    if (!price) {
+      const fleet = OTB_FLEET.find(f => f.id === cabId) || OTB_FLEET[1];
+      price = Math.max(2198, Math.round((this.calculatedDistanceKm || 104) * (fleet.ratePerKm || 25)));
+    }
+    return this.startCheckout(cabId, price);
+  }
+
   startCheckout(cabId, price) {
     this.selectedCabId = cabId;
 
-    if (!this.originCity) {
-      this.originCity = OTB_CITIES.find(c => c.id === "patna") || OTB_CITIES[0];
+    if (!this.originCity || !this.destCity) {
+      window.showToast("Please enter or select your pickup and drop location", "info");
+      const hero = document.getElementById("booking-hero");
+      if (hero) hero.scrollIntoView({ behavior: "smooth" });
+      const pInput = document.getElementById("input-pickup");
+      const dInput = document.getElementById("input-drop");
+      if (!this.originCity && pInput) {
+        pInput.focus();
+        const pDropdown = document.getElementById("pickup-dropdown");
+        if (pDropdown) this.handleCitySearch("pickup", "", pDropdown, true);
+      } else if (!this.destCity && dInput) {
+        dInput.focus();
+        const dDropdown = document.getElementById("drop-dropdown");
+        if (dDropdown) this.handleCitySearch("drop", "", dDropdown, true);
+      }
+      return;
     }
-    if (!this.destCity) {
-      this.destCity = OTB_CITIES.find(c => c.id === "gaya") || OTB_CITIES[1];
+
+    const fleet = OTB_FLEET.find(f => f.id === cabId) || OTB_FLEET[1];
+
+    // Intercept checkout: Prompt passenger to login/verify & claim ₹100 reward
+    if (!window.currentUser) {
+      this.pendingCheckout = { cabId, price };
+      if (window.openAuthModal) {
+        window.openAuthModal({
+          cabTier: cabId,
+          cabName: fleet.category || "Outstation Cab",
+          price: price
+        });
+      }
+      return;
     }
 
     if (window.currentUser) {
@@ -1697,32 +1910,26 @@ class BookingManager {
         this.passengerDetails.phone = window.currentUser.phone;
       }
     }
-
-    const fleet = OTB_FLEET.find(f => f.id === cabId) || OTB_FLEET[1];
     const checkoutModal = document.getElementById("modal-checkout");
     const checkoutBody = document.getElementById("modal-checkout-body");
 
     if (!checkoutModal || !checkoutBody) return;
 
-    const km = this.calculatedDistanceKm || 104;
-    const baseKm = fleet.baseKm || 15;
-    const extraKm = Math.max(0, km - baseKm);
-    const distanceCharge = Math.round(extraKm * (fleet.perKmRate || 25));
-    const toll = Math.round((km / 70) * 55);
-    const allowance = (this.tripType === "roundtrip" || km > 200) ? 350 : 0;
-    const isAirport = (this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport"));
-    const parking = isAirport ? 100 : 0;
     this.currentCheckoutPrice = price;
     this.currentCheckoutFleet = fleet;
+    this.appliedCouponCode = "";
+    this.appliedCouponDiscount = 0;
     this.tempBookingId = "OTB-2026-" + Math.floor(1000 + Math.random() * 9000);
 
     const km = this.calculatedDistanceKm || 104;
-    const baseKm = (this.tripType === "local") ? 80 : 15;
+    const baseKm = (this.tripType === "local") ? 80 : (fleet.baseKm || 15);
     const extraKm = Math.max(0, km - baseKm);
-    const distanceCharge = Math.round(extraKm * (fleet.perKmRate || 25));
+    const perKm = fleet.ratePerKm || fleet.perKmRate || 25;
+    const baseFareAmount = (fleet.baseFare !== undefined) ? fleet.baseFare : Math.round(baseKm * perKm);
+    const distanceCharge = Math.round(extraKm * perKm);
     const toll = Math.round((km / 70) * 55);
     const allowance = (this.tripType === "roundtrip" || km > 200) ? 350 : 0;
-    const isAirport = (this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport"));
+    const isAirport = Boolean(this.originCity?.name?.toLowerCase().includes("airport") || this.destCity?.name?.toLowerCase().includes("airport"));
     const parking = isAirport ? 100 : 0;
     const finalPayableInit = Math.max(0, price - 100);
 
@@ -1765,10 +1972,10 @@ class BookingManager {
           <div class="checkout-breakdown-content" id="checkout-breakdown-box">
             <div class="checkout-breakdown-row">
               <span>Base Fare (First ${baseKm} KM):</span>
-              <strong style="color: #ffffff;">₹${fleet.baseFare.toLocaleString('en-IN')}</strong>
+              <strong style="color: #ffffff;">₹${baseFareAmount.toLocaleString('en-IN')}</strong>
             </div>
             <div class="checkout-breakdown-row">
-              <span>Distance Charge (${extraKm} KM @ ₹${fleet.perKmRate}/KM):</span>
+              <span>Distance Charge (${extraKm} KM @ ₹${perKm}/KM):</span>
               <strong style="color: #ffffff;">₹${distanceCharge.toLocaleString('en-IN')}</strong>
             </div>
             <div class="checkout-breakdown-row">
@@ -1961,6 +2168,14 @@ class BookingManager {
                 </span>
               </div>
 
+              <!-- 10b. Coupon Promo Discount -->
+              <div class="summary-row" id="sum-coupon-row" style="display: none; background: rgba(16, 185, 129, 0.06);">
+                <span class="summary-row-label" style="color: #059669; font-weight: 700;">Coupon Promo (<span id="sum-coupon-code"></span>)</span>
+                <span class="summary-row-val">
+                  <span style="color: #059669; font-weight: 800;" id="sum-coupon-discount">-₹0</span>
+                </span>
+              </div>
+
               <!-- 11. Remaining Payment -->
               <div class="summary-row" style="background: rgba(0, 154, 244, 0.05);">
                 <span class="summary-row-label" style="color: var(--owc-primary); font-weight: 800;">Remaining Payment</span>
@@ -1993,6 +2208,21 @@ class BookingManager {
             </div>
             <span style="color: #15803d; font-weight: 800; font-size: 15px;" id="chk-wallet-deduct-label">-₹100</span>
           </label>
+
+          <!-- Promo Coupon Box -->
+          <div class="checkout-coupon-box" style="margin-top: 10px; background: rgba(2, 132, 199, 0.04); border: 1px dashed #38bdf8; border-radius: 12px; padding: 12px 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 11.5px; font-weight: 800; color: #0284c7; text-transform: uppercase; letter-spacing: 0.5px;">🎟️ Apply Promo Coupon</span>
+              <span style="font-size: 10.5px; color: var(--owc-text-muted);">Try: <strong style="color: #0284c7;">FIRST100</strong>, <strong style="color: #0284c7;">BIHAR50</strong>, <strong style="color: #0284c7;">FESTIVE10</strong></span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="chk-coupon-input" placeholder="ENTER COUPON CODE" style="flex: 1; text-transform: uppercase; font-weight: 800; padding: 8px 12px; border: 1px solid var(--owc-border); border-radius: 8px; font-size: 13px; background: var(--owc-card-bg); color: var(--owc-text);">
+              <button type="button" id="chk-coupon-apply-btn" style="padding: 8px 16px; font-size: 12px; font-weight: 800; border-radius: 8px; background: #0284c7; color: white; border: none; cursor: pointer;" onclick="window.bookingManager.handleApplyCoupon(${price})">
+                Apply
+              </button>
+            </div>
+            <div id="chk-coupon-msg" style="font-size: 11.5px; margin-top: 6px; display: none;"></div>
+          </div>
 
           <!-- Payment Options -->
           <div class="checkout-methods-list" style="margin-top: 10px;">
@@ -2110,9 +2340,23 @@ class BookingManager {
 
       this.saveState();
 
+      this.userPhone = phone;
+      this.passengerDetails.name = name;
+      this.passengerDetails.phone = `+91 ${phone}`;
+
       // Update Summary Values (Req 140)
       const pickupAddr = document.getElementById("chk-pickup-addr")?.value.trim();
       const dropAddr = document.getElementById("chk-drop-addr")?.value.trim();
+      if (pickupAddr) this.passengerDetails.pickupAddress = pickupAddr;
+      if (dropAddr) this.passengerDetails.dropAddress = dropAddr;
+
+      // Sync lead immediately to Admin Desk
+      this.transferLeadToHelpdesk(phone, true, {
+        passengerName: name,
+        selectedCab: this.selectedCabId,
+        source: "Checkout Step 1 Form"
+      });
+
       const pVal = document.getElementById("sum-pickup-val");
       const dVal = document.getElementById("sum-drop-val");
       const nVal = document.getElementById("sum-name-val");
@@ -2186,6 +2430,24 @@ class BookingManager {
         el.addEventListener("input", () => this.saveState());
       }
     });
+
+    const phoneEl = document.getElementById("chk-phone");
+    const nameEl = document.getElementById("chk-name");
+    if (phoneEl) {
+      phoneEl.addEventListener("blur", () => {
+        const p = phoneEl.value.replace(/\D/g, "").slice(-10);
+        if (p.length === 10 && /^[6-9]\d{9}$/.test(p)) {
+          this.userPhone = p;
+          this.passengerDetails.phone = `+91 ${p}`;
+          this.passengerDetails.name = nameEl ? nameEl.value.trim() : "";
+          this.transferLeadToHelpdesk(p, true, {
+            passengerName: this.passengerDetails.name || "Checkout Visitor",
+            selectedCab: this.selectedCabId,
+            source: "Checkout Modal Input"
+          });
+        }
+      });
+    }
   }
 
   toggleFareBreakdown() {
@@ -2247,14 +2509,15 @@ class BookingManager {
     const origEl = document.getElementById("chk-original-payable");
     const deductLabel = document.getElementById("chk-wallet-deduct-label");
     const isUsing = chk && chk.checked;
-    const deduction = isUsing ? 100 : 0;
-    const finalAmt = Math.max(0, basePrice - deduction);
+    const walletDeduction = isUsing ? 100 : 0;
+    const couponDeduction = this.appliedCouponDiscount || 0;
+    const finalAmt = Math.max(0, basePrice - walletDeduction - couponDeduction);
 
     if (deductLabel) {
       deductLabel.textContent = isUsing ? "-₹100" : "₹0";
     }
     if (origEl) {
-      origEl.style.display = isUsing ? "inline" : "none";
+      origEl.style.display = (isUsing || couponDeduction > 0) ? "inline" : "none";
     }
     if (totalEl) {
       totalEl.textContent = `₹${finalAmt.toLocaleString('en-IN')}`;
@@ -2265,6 +2528,68 @@ class BookingManager {
     if (sumWalletUsed) {
       sumWalletUsed.textContent = isUsing ? "-₹100" : "₹0";
       sumWalletUsed.style.color = isUsing ? "#059669" : "#94a3b8";
+    }
+  }
+
+  async handleApplyCoupon(basePrice) {
+    const input = document.getElementById("chk-coupon-input");
+    const msgEl = document.getElementById("chk-coupon-msg");
+    const btn = document.getElementById("chk-coupon-apply-btn");
+    if (!input || !msgEl) return;
+
+    const code = input.value.trim().toUpperCase();
+    if (!code) {
+      msgEl.style.display = "block";
+      msgEl.style.color = "#ef4444";
+      msgEl.textContent = "Please enter a valid coupon promo code.";
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "...";
+    }
+
+    try {
+      const res = await ApiClient.applyCoupon({ code, fareAmount: basePrice });
+      if (res && res.success) {
+        this.appliedCouponCode = res.code;
+        this.appliedCouponDiscount = res.discount;
+
+        msgEl.style.display = "block";
+        msgEl.style.color = "#10b981";
+        msgEl.innerHTML = `✅ <strong>${res.code} applied!</strong> You saved ₹${res.discount.toLocaleString('en-IN')}.`;
+
+        const row = document.getElementById("sum-coupon-row");
+        const codeEl = document.getElementById("sum-coupon-code");
+        const discEl = document.getElementById("sum-coupon-discount");
+        if (row) row.style.display = "flex";
+        if (codeEl) codeEl.textContent = res.code;
+        if (discEl) discEl.textContent = `-₹${res.discount.toLocaleString('en-IN')}`;
+
+        this.updateCheckoutPayable(basePrice);
+        if (window.showToast) window.showToast(`Coupon ${res.code} applied: -₹${res.discount}`, "success");
+      } else {
+        this.appliedCouponCode = "";
+        this.appliedCouponDiscount = 0;
+        msgEl.style.display = "block";
+        msgEl.style.color = "#ef4444";
+        msgEl.textContent = `❌ ${res?.message || 'Invalid or expired coupon code'}`;
+
+        const row = document.getElementById("sum-coupon-row");
+        if (row) row.style.display = "none";
+        this.updateCheckoutPayable(basePrice);
+      }
+    } catch (err) {
+      console.error("Coupon apply error:", err);
+      msgEl.style.display = "block";
+      msgEl.style.color = "#ef4444";
+      msgEl.textContent = "Network error verifying coupon.";
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Apply";
+      }
     }
   }
 
@@ -2312,7 +2637,8 @@ class BookingManager {
 
       pickupChipsContainer.innerHTML = `
         <div class="auto-type-header">
-          <span>Popular ${originCityName} Pickup Hubs:</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: #0284c7; flex-shrink: 0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span style="font-weight: 750; color: #475569; font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase;">Popular ${originCityName} Pickup Hubs (Tap to Fill):</span>
         </div>
         <div class="auto-type-chips-list">
           ${chips.map(c => `
@@ -2351,7 +2677,8 @@ class BookingManager {
 
       dropChipsContainer.innerHTML = `
         <div class="auto-type-header">
-          <span>Popular ${destCityName} Drop Destinations:</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: #f43f5e; flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+          <span style="font-weight: 750; color: #475569; font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase;">Popular ${destCityName} Drop Destinations (Tap to Fill):</span>
         </div>
         <div class="auto-type-chips-list">
           ${chips.map(c => `
@@ -2537,8 +2864,10 @@ class BookingManager {
       return;
     }
 
-    const today = new Date().toISOString().split("T")[0];
-    if (this.pickupDate && this.pickupDate < today) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+    if (this.pickupDate && this.pickupDate < yStr) {
       window.showToast("Please choose a valid travel date (today or later)", "warning");
       return;
     }
@@ -2595,14 +2924,16 @@ class BookingManager {
         pickupAddress: pickupAddr,
         dropAddress: dropAddr,
         paymentMethod: method,
-        useWallet: isUsingWallet
+        useWallet: isUsingWallet,
+        couponCode: this.appliedCouponCode || ""
       };
 
       const res = await ApiClient.createBooking(payload);
 
       if (res && res.success && res.booking) {
+        const b = res.booking;
         if (isUsingWallet && window.currentUser) {
-          window.currentUser.walletBalance = Math.max(0, (window.currentUser.walletBalance || 100) - (res.booking.walletUsed || 100));
+          window.currentUser.walletBalance = Math.max(0, (window.currentUser.walletBalance || 100) - (b.walletUsed || 100));
           if (window.renderNavAuth) window.renderNavAuth();
         }
 
@@ -2610,8 +2941,36 @@ class BookingManager {
         if (phoneInputHero) phoneInputHero.value = "";
         localStorage.removeItem("oneway_fare_phone");
 
+        // Format detailed WhatsApp dispatch and customer ticket text
+        const couponDetail = (b.couponDiscount > 0) ? `🎟️ *Coupon Applied:* ${b.couponCode} (-₹${b.couponDiscount.toLocaleString('en-IN')})\n` : "";
+        const waMsg = 
+          `🚕 *NEW BOOKING CONFIRMATION - OneWayTaxiBihar*\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `📋 *Booking ID:* ${b.bookingId}\n` +
+          `👤 *Passenger:* ${b.passengerName}\n` +
+          `📞 *Mobile:* ${b.passengerPhone}\n` +
+          `📍 *Route:* ${b.originCity} ➔ ${b.destCity} (${b.distanceKm} KM)\n` +
+          `🕒 *Pickup Time:* ${b.pickupDate} at ${b.pickupTime}\n` +
+          `🏠 *Pickup Address:* ${b.pickupAddress}\n` +
+          `🎯 *Drop Address:* ${b.dropAddress}\n` +
+          `🚘 *Cab Tier:* ${b.fleetClass} (${b.fleetModel || 'Verified AC Cab'})\n` +
+          couponDetail +
+          `💰 *Total Fare:* ₹${(b.totalFare || 0).toLocaleString('en-IN')} (${b.paymentMethod})\n` +
+          `📌 *Status:* REQUESTED / PENDING CONFIRMATION\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `Our central dispatch agent will call you within 5 minutes.`;
+
+        const waDispatchUrl = `https://wa.me/917281851011?text=${encodeURIComponent(waMsg)}`;
+        b.whatsappDispatchUrl = waDispatchUrl;
+        b.whatsappMessage = waMsg;
+
         window.closeAllModals(false);
-        this.renderBookingConfirmation(res.booking);
+        this.renderBookingConfirmation(b);
+        try {
+          if (window.customerNotificationManager) {
+            window.customerNotificationManager.onBookingSubmitted(b);
+          }
+        } catch(e) {}
       } else {
         window.showToast(res?.message || "Failed to submit booking request. Please check connection.", "warning");
         if (btnConfirm) {
@@ -2638,72 +2997,83 @@ class BookingManager {
     if (!confModal || !confBody) return;
 
     confBody.innerHTML = `
-      <div style="text-align: center; padding: 6px 0;">
-        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <div class="booking-confirmation-voucher" style="text-align: center; padding: 4px 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; width: 100%; box-sizing: border-box; min-width: 0; overflow-x: hidden;">
+        
+        <!-- Verification Emblem -->
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; border: 1.5px solid rgba(16, 185, 129, 0.3);">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
         
-        <h2 style="font-size: 21px; font-weight: 900; color: var(--owc-text); margin-bottom: 4px;">BOOKING REQUEST RECEIVED</h2>
-        <div style="display: inline-block; background: #e0f2fe; color: #0284c7; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800; margin-bottom: 12px;">
-          STATUS: REQUESTED / PENDING CONFIRMATION
+        <h2 style="font-size: 18px; font-weight: 900; color: var(--owc-text); margin: 0 0 4px 0; letter-spacing: -0.3px; word-break: break-word; overflow-wrap: anywhere; line-height: 1.3;">BOOKING REQUEST CONFIRMED</h2>
+        <div style="display: inline-block; max-width: 100%; word-break: break-word; overflow-wrap: anywhere; background: rgba(2, 132, 199, 0.1); border: 1px solid rgba(2, 132, 199, 0.3); color: #0284c7; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 12px; letter-spacing: 0.3px; line-height: 1.4; box-sizing: border-box;">
+          <span>STATUS: REQUEST RECEIVED • CENTRAL DISPATCH NOTIFIED</span>
         </div>
-        <p style="font-size: 13.5px; color: var(--owc-text-muted); margin-bottom: 16px;">
-          Booking ID: <strong style="color: var(--owc-primary); font-size: 16px;">${booking.bookingId}</strong>
-        </p>
+        
+        <div style="font-size: 13px; color: var(--owc-text-muted); margin-bottom: 14px; word-break: break-word;">
+          Booking Reference: <strong style="color: var(--owc-primary); font-size: 15px; font-family: monospace; letter-spacing: 0.5px;">${booking.bookingId}</strong>
+        </div>
 
-        <!-- Official 5-Minute Agent Call Notice -->
-        <div style="background: rgba(16, 185, 129, 0.08); border: 2px solid #059669; border-radius: var(--radius-lg); padding: 16px; text-align: left; margin-bottom: 18px;">
-          <div style="display: flex; align-items: flex-start; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <!-- Official Central Dispatch 5-Minute Call Guarantee -->
+        <div style="background: rgba(16, 185, 129, 0.06); border: 1.5px solid #059669; border-radius: var(--radius-lg); padding: 12px 14px; text-align: left; margin-bottom: 14px; width: 100%; box-sizing: border-box; min-width: 0;">
+          <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%; box-sizing: border-box; min-width: 0;">
+            <div style="width: 34px; height: 34px; border-radius: 8px; background: #059669; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </div>
-            <div>
-              <h3 style="font-size: 16px; font-weight: 800; color: #065f46; margin-bottom: 3px; line-height: 1.35;">Our partner/driver or agent will call you within 5 minutes to confirm your booking.</h3>
-              <p style="font-size: 12.5px; color: #047857; margin: 0; line-height: 1.45;">Hamare Patna control room se executive aapko 5 minute ke andar call karke cab assign aur dispatch confirm karenge.</p>
+            <div style="flex: 1; min-width: 0; word-break: break-word; overflow-wrap: anywhere;">
+              <div style="font-size: 13.5px; font-weight: 800; color: #065f46; margin-bottom: 2px;">Central Dispatch Executive Call Within 5 Minutes</div>
+              <p style="font-size: 12px; color: #047857; margin: 0; line-height: 1.45;">
+                Our Patna Central Operations room has received your booking inquiry. A verified dispatch coordinator will telephone you at <strong>${booking.passengerPhone}</strong> within 5 minutes to confirm chauffeur &amp; vehicle details.
+              </p>
             </div>
           </div>
         </div>
 
-        <!-- Driver Assignment Notice -->
-        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: var(--radius-md); padding: 12px 14px; text-align: left; margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <span style="font-size: 12.5px; color: #475569; font-weight: 600;">Driver details will be shared after confirmation.</span>
-        </div>
-
-        <!-- Verified Trip Details Card -->
-        <div style="background: var(--owc-slate-50); border: 1px solid var(--owc-border); border-radius: var(--radius-lg); padding: 16px; text-align: left; margin-bottom: 20px; font-size: 13px; line-height: 1.7; color: var(--owc-text);">
-          <div style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--owc-border); padding-bottom: 8px; margin-bottom: 8px;">
-            <span style="color: var(--owc-text-muted);">Passenger:</span>
-            <strong>${booking.passengerName} (${booking.passengerPhone})</strong>
+        <!-- Verified Trip Itinerary Card -->
+        <div style="background: var(--owc-slate-50); border: 1px solid var(--owc-border); border-radius: var(--radius-lg); padding: 12px 14px; text-align: left; margin-bottom: 16px; font-size: 12.5px; line-height: 1.6; color: var(--owc-text); width: 100%; box-sizing: border-box; min-width: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4px; border-bottom: 1px dashed var(--owc-border); padding-bottom: 6px; margin-bottom: 6px; width: 100%; box-sizing: border-box; min-width: 0;">
+            <span style="color: var(--owc-text-muted); font-size: 12px; flex-shrink: 0;">Lead Passenger:</span>
+            <strong style="word-break: break-word; overflow-wrap: anywhere; text-align: right; min-width: 0; flex: 1;">${booking.passengerName} (${booking.passengerPhone})</strong>
           </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Route:</span>
-            <strong>${booking.originCity} → ${booking.destCity} (${booking.distanceKm} KM)</strong>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4px; border-bottom: 1px dashed var(--owc-border); padding-bottom: 6px; margin-bottom: 6px; width: 100%; box-sizing: border-box; min-width: 0;">
+            <span style="color: var(--owc-text-muted); font-size: 12px; flex-shrink: 0;">Confirmed Route:</span>
+            <strong style="word-break: break-word; overflow-wrap: anywhere; text-align: right; min-width: 0; flex: 1;">${booking.originCity} → ${booking.destCity} (${booking.distanceKm} KM)</strong>
           </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Pickup Time:</span>
-            <strong>${booking.pickupDate} at ${booking.pickupTime}</strong>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4px; border-bottom: 1px dashed var(--owc-border); padding-bottom: 6px; margin-bottom: 6px; width: 100%; box-sizing: border-box; min-width: 0;">
+            <span style="color: var(--owc-text-muted); font-size: 12px; flex-shrink: 0;">Pickup Schedule:</span>
+            <strong style="word-break: break-word; overflow-wrap: anywhere; text-align: right; min-width: 0; flex: 1;">${booking.pickupDate} at ${booking.pickupTime}</strong>
           </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--owc-text-muted);">Vehicle Class:</span>
-            <strong>${booking.fleetClass} (${booking.fleetModel})</strong>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 4px; border-bottom: 1px dashed var(--owc-border); padding-bottom: 6px; margin-bottom: 6px; width: 100%; box-sizing: border-box; min-width: 0;">
+            <span style="color: var(--owc-text-muted); font-size: 12px; flex-shrink: 0;">Vehicle Category:</span>
+            <strong style="word-break: break-word; overflow-wrap: anywhere; text-align: right; min-width: 0; flex: 1;">${booking.fleetClass} (${booking.fleetModel || 'AC Cab'})</strong>
           </div>
-          <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--owc-border); padding-top: 8px; margin-top: 8px;">
-            <span style="color: var(--owc-text-muted);">Total Fare:</span>
-            <strong style="color: var(--owc-primary); font-size: 15px;">₹${(booking.totalFare || 0).toLocaleString('en-IN')}</strong> (${booking.paymentMethod})
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; padding-top: 2px; width: 100%; box-sizing: border-box; min-width: 0;">
+            <span style="color: var(--owc-text-muted); font-size: 12px;">Total Payable Fare:</span>
+            <strong style="color: var(--owc-primary); font-size: 16px;">₹${(booking.totalFare || 0).toLocaleString('en-IN')}</strong>
+          </div>
+          <div style="font-size: 11px; color: var(--owc-text-muted); text-align: right; margin-top: 2px; word-break: break-word;">
+            (Includes Toll Tax, Fastag, GST &amp; Driver Allowance • ${booking.paymentMethod})
           </div>
         </div>
 
-        <!-- 24x7 Direct Action Buttons -->
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="tel:+918002141816" class="btn-select-cab" style="text-decoration: none; flex: 1; min-width: 180px; background: #0095f6; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 16px; font-weight: 800; font-size: 13.5px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Call Helpdesk (80021 41816)
+        <!-- Security & Chauffeur Masking Notice -->
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: var(--radius-md); padding: 10px 12px; text-align: left; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box; min-width: 0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span style="font-size: 11.5px; color: #475569; font-weight: 600; word-break: break-word; overflow-wrap: anywhere;">Driver and vehicle registration details are securely dispatched once chauffeur is assigned by Central Control.</span>
+        </div>
+
+        <!-- Executive Action Buttons -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+          <button type="button" onclick="window.print()" class="btn-nav-outline" style="flex: 1 1 140px; width: 100%; min-width: 140px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 14px; font-weight: 700; font-size: 13px; border-color: #cbd5e1; color: var(--owc-text); background: white; cursor: pointer; border-radius: var(--radius-md);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save Voucher
+          </button>
+          <a href="tel:+918002141816" class="btn-select-cab" style="text-decoration: none; flex: 1 1 160px; width: 100%; min-width: 160px; box-sizing: border-box; background: #0284c7; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 14px; font-weight: 800; font-size: 13px; color: white; border-radius: var(--radius-md); box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            24x7 Helpline (+91 80021 41816)
           </a>
-          <a href="https://wa.me/917281851011?text=Hello%20OneWayTaxiBihar%2C%20I%20have%20booked%20cab%20${booking.bookingId}%20(${booking.originCity}%20to%20${booking.destCity}).%20Please%20confirm." target="_blank" rel="noopener noreferrer" class="btn-nav-outline" style="text-decoration: none; flex: 1; min-width: 180px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 16px; font-weight: 800; font-size: 13.5px; border-color: #10b981; color: #10b981;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2z"/></svg>
-            WhatsApp Dispatch
-          </a>
+          <button type="button" onclick="window.closeAllModals(false)" style="width: 100%; margin-top: 4px; padding: 9px; background: transparent; border: none; color: var(--owc-text-muted); font-size: 12.5px; font-weight: 700; cursor: pointer; text-decoration: underline;">
+            Close &amp; Return to Home
+          </button>
         </div>
       </div>
     `;

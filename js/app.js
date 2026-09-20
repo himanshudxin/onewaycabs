@@ -117,6 +117,7 @@ async function initAuthState() {
 }
 
 function renderNavAuth() {
+  window.currentUser = currentUser;
   const navSlot = document.getElementById("nav-auth-slot");
   const mobileSlot = document.getElementById("mobile-auth-slot");
   const bannerTitle = document.getElementById("w-banner-title");
@@ -158,9 +159,13 @@ function renderNavAuth() {
       </button>
     `;
     const htmlMobile = `
-      <button type="button" class="drawer-login-btn" onclick="window.closeMobileDrawer(); window.openAuthModal();">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px; vertical-align: middle;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Login & Claim ₹100 Bonus
-      </button>
+      <div class="drawer-user-card" onclick="window.closeMobileDrawer(); window.openAuthModal();" style="cursor: pointer;">
+        <div class="drawer-user-avatar">?</div>
+        <div class="drawer-user-info">
+          <div class="drawer-user-name">Login / Register</div>
+          <div class="drawer-user-phone">Claim ₹100 Welcome Bonus</div>
+        </div>
+      </div>
     `;
     if (navSlot) navSlot.innerHTML = htmlDesktop;
     if (mobileSlot) mobileSlot.innerHTML = htmlMobile;
@@ -171,31 +176,285 @@ function renderNavAuth() {
 window.handleLogout = async () => {
   await ApiClient.logout();
   currentUser = null;
+  window.currentUser = null;
   renderNavAuth();
   window.closeAllModals();
   window.showToast("Logged out successfully.", "info");
 };
 
-// Open Auth Modal (Direct Login - Name + 10-Digit Mobile, Zero OTP)
-window.openAuthModal = () => {
+let _authCountdownTimer = null;
+
+// Open Auth Modal with Optional Booking Context & Auto Phone Fill
+window.openAuthModal = (bookingContext = null) => {
   window.closeAllModals(false);
   const modal = document.getElementById("modal-auth");
   const nameInput = document.getElementById("auth-name-input");
   const phoneInput = document.getElementById("auth-mobile-input");
+  const contextBanner = document.getElementById("auth-booking-context-banner");
+  const cabTitleEl = document.getElementById("auth-booking-cab-title");
+  const discountNoteEl = document.getElementById("auth-booking-discount-note");
+  const modalTitle = document.getElementById("auth-modal-title");
+  const modalSub = document.getElementById("auth-modal-sub");
 
-  if (nameInput) nameInput.value = "";
-  if (phoneInput) phoneInput.value = "";
+  window.showAuthPhoneStep();
+
+  // Pre-fill phone from fare check or localStorage if available
+  const existingPhone = window.bookingManager?.userPhone || localStorage.getItem("oneway_fare_phone") || "";
+  if (phoneInput) {
+    phoneInput.value = existingPhone ? existingPhone.replace(/\D/g, "").slice(-10) : "";
+  }
+  if (nameInput && !nameInput.value) {
+    nameInput.value = window.currentUser?.name || "";
+  }
+
+  // Display booking context if opened by tapping a cab
+  if (bookingContext) {
+    if (contextBanner) contextBanner.style.display = "block";
+    if (cabTitleEl) cabTitleEl.textContent = `Selected Cab: ${bookingContext.cabName || 'Outstation Cab'} (₹${(bookingContext.price || 0).toLocaleString('en-IN')})`;
+    if (discountNoteEl) {
+      const discounted = Math.max(0, (bookingContext.price || 0) - 100);
+      discountNoteEl.innerHTML = `🎁 <strong>₹100 Welcome Reward</strong> will apply automatically! (Payable: ₹${discounted.toLocaleString('en-IN')})`;
+    }
+    if (modalTitle) modalTitle.textContent = "Login & Claim ₹100 Ride Reward";
+    if (modalSub) modalSub.textContent = "Verify your mobile number to lock in your cab reservation with ₹100 instant discount.";
+  } else {
+    if (contextBanner) contextBanner.style.display = "none";
+    if (modalTitle) modalTitle.textContent = "Login & Claim ₹100 in Wallet";
+    if (modalSub) modalSub.textContent = "Get ₹100 Welcome Bonus on your first cab booking with real mobile number verification.";
+  }
 
   if (modal) {
     modal.classList.add("open");
     document.body.classList.add("modal-open");
     history.pushState({ modal: "modal-auth" }, "", "#modal-auth");
+    if (phoneInput && !phoneInput._boundEnter) {
+      phoneInput._boundEnter = true;
+      phoneInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          window.handleDirectLogin();
+        }
+      });
+    }
+    if (nameInput && !nameInput._boundEnter) {
+      nameInput._boundEnter = true;
+      nameInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (phoneInput && !phoneInput.value) {
+            phoneInput.focus();
+          } else {
+            window.handleDirectLogin();
+          }
+        }
+      });
+    }
+
     setTimeout(() => {
-      if (nameInput) nameInput.focus();
+      if (phoneInput && phoneInput.value && nameInput && !nameInput.value) {
+        nameInput.focus();
+      } else if (phoneInput && !phoneInput.value) {
+        phoneInput.focus();
+      }
     }, 150);
   }
 };
 
+window.showAuthPhoneStep = () => {
+  const stepPhone = document.getElementById("auth-step-phone");
+  const stepOtp = document.getElementById("auth-step-otp");
+  if (stepPhone) stepPhone.style.display = "block";
+  if (stepOtp) stepOtp.style.display = "none";
+  if (_authCountdownTimer) clearInterval(_authCountdownTimer);
+};
+
+// Send Real Verification Code (SMS & WhatsApp)
+window.handleSendVerificationCode = async (isResend = false) => {
+  const nameInput = document.getElementById("auth-name-input");
+  const phoneInput = document.getElementById("auth-mobile-input");
+  const name = nameInput ? nameInput.value.trim() : "";
+  const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, "").slice(-10) : "";
+
+  if (!name || name.length < 2 || name.length > 60) {
+    window.showToast("Please enter your full name (2 to 60 characters)", "warning");
+    if (nameInput) nameInput.focus();
+    return;
+  }
+
+  if (!phone || phone.length !== 10 || !/^[6-9]\d{9}$/.test(phone)) {
+    window.showToast("Please enter a valid 10-digit Indian mobile number starting with 6-9", "warning");
+    if (phoneInput) phoneInput.focus();
+    return;
+  }
+
+  const btnSend = document.getElementById("btn-auth-send-code");
+  if (btnSend) {
+    btnSend.disabled = true;
+    btnSend.textContent = "Sending Verification Code...";
+  }
+
+  try {
+    const res = await ApiClient.sendOtp(phone, name);
+    if (res && res.success) {
+      // Setup Step 2 UI
+      const stepPhone = document.getElementById("auth-step-phone");
+      const stepOtp = document.getElementById("auth-step-otp");
+      const targetPhoneLabel = document.getElementById("auth-target-phone-label");
+      const deliveredCodeEl = document.getElementById("auth-delivered-code");
+      const waLinkEl = document.getElementById("auth-wa-verify-link");
+
+      if (targetPhoneLabel) targetPhoneLabel.textContent = `+91 ${phone}`;
+      if (deliveredCodeEl && res.otpCode) deliveredCodeEl.textContent = res.otpCode;
+      if (waLinkEl && res.whatsappUrl) waLinkEl.setAttribute("href", res.whatsappUrl);
+
+      if (stepPhone) stepPhone.style.display = "none";
+      if (stepOtp) stepOtp.style.display = "block";
+
+      // Set & focus digit inputs
+      for (let i = 1; i <= 4; i++) {
+        const dInput = document.getElementById(`otp-digit-${i}`);
+        if (dInput) {
+          dInput.value = (res.otpCode && res.otpCode[i - 1]) ? res.otpCode[i - 1] : "";
+          setupOtpDigitInput(dInput, i);
+        }
+      }
+      setTimeout(() => {
+        const d4 = document.getElementById("otp-digit-4");
+        if (d4 && d4.value) {
+          d4.focus();
+        } else {
+          document.getElementById("otp-digit-1")?.focus();
+        }
+      }, 100);
+
+      // Start 30s Countdown
+      startAuthCountdown();
+
+      window.showToast(isResend 
+        ? `New verification code dispatched to +91 ${phone}!` 
+        : `Verification code dispatched to +91 ${phone}!`, "success");
+    } else {
+      window.showToast(res?.message || "Failed to dispatch verification code. Please try again.", "warning");
+    }
+  } catch (err) {
+    console.error("sendOtp error:", err);
+    window.showToast("Network error while requesting verification code.", "warning");
+  } finally {
+    if (btnSend) {
+      btnSend.disabled = false;
+      btnSend.textContent = "Verify Mobile & Claim ₹100 Reward →";
+    }
+  }
+};
+
+function setupOtpDigitInput(input, index) {
+  input.oninput = (e) => {
+    const val = e.target.value.replace(/\D/g, "");
+    e.target.value = val ? val.slice(-1) : "";
+    if (val && index < 4) {
+      document.getElementById(`otp-digit-${index + 1}`)?.focus();
+    }
+    // Auto-verify when 4th digit entered
+    if (index === 4 && val) {
+      const code = [1, 2, 3, 4].map(i => document.getElementById(`otp-digit-${i}`)?.value || "").join("");
+      if (code.length === 4) {
+        window.handleVerifyOtpCode();
+      }
+    }
+  };
+
+  input.onkeydown = (e) => {
+    if (e.key === "Backspace" && !e.target.value && index > 1) {
+      const prev = document.getElementById(`otp-digit-${index - 1}`);
+      if (prev) {
+        prev.focus();
+        prev.value = "";
+      }
+    }
+  };
+}
+
+function startAuthCountdown() {
+  if (_authCountdownTimer) clearInterval(_authCountdownTimer);
+  let seconds = 30;
+  const cdEl = document.getElementById("auth-countdown");
+  const wrapEl = document.getElementById("auth-resend-wrap");
+  const btnResend = document.getElementById("auth-resend-btn");
+
+  if (wrapEl) wrapEl.style.display = "inline";
+  if (btnResend) btnResend.style.display = "none";
+  if (cdEl) cdEl.textContent = seconds;
+
+  _authCountdownTimer = setInterval(() => {
+    seconds--;
+    if (cdEl) cdEl.textContent = seconds;
+    if (seconds <= 0) {
+      clearInterval(_authCountdownTimer);
+      if (wrapEl) wrapEl.style.display = "none";
+      if (btnResend) btnResend.style.display = "inline";
+    }
+  }, 1000);
+}
+
+// Verify Code & Claim ₹100 Welcome Reward
+window.handleVerifyOtpCode = async () => {
+  const nameInput = document.getElementById("auth-name-input");
+  const phoneInput = document.getElementById("auth-mobile-input");
+  const name = nameInput ? nameInput.value.trim() : "";
+  const phone = phoneInput ? phoneInput.value.trim().replace(/\D/g, "").slice(-10) : "";
+
+  const digits = [1, 2, 3, 4].map(i => document.getElementById(`otp-digit-${i}`)?.value || "").join("");
+  if (digits.length !== 4) {
+    window.showToast("Please enter the complete 4-digit verification code", "warning");
+    document.getElementById(`otp-digit-${digits.length + 1}`)?.focus();
+    return;
+  }
+
+  const btnVerify = document.getElementById("btn-auth-verify-code");
+  if (btnVerify) {
+    btnVerify.disabled = true;
+    btnVerify.textContent = "Verifying...";
+  }
+
+  try {
+    const res = await ApiClient.verifyOtp(phone, digits, name);
+    if (res && res.success && res.user) {
+      currentUser = res.user;
+      window.currentUser = res.user;
+      renderNavAuth();
+
+      // Check if this was initiated by tapping a cab to book
+      if (window.bookingManager && window.bookingManager.pendingCheckout) {
+        const { cabId, price } = window.bookingManager.pendingCheckout;
+        window.bookingManager.pendingCheckout = null;
+
+        window.closeAllModals(false);
+        const rewardMsg = res.isFirstTimeUser
+          ? `🎉 Phone verified! ₹100 Welcome Reward applied to your ${cabId.toUpperCase()} cab!`
+          : `🎉 Verified! Welcome back, ${currentUser.name}!`;
+        window.showToast(rewardMsg, "success");
+
+        // Automatically launch checkout for the selected cab
+        window.bookingManager.startCheckout(cabId, price);
+      } else {
+        window.closeAllModals();
+        window.showToast(res.message || "Mobile number verified successfully!", "success");
+      }
+    } else {
+      window.showToast(res?.message || "Invalid verification code. Please check and try again.", "warning");
+    }
+  } catch (err) {
+    console.error("verifyOtp error:", err);
+    window.showToast("Verification failed. Please check connection.", "warning");
+  } finally {
+    if (btnVerify) {
+      btnVerify.disabled = false;
+      btnVerify.textContent = "Verify Code & Claim ₹100 →";
+    }
+  }
+};
+
+// Genuine Instant 1-Click Direct Passenger Login (Criteria 1: Name + Mobile, Zero OTP required)
 window.handleDirectLogin = async () => {
   const nameInput = document.getElementById("auth-name-input");
   const phoneInput = document.getElementById("auth-mobile-input");
@@ -214,14 +473,46 @@ window.handleDirectLogin = async () => {
     return;
   }
 
-  const res = await ApiClient.directLogin(name, phone);
-  if (res && res.success) {
-    currentUser = res.user;
-    renderNavAuth();
-    window.closeAllModals();
-    window.showToast(`Welcome, ${currentUser.name}! Logged in successfully. ₹100 Welcome Bonus added to your wallet.`, "success");
-  } else {
-    window.showToast(res?.message || "Login failed. Please check your credentials.", "warning");
+  const btnDirect = document.getElementById("btn-auth-direct-login");
+  const origText = btnDirect ? btnDirect.textContent : "";
+  if (btnDirect) {
+    btnDirect.disabled = true;
+    btnDirect.textContent = "Logging In...";
+  }
+
+  try {
+    const res = await ApiClient.directLogin(name, phone);
+    if (res && res.success && res.user) {
+      currentUser = res.user;
+      window.currentUser = res.user;
+      renderNavAuth();
+
+      // Check if this was initiated by tapping a cab to book
+      if (window.bookingManager && window.bookingManager.pendingCheckout) {
+        const { cabId, price } = window.bookingManager.pendingCheckout;
+        window.bookingManager.pendingCheckout = null;
+
+        window.closeAllModals(false);
+        const rewardMsg = `🎉 Welcome, ${currentUser.name}! Logged in successfully & ₹100 Welcome Reward applied!`;
+        window.showToast(rewardMsg, "success");
+
+        // Automatically launch checkout for the selected cab
+        window.bookingManager.startCheckout(cabId, price);
+      } else {
+        window.closeAllModals();
+        window.showToast(`🎉 Welcome, ${currentUser.name}! You are logged in with ₹100 in your wallet.`, "success");
+      }
+    } else {
+      window.showToast(res?.message || "Login failed. Please check your credentials.", "warning");
+    }
+  } catch (err) {
+    console.error("directLogin error:", err);
+    window.showToast("Connection error during login. Please try again.", "warning");
+  } finally {
+    if (btnDirect) {
+      btnDirect.disabled = false;
+      btnDirect.textContent = origText || "Instant 1-Click Login & Claim ₹100 →";
+    }
   }
 };
 
@@ -277,7 +568,7 @@ window.openReferModal = () => {
       </a>
 
       <div style="font-size: 12px; color: var(--owc-text-muted); margin-top: 14px; line-height: 1.4;">
-        • ₹100 Welcome bonus credited on OTP login (one-time per user)<br>
+        • ₹100 Welcome bonus credited on passenger registration (one-time per user)<br>
         • ₹150 Referral reward credited automatically upon friend's trip completion
       </div>
     </div>
@@ -530,7 +821,7 @@ window.openMyTripsModal = async () => {
 
   const rides = await ApiClient.getRides();
   const ledgerRes = await ApiClient.getWalletLedger();
-  const ledger = (ledgerRes && ledgerRes.success) ? ledgerRes.ledger : [];
+  const ledger = (ledgerRes && ledgerRes.success) ? (ledgerRes.ledger || ledgerRes.transactions || []) : [];
 
   const upcomingRides = rides.filter(r => r.bookingStatus !== 'COMPLETED' && r.bookingStatus !== 'CANCELLED');
   const completedRides = rides.filter(r => r.bookingStatus === 'COMPLETED');
@@ -1582,8 +1873,10 @@ window.openHelpModal = () => {
 window.addEventListener("popstate", (e) => {
   // 1. Close mobile drawer if open
   const drawer = document.getElementById("mobile-drawer");
+  const backdrop = document.getElementById("drawer-backdrop");
   if (drawer && drawer.classList.contains("open")) {
     drawer.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("active");
     document.body.classList.remove("drawer-open");
     return;
   }
@@ -1615,17 +1908,21 @@ window.addEventListener("popstate", (e) => {
 
 window.openMobileDrawer = () => {
   const d = document.getElementById("mobile-drawer");
+  const b = document.getElementById("drawer-backdrop");
   if (d) {
     d.classList.add("open");
+    if (b) b.classList.add("active");
     document.body.classList.add("drawer-open");
     history.pushState({ drawer: true }, "", "#menu");
   }
 };
 
-window.closeMobileDrawer = (updateHistory = true) => {
+window.closeMobileDrawer = (updateHistory = false) => {
   const d = document.getElementById("mobile-drawer");
+  const b = document.getElementById("drawer-backdrop");
   if (d && d.classList.contains("open")) {
     d.classList.remove("open");
+    if (b) b.classList.remove("active");
     document.body.classList.remove("drawer-open");
     if (updateHistory && window.location.hash === "#menu") {
       try {
@@ -1634,6 +1931,21 @@ window.closeMobileDrawer = (updateHistory = true) => {
     }
   }
 };
+
+// Global Escape Key Handler for Modals & Mobile Drawer
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    const drawer = document.getElementById("mobile-drawer");
+    if (drawer && drawer.classList.contains("open")) {
+      window.closeMobileDrawer(true);
+      return;
+    }
+    const openModal = document.querySelector(".modal-overlay.open");
+    if (openModal) {
+      window.closeAllModals(true);
+    }
+  }
+});
 
 function setupMobileDrawer() {
   const btn = document.getElementById("btn-hamburger");
@@ -1726,17 +2038,17 @@ class ThemeManager {
 
   getPreference() {
     try {
-      return localStorage.getItem(this.storageKey) || "light";
+      return localStorage.getItem(this.storageKey) || "dark";
     } catch (e) {
-      return "light";
+      return "dark";
     }
   }
 
   getResolvedTheme(pref = this.getPreference()) {
     if (pref === "system") {
-      return this.mediaQuery.matches ? "dark" : "light";
+      return this.mediaQuery.matches ? "dark" : "dark";
     }
-    return pref === "dark" ? "dark" : "light";
+    return pref === "light" ? "light" : "dark";
   }
 
   toggleTheme() {
@@ -1848,6 +2160,433 @@ document.addEventListener("DOMContentLoaded", () => {
     window.toggleCallBar(true);
   }
 });
+
+/* ==========================================================================
+   2026 AI MOBILITY COPILOT ASSISTANT CONTROLLER
+   ========================================================================== */
+window.toggleAiAssistant = (forceOpen) => {
+  const windowEl = document.getElementById("ai-chat-window");
+  if (!windowEl) return;
+
+  const shouldOpen = forceOpen !== undefined ? Boolean(forceOpen) : windowEl.style.display === "none";
+  if (shouldOpen) {
+    windowEl.style.display = "flex";
+    const input = document.getElementById("ai-chat-input");
+    if (input) {
+      setTimeout(() => input.focus(), 150);
+    }
+    const msgs = document.getElementById("ai-messages-area");
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+  } else {
+    windowEl.style.display = "none";
+  }
+};
+
+window.sendAiQuickPrompt = (promptText) => {
+  const input = document.getElementById("ai-chat-input");
+  if (input) {
+    input.value = promptText;
+    window.toggleAiAssistant(true);
+    window.handleAiSubmit();
+  }
+};
+
+window.handleAiSubmit = async (e) => {
+  if (e) e.preventDefault();
+  const input = document.getElementById("ai-chat-input");
+  const msgsArea = document.getElementById("ai-messages-area");
+  if (!input || !msgsArea) return;
+
+  const query = input.value.trim();
+  if (!query) return;
+
+  // Append user message
+  const userBubble = document.createElement("div");
+  userBubble.className = "ai-bubble ai-bubble-user";
+  userBubble.textContent = query;
+  msgsArea.appendChild(userBubble);
+  input.value = "";
+  msgsArea.scrollTop = msgsArea.scrollHeight;
+
+  // Append typing indicator
+  const loadingBubble = document.createElement("div");
+  loadingBubble.className = "ai-bubble ai-bubble-bot ai-typing-bubble";
+  loadingBubble.innerHTML = `<span class="ai-typing-dots"><span>.</span><span>.</span><span>.</span></span> Analyzing query with 2026 Mobility AI...`;
+  msgsArea.appendChild(loadingBubble);
+  msgsArea.scrollTop = msgsArea.scrollHeight;
+
+  try {
+    // Check if query is natural language trip booking intent
+    const hasTripKeywords = /\b(cab|taxi|ride|from|to|tomorrow|today|car|sedan|suv|people|passenger|book)\b/i.test(query);
+    let parsedIntent = null;
+    
+    if (hasTripKeywords && !/\b(track|where|status|cancel|refund|toll|gst|invoice)\b/i.test(query)) {
+      try {
+        const intentRes = await ApiClient.parseAiIntent(query);
+        if (intentRes && intentRes.success && intentRes.intent && intentRes.intent.origin && intentRes.intent.destination) {
+          parsedIntent = intentRes.intent;
+        }
+      } catch (err) {
+        console.warn("Intent parse skip:", err);
+      }
+    }
+
+    loadingBubble.remove();
+
+    if (parsedIntent) {
+      // Render interactive AI Trip Configuration Card
+      const botBubble = document.createElement("div");
+      botBubble.className = "ai-bubble ai-bubble-bot";
+      botBubble.innerHTML = `
+        <div class="ai-bot-name">⚡ OneWay AI Route Engine</div>
+        <div>I analyzed your travel request and extracted your Bihar trip parameters:</div>
+        <div style="background: rgba(2, 132, 199, 0.08); border: 1px solid rgba(2, 132, 199, 0.3); border-radius: 10px; padding: 10px 12px; margin: 10px 0;">
+          <div style="font-weight: 800; color: #0284c7; font-size: 13.5px;">
+            ${parsedIntent.origin} ➔ ${parsedIntent.destination}
+          </div>
+          <div style="font-size: 12px; color: var(--owc-text); margin-top: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px;">
+            <div>📅 <strong>Date:</strong> ${parsedIntent.pickupDate || 'Today'}</div>
+            <div>⏰ <strong>Time:</strong> ${parsedIntent.pickupTime || '10:00 AM'}</div>
+            <div>👥 <strong>Pax:</strong> ${parsedIntent.passengers || 4} Passengers</div>
+            <div>🚘 <strong>Cab:</strong> ${(parsedIntent.recommendedTier || 'sedan').toUpperCase()}</div>
+          </div>
+        </div>
+        <button type="button" class="btn-check-fare-primary" style="width: 100%; padding: 10px; font-size: 12.5px; font-weight: 800; border-radius: 8px; cursor: pointer;" onclick='window.applyAiParsedTrip(${JSON.stringify(parsedIntent).replace(/'/g, "&#39;")})'>
+          ⚡ Autofill Trip & View Fares Now →
+        </button>
+      `;
+      msgsArea.appendChild(botBubble);
+    } else {
+      // General support, booking lookup, or policy query
+      const userPhone = window.currentUser?.phone || localStorage.getItem("oneway_fare_phone") || "";
+      const supportRes = await ApiClient.askAiSupport({ query, phone: userPhone });
+      
+      const botBubble = document.createElement("div");
+      botBubble.className = "ai-bubble ai-bubble-bot";
+      
+      if (supportRes && supportRes.success) {
+        let extraHtml = "";
+        if (supportRes.foundBooking) {
+          const b = supportRes.foundBooking;
+          extraHtml = `
+            <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px 12px; margin: 8px 0; font-size: 12px;">
+              <strong style="color: #10b981;">Active Booking: ${b.bookingId}</strong>
+              <div>${b.originCity} ➔ ${b.destCity} • Status: <strong>${b.status}</strong></div>
+              <div>Pickup: ${b.pickupDate} at ${b.pickupTime}</div>
+              <div>Assigned Driver: <strong>${b.driverName || 'Central Partner Dispatch in Progress'}</strong></div>
+            </div>
+          `;
+        }
+
+        let waEscalateBtn = "";
+        if (supportRes.escalateWhatsApp) {
+          const waUrl = `https://wa.me/917281851011?text=${encodeURIComponent('OneWay Support Assistance for: ' + query)}`;
+          waEscalateBtn = `
+            <div style="margin-top: 10px;">
+              <a href="${waUrl}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; background: #25d366; color: white; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; text-decoration: none;">
+                💬 Speak with Dispatch Captain on WhatsApp
+              </a>
+            </div>
+          `;
+        }
+
+        botBubble.innerHTML = `
+          <div class="ai-bot-name">OneWay AI Support</div>
+          <div>${supportRes.answer.replace(/\n/g, '<br>')}</div>
+          ${extraHtml}
+          ${waEscalateBtn}
+        `;
+      } else {
+        botBubble.innerHTML = `
+          <div class="ai-bot-name">OneWay AI Support</div>
+          <div>I am at your service. For instant trip confirmation, booking lookup, or outstation inquiries across Bihar, you can also connect 24x7 with our direct dispatch team at <strong>+91 80021 41816</strong> or WhatsApp <strong>+91 72818 51011</strong>.</div>
+        `;
+      }
+      msgsArea.appendChild(botBubble);
+    }
+  } catch (err) {
+    console.error("AI assistant error:", err);
+    loadingBubble.remove();
+    const errorBubble = document.createElement("div");
+    errorBubble.className = "ai-bubble ai-bubble-bot";
+    errorBubble.innerHTML = `
+      <div class="ai-bot-name">OneWay AI Support</div>
+      <div>Our AI intelligence system is currently operating in offline-cached mode. Feel free to use the instant booking search bar above or call our 24x7 helpdesk at <strong>+91 80021 41816</strong>.</div>
+    `;
+    msgsArea.appendChild(errorBubble);
+  }
+
+  msgsArea.scrollTop = msgsArea.scrollHeight;
+};
+
+window.applyAiParsedTrip = (intent) => {
+  if (!window.bookingManager || !intent) return;
+
+  const bm = window.bookingManager;
+
+  // Resolve origin
+  if (intent.origin && typeof OTB_CITIES !== "undefined") {
+    const orig = OTB_CITIES.find(c => c.name.toLowerCase().includes(intent.origin.toLowerCase()) || intent.origin.toLowerCase().includes(c.name.toLowerCase()));
+    if (orig) {
+      bm.originCity = orig;
+      const pInput = document.getElementById("input-pickup");
+      if (pInput) pInput.value = `${orig.name}${orig.district && orig.district !== orig.name ? ', ' + orig.district : ''}, ${orig.state}`;
+    }
+  }
+
+  // Resolve destination
+  if (intent.destination && typeof OTB_CITIES !== "undefined") {
+    const dest = OTB_CITIES.find(c => c.name.toLowerCase().includes(intent.destination.toLowerCase()) || intent.destination.toLowerCase().includes(c.name.toLowerCase()));
+    if (dest) {
+      bm.destCity = dest;
+      const dInput = document.getElementById("input-drop");
+      if (dInput) dInput.value = `${dest.name}${dest.district && dest.district !== dest.name ? ', ' + dest.district : ''}, ${dest.state}`;
+    }
+  }
+
+  // Resolve date
+  if (intent.pickupDate) {
+    bm.pickupDate = intent.pickupDate;
+    const pDateInput = document.getElementById("pickup-date-input");
+    if (pDateInput) pDateInput.value = intent.pickupDate;
+    const dispDate = document.getElementById("display-pickup-date");
+    if (dispDate) dispDate.textContent = intent.pickupDate;
+  }
+
+  // Resolve time
+  if (intent.pickupTime) {
+    bm.pickupTime = intent.pickupTime;
+    const dispTime = document.getElementById("display-pickup-time");
+    if (dispTime) dispTime.textContent = intent.pickupTime;
+  }
+
+  // Resolve cab tier
+  if (intent.recommendedTier) {
+    bm.selectedCabId = intent.recommendedTier;
+  }
+
+  // Close AI widget
+  window.toggleAiAssistant(false);
+
+  // Scroll to booking form or check fares
+  const heroCard = document.getElementById("booking-hero");
+  if (heroCard) {
+    heroCard.scrollIntoView({ behavior: "smooth" });
+  }
+
+  // If user phone exists, automatically calculate fare, otherwise prompt phone
+  const storedPhone = localStorage.getItem("oneway_fare_phone") || (window.currentUser ? window.currentUser.phone : "");
+  if (storedPhone && storedPhone.length >= 10) {
+    const phoneInput = document.getElementById("input-fare-phone");
+    if (phoneInput && !phoneInput.value) phoneInput.value = storedPhone.slice(-10);
+    bm.handleCheckFare(false);
+  } else {
+    const phoneInput = document.getElementById("input-fare-phone");
+    if (phoneInput) {
+      phoneInput.focus();
+      if (window.showToast) {
+        window.showToast("Trip details loaded! Enter mobile number to unlock live fares", "info");
+      }
+    }
+  }
+};
+
+/* ==========================================================================
+   CUSTOMER LIVE NOTIFICATION & STATUS ENGINE (Web Notification & Audio API)
+   ========================================================================== */
+class CustomerNotificationManager {
+  constructor() {
+    this.isEnabled = localStorage.getItem("otb_customer_notifications") !== "false";
+    this.audioEnabled = localStorage.getItem("otb_customer_audio") !== "false";
+    this.knownStates = new Map();
+    this.pollTimer = null;
+    this.audioContext = null;
+    this.hasInitialSync = false;
+
+    this.init();
+  }
+
+  init() {
+    // Start background check every 5 seconds
+    this.startPolling();
+  }
+
+  playChime(type = "info") {
+    if (!this.audioEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!this.audioContext) this.audioContext = new AudioCtx();
+      if (this.audioContext.state === "suspended") this.audioContext.resume();
+
+      const now = this.audioContext.currentTime;
+      const freqs = type === "driver_assigned" ? [523.25, 659.25, 783.99] : [587.33, 880.00];
+      freqs.forEach((freq, idx) => {
+        const osc = this.audioContext.createOscillator();
+        const gain = this.audioContext.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.15, now + idx * 0.12 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+        osc.connect(gain);
+        gain.connect(this.audioContext.destination);
+        osc.start(now + idx * 0.12);
+        osc.stop(now + idx * 0.12 + 0.36);
+      });
+    } catch (e) {
+      console.warn("Customer chime error:", e);
+    }
+  }
+
+  async requestPermission() {
+    if (!("Notification" in window)) return;
+    try {
+      const res = await Notification.requestPermission();
+      if (res === "granted") {
+        this.playChime("info");
+        this.sendNotification(
+          "OneWayTaxiBihar | Ride Notifications Enabled",
+          "You will receive instant alerts on this device when your driver is assigned or arrives at your doorstep.",
+          "cust_perm_granted"
+        );
+      }
+    } catch (e) {
+      console.warn("Customer notification permission error:", e);
+    }
+  }
+
+  sendNotification(title, body, tag = "") {
+    if (!("Notification" in window) || Notification.permission !== "granted" || !this.isEnabled) {
+      return;
+    }
+    try {
+      const notif = new Notification(title, {
+        body: body,
+        icon: "favicon.svg",
+        badge: "favicon.svg",
+        tag: tag || ("cust_" + Date.now()),
+        vibrate: [250, 100, 250],
+        requireInteraction: true
+      });
+      notif.onclick = function() {
+        window.focus();
+        if (window.openMyTripsModal) {
+          window.openMyTripsModal();
+        }
+        notif.close();
+      };
+    } catch (err) {
+      console.warn("Customer notification send error:", err);
+    }
+  }
+
+  onBookingSubmitted(booking) {
+    if ("Notification" in window && Notification.permission === "default") {
+      setTimeout(() => this.requestPermission(), 1000);
+    }
+    if (booking && booking.bookingId) {
+      this.knownStates.set(booking.bookingId, booking.bookingStatus || "REQUESTED");
+    }
+    this.pollStatus();
+  }
+
+  startPolling() {
+    if (this.pollTimer) clearInterval(this.pollTimer);
+    this.pollTimer = setInterval(() => this.pollStatus(), 5000);
+    this.pollStatus();
+  }
+
+  async pollStatus() {
+    try {
+      const rides = await ApiClient.getRides();
+      if (!Array.isArray(rides)) return;
+
+      if (!this.hasInitialSync) {
+        rides.forEach(r => this.knownStates.set(r.bookingId, r.bookingStatus));
+        this.hasInitialSync = true;
+        return;
+      }
+
+      rides.forEach(r => {
+        const prevStatus = this.knownStates.get(r.bookingId);
+        if (!prevStatus) {
+          this.knownStates.set(r.bookingId, r.bookingStatus);
+          return;
+        }
+
+        if (prevStatus !== r.bookingStatus) {
+          this.knownStates.set(r.bookingId, r.bookingStatus);
+
+          // Handle specific transitions
+          if (r.bookingStatus === "DRIVER ASSIGNED" || r.bookingStatus === "CONFIRMED") {
+            this.playChime("driver_assigned");
+            const dName = r.driverName || "Commercial Chauffeur";
+            const dVeh = r.driverVehicleNo || r.driverVehicle || "Assigned Vehicle";
+            this.sendNotification(
+              `Chauffeur Assigned • ${r.originCity} ➔ ${r.destCity}`,
+              `Driver ${dName} (${dVeh}) is confirmed for your trip. Tap to view details.`,
+              `cust_status_${r.bookingId}`
+            );
+            if (window.showToast) {
+              window.showToast(`Chauffeur Assigned: ${dName} (${dVeh})`, "success");
+            }
+          } else if (r.bookingStatus === "DRIVER ON THE WAY" || r.bookingStatus === "ON THE WAY") {
+            this.playChime("info");
+            const dName = r.driverName || "Chauffeur";
+            this.sendNotification(
+              `Chauffeur On The Way • ${r.originCity}`,
+              `${dName} has departed and is on the way to your pickup location.`,
+              `cust_status_${r.bookingId}`
+            );
+            if (window.showToast) {
+              window.showToast(`${dName} is on the way to pickup!`, "info");
+            }
+          } else if (r.bookingStatus === "ARRIVED") {
+            this.playChime("driver_assigned");
+            this.sendNotification(
+              `Cab Arrived at Doorstep!`,
+              `Your cab has arrived at ${r.pickupAddress || r.originCity}. Please board when ready.`,
+              `cust_status_${r.bookingId}`
+            );
+            if (window.showToast) {
+              window.showToast(`Cab arrived at your doorstep!`, "success");
+            }
+          } else if (r.bookingStatus === "TRIP STARTED") {
+            this.playChime("info");
+            this.sendNotification(
+              `Trip Started • Have a Safe Journey`,
+              `Journey to ${r.destCity} is now underway. SOS & tracking active.`,
+              `cust_status_${r.bookingId}`
+            );
+          } else if (r.bookingStatus === "COMPLETED") {
+            this.playChime("info");
+            this.sendNotification(
+              `Trip Completed • Thank You`,
+              `You have arrived at ${r.destCity}. Download your invoice in My Trips.`,
+              `cust_status_${r.bookingId}`
+            );
+          }
+
+          // If My Trips modal is currently open, refresh it
+          const tripsModal = document.getElementById("modal-my-trips");
+          if (tripsModal && tripsModal.classList.contains("open") && window.openMyTripsModal) {
+            window.openMyTripsModal();
+          }
+        }
+      });
+    } catch (e) {
+      // Ignore network polling glitches
+    }
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.CustomerNotificationManager = CustomerNotificationManager;
+  window.customerNotificationManager = new CustomerNotificationManager();
+}
+
+
 
 
 

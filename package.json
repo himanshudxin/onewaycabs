@@ -1,0 +1,30 @@
+{
+  "name": "onewaycabs",
+  "version": "1.0.0",
+  "description": "OneWayTaxiBihar - Dedicated Intercity & Outstation One-Way Taxi Booking Platform across Bihar",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node scripts/check-syntax.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himanshudxin/onewaycabs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/himanshudxin/onewaycabs/issues"
+  },
+  "homepage": "https://github.com/himanshudxin/onewaycabs#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mongodb": "^7.6.0"
+  }
+}

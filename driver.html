@@ -66,8 +66,84 @@
       border: 1px solid var(--driver-border);
       border-radius: 16px;
       padding: 24px;
-      margin-top: 40px;
+      margin-top: 30px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .auth-tab-bar {
+      display: flex;
+      background: #090d16;
+      border: 1px solid var(--driver-border);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 800;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .auth-tab-btn.active {
+      background: #10b981;
+      color: white;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+    }
+    .form-group-driver {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .form-group-driver label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
+    }
+    .form-group-driver input,
+    .form-group-driver select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-group-driver input:focus,
+    .form-group-driver select:focus {
+      border-color: #10b981;
+    }
+    .driver-success-box {
+      text-align: center;
+      padding: 12px 6px;
+    }
+    .success-badge-pulse {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 14px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
     }
     .driver-trip-card {
       background: var(--driver-card);
@@ -164,37 +240,295 @@
       color: white;
       border-color: #34d399;
     }
+
+    /* Real-Time Dispatch Alert Controls for Driver */
+    .driver-alert-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid var(--driver-border);
+      background: rgba(16, 185, 129, 0.1);
+      color: #34d399;
+      transition: all 0.2s ease;
+    }
+    .driver-alert-btn.inactive {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+    .driver-sound-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid var(--driver-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+    .driver-sound-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+    }
+    .hud-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .hud-pulse-driver {
+      background: #34d399;
+      box-shadow: 0 0 0 rgba(52, 211, 153, 0.7);
+      animation: pulseDriverIndicator 1.8s infinite;
+    }
+    @keyframes pulseDriverIndicator {
+      0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+      70% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+    #driver-live-alerts-hud {
+      position: fixed;
+      top: 64px;
+      right: 16px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 380px;
+      width: calc(100% - 32px);
+      pointer-events: none;
+    }
+    .driver-hud-toast {
+      pointer-events: auto;
+      background: rgba(19, 27, 46, 0.96);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid #10b981;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.2);
+      animation: driverHudSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s ease;
+    }
+    @keyframes driverHudSlide {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS (< 768px) FOR DRIVER CONSOLE
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .driver-navbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        padding: 10px 14px !important;
+      }
+      .driver-brand {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      .driver-brand-content {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+      }
+      .driver-brand-title {
+        white-space: nowrap !important;
+        font-weight: 900 !important;
+        font-size: 14.5px !important;
+        color: #ffffff !important;
+      }
+      .driver-brand-sub {
+        font-size: 8px !important;
+        font-weight: 800 !important;
+        color: #34d399 !important;
+        letter-spacing: 0.6px !important;
+        white-space: nowrap !important;
+      }
+      .driver-nav-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+        justify-content: flex-start !important;
+      }
+      .driver-container {
+        padding: 12px 10px !important;
+      }
+    }
   </style>
 </head>
 <body class="driver-body">
 
-  <!-- Driver Login Screen -->
+  <!-- Driver Auth Screen (Login + Sign Up) -->
   <div id="driver-login-view" style="display: none; padding: 16px;">
     <div class="driver-login-box">
       <div style="text-align: center; margin-bottom: 20px;">
-        <div style="font-size: 32px; margin-bottom: 6px;">🚖</div>
-        <h2 style="font-size: 20px; font-weight: 900; margin: 0; color: #f8fafc;">Partner Driver Portal</h2>
-        <p style="font-size: 12.5px; color: #94a3b8; margin-top: 4px;">Log in to access your assigned Bihar outstation trips</p>
+        <div style="width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(5, 150, 105, 0.35);">
+          <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar Driver Partner" width="52" height="52" style="width: 52px; height: 52px; object-fit: contain; display: block; border-radius: 14px;">
+        </div>
+        <h2 style="font-size: 20px; font-weight: 900; margin: 0; color: #f8fafc;">Chauffeur Fleet Partner</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-top: 4px; letter-spacing: 0.5px;">ONEWAY TAXI BIHAR DRIVER NETWORK</p>
       </div>
 
-      <div style="margin-bottom: 14px;">
-        <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">REGISTERED MOBILE NUMBER</label>
-        <input type="tel" id="driver-phone-input" placeholder="e.g. 9431012345" maxlength="10" style="width: 100%; box-sizing: border-box; padding: 12px; background: #090d16; border: 1px solid #1e293b; border-radius: 8px; color: white; margin-top: 4px; font-size: 15px;">
+      <!-- Auth Switcher Tabs -->
+      <div class="auth-tab-bar" id="driver-auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tab-login-btn" onclick="switchAuthMode('login')">
+          🔑 Partner Login
+        </button>
+        <button type="button" class="auth-tab-btn" id="tab-signup-btn" onclick="switchAuthMode('signup')">
+          ✨ New Driver Sign Up
+        </button>
       </div>
 
-      <div style="margin-bottom: 20px;">
-        <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">4-DIGIT SECURITY PIN</label>
-        <input type="password" id="driver-pin-input" placeholder="Enter 4-digit PIN" maxlength="4" style="width: 100%; box-sizing: border-box; padding: 12px; background: #090d16; border: 1px solid #1e293b; border-radius: 8px; color: white; margin-top: 4px; font-size: 15px;">
+      <!-- 1. LOGIN FORM -->
+      <div id="driver-login-form">
+        <div class="form-group-driver">
+          <label>REGISTERED MOBILE NUMBER</label>
+          <input type="tel" id="driver-phone-input" placeholder="e.g. 9431012345" maxlength="10">
+        </div>
+
+        <div class="form-group-driver" style="margin-bottom: 20px;">
+          <label>4-DIGIT SECURITY PIN</label>
+          <input type="password" id="driver-pin-input" placeholder="Enter 4-digit PIN" maxlength="4">
+        </div>
+
+        <button type="button" onclick="handleDriverLogin()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer;">
+          Log In as Partner Driver →
+        </button>
+
+        <button type="button" id="btn-driver-demo-login" onclick="document.getElementById('driver-phone-input').value='9431012345'; document.getElementById('driver-pin-input').value='1234'; handleDriverLogin();" style="display: none; width: 100%; margin-top: 10px; padding: 10px; background: rgba(56, 189, 248, 0.12); border: 1px solid #38bdf8; color: #38bdf8; font-weight: 700; border-radius: 8px; font-size: 13px; cursor: pointer;">
+          ⚡ 1-Tap Demo Driver Login (9431012345 / PIN 1234)
+        </button>
+
+        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #1e293b; text-align: center; font-size: 12.5px; color: #94a3b8;">
+          New Driver? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color: #34d399; font-weight: 800; text-decoration: none;">Join Fleet & Register Your Cab →</a>
+        </div>
       </div>
 
-      <button type="button" onclick="handleDriverLogin()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer;">
-        Log In as Partner Driver →
-      </button>
+      <!-- 2. SIGNUP FORM -->
+      <div id="driver-signup-form" style="display: none;">
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; font-size: 12.5px; color: #a7f3d0; text-align: left;">
+          💡 <strong>Earn ₹30,000 to ₹65,000+/month</strong> on one-way intercity trips across Bihar. Guaranteed instant payments.
+        </div>
 
-      <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b;">
-        Demo Verified Partners: <strong>9431012345 (PIN: 1234)</strong> or <strong>9835067890 (PIN: 5678)</strong>
+        <div class="form-group-driver">
+          <label>FULL NAME (CHAUFFEUR NAME) *</label>
+          <input type="text" id="reg-driver-name" placeholder="e.g. Ramesh Kumar Sharma">
+        </div>
+
+        <div class="form-group-driver">
+          <label>WHATSAPP MOBILE NUMBER *</label>
+          <input type="tel" id="reg-driver-phone" placeholder="10-digit Mobile Number" maxlength="10">
+        </div>
+
+        <div class="form-group-driver">
+          <label>OPERATING BASE DISTRICT *</label>
+          <select id="reg-driver-city">
+            <option value="Patna">Patna (Headquarters)</option>
+            <option value="Gaya">Gaya / Bodh Gaya</option>
+            <option value="Muzaffarpur">Muzaffarpur</option>
+            <option value="Darbhanga">Darbhanga</option>
+            <option value="Bhagalpur">Bhagalpur</option>
+            <option value="Begusarai">Begusarai</option>
+            <option value="Purnia">Purnia / Katihar</option>
+            <option value="Chapra">Chapra / Saran</option>
+            <option value="Ara">Ara / Bhojpur</option>
+            <option value="Samastipur">Samastipur</option>
+            <option value="Motihari">Motihari / Champaran</option>
+            <option value="Other">Other Bihar District</option>
+          </select>
+        </div>
+
+        <div class="form-group-driver">
+          <label>VEHICLE MODEL & CATEGORY *</label>
+          <select id="reg-driver-model">
+            <option value="Swift Dzire (Prime Sedan)">Swift Dzire / Etios (Sedan)</option>
+            <option value="Maruti Ertiga (Ertiga 6-Seater)">Maruti Ertiga (6-Seater SUV)</option>
+            <option value="Innova Crysta (Luxury SUV)">Toyota Innova Crysta (Luxury SUV)</option>
+            <option value="WagonR / Tiago (Compact Hatchback)">WagonR / Tiago (Hatchback)</option>
+            <option value="Scorpio / Bolero (SUV)">Scorpio / Bolero (SUV)</option>
+          </select>
+        </div>
+
+        <div class="form-group-driver">
+          <label>VEHICLE REGISTRATION NUMBER (COMMERCIAL PLATE) *</label>
+          <input type="text" id="reg-driver-vehno" placeholder="e.g. BR 01 PB 4921" style="text-transform: uppercase;">
+        </div>
+
+        <div class="form-group-driver">
+          <label>COMMERCIAL DRIVING LICENSE (DL) NUMBER *</label>
+          <input type="text" id="reg-driver-dl" placeholder="e.g. BR-0120200012345" style="text-transform: uppercase;">
+        </div>
+
+        <div class="form-group-driver" style="margin-bottom: 20px;">
+          <label>DRIVING EXPERIENCE</label>
+          <select id="reg-driver-exp">
+            <option value="3-5 Years">3 to 5 Years (Commercial Intercity)</option>
+            <option value="1-3 Years">1 to 3 Years</option>
+            <option value="5-10 Years">5 to 10 Years</option>
+            <option value="10+ Years">10+ Years (Senior Chauffeur)</option>
+          </select>
+        </div>
+
+        <button type="button" id="btn-submit-reg" onclick="handleDriverRegistration()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          Submit Driver Application →
+        </button>
+
+        <div style="margin-top: 14px; text-align: center; font-size: 12.5px; color: #94a3b8;">
+          Already registered? <a href="javascript:void(0)" onclick="switchAuthMode('login')" style="color: #38bdf8; text-decoration: none; font-weight: 700;">Click to Login</a>
+        </div>
       </div>
-      <div style="text-align: center; margin-top: 14px; font-size: 12px;">
+
+      <!-- 3. SIGNUP SUCCESS VERIFICATION SCREEN -->
+      <div id="driver-signup-success" style="display: none;" class="driver-success-box">
+        <div class="success-badge-pulse">✅</div>
+        <h3 style="font-size: 18px; font-weight: 900; color: #f8fafc; margin: 0 0 8px;">Application Submitted Successfully!</h3>
+        <div style="display: inline-block; background: rgba(56, 189, 248, 0.15); border: 1px solid #0284c7; color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 16px;" id="reg-app-ref-badge">
+          REF: #DRV-APP-1024
+        </div>
+
+        <!-- HIGHLIGHT BOX AS SPECIFIED BY USER -->
+        <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid #059669; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left;">
+          <div style="font-size: 14px; font-weight: 800; color: #34d399; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <span>📞</span> Next Step: Document Verification & Password Sharing
+          </div>
+          <p style="font-size: 13.5px; color: #f1f5f9; line-height: 1.5; margin: 0 0 10px; font-weight: 600;">
+            We will call you to verify your documents and share your password/PIN to log in.
+          </p>
+          <div style="font-size: 12px; color: #94a3b8; line-height: 1.4; border-top: 1px dashed rgba(16, 185, 129, 0.3); padding-top: 8px;">
+            हमारे फ्लीट मैनेजर 24 घंटे के अंदर आपके डाक्यूमेंट्स वेरीफाई करने के लिए आपसे संपर्क करेंगे और लॉगिन करने के लिए आपका पासवर्ड/पिन शेयर करेंगे।
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button type="button" onclick="switchAuthMode('login')" style="width: 100%; padding: 12px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+            ← Go to Driver Login
+          </button>
+          <a href="tel:+918002141816" style="display: block; padding: 11px; background: #090d16; border: 1px solid #1e293b; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700;">
+            📞 Need Urgent Assistance? Call Dispatch: +91 8002141816
+          </a>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 18px; font-size: 12px;">
         <a href="index.html" style="color: #38bdf8; text-decoration: none;">← Back to Passenger Website</a>
       </div>
     </div>
@@ -204,18 +538,65 @@
   <div id="driver-dashboard-view">
     <header class="driver-navbar">
       <div class="driver-brand">
-        <span>OneWayTaxiBihar</span>
-        <span class="driver-badge">PARTNER</span>
-      </div>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span id="driver-name-display" style="font-size: 13px; font-weight: 700; color: #f8fafc;"></span>
-        <button type="button" onclick="handleDriverLogout()" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer;">
+        <div class="driver-brand-content">
+          <div style="width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3); flex-shrink: 0;">
+            <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar Driver Partner" width="32" height="32" style="width: 32px; height: 32px; object-fit: contain; display: block; border-radius: 9px;">
+          </div>
+          <div style="display: flex; flex-direction: column; min-width: 0;">
+            <span class="driver-brand-title">OneWay<span style="color: #34d399;">TaxiBihar</span></span>
+            <span class="driver-brand-sub">CHAUFFEUR CREW CONSOLE</span>
+          </div>
+        </div>
+        <button type="button" onclick="handleDriverLogout()" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; flex-shrink: 0;">
           Logout
         </button>
       </div>
+      <div class="driver-nav-actions">
+        <!-- Live Real-Time Device Notifications Control -->
+        <button type="button" id="btn-driver-device-alerts" onclick="toggleDriverNotifications()" class="driver-alert-btn" title="Toggle native device notifications (works even when tab is backgrounded)">
+          <span class="hud-indicator hud-pulse-driver"></span>
+          <span id="txt-driver-alerts">Alerts: Active</span>
+        </button>
+        <button type="button" id="btn-driver-audio-alerts" onclick="toggleDriverAudioAlerts()" class="driver-sound-btn active" title="Toggle audio chime">
+          <span id="txt-driver-audio">🔊 Sound</span>
+        </button>
+        <span id="driver-name-display" style="font-size: 12.5px; font-weight: 700; color: #f8fafc; padding: 3px 8px; background: rgba(255,255,255,0.06); border-radius: 6px;"></span>
+      </div>
     </header>
 
+    <!-- Floating In-App Dispatch Alert HUD -->
+    <div id="driver-live-alerts-hud"></div>
+
     <main class="driver-container">
+      <!-- Duty Status Card & Today's Earnings Strip -->
+      <div style="background: var(--driver-card); border: 1px solid var(--driver-border); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div>
+            <div style="font-size: 10.5px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">CHAUFFEUR DUTY STATUS</div>
+            <div id="driver-duty-status-text" style="font-size: 13.5px; font-weight: 900; color: #34d399; margin-top: 2px;">🟢 ON DUTY • READY FOR DISPATCH</div>
+          </div>
+          <button type="button" id="btn-toggle-duty" onclick="toggleDriverDuty()" style="background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; color: #34d399; padding: 7px 14px; border-radius: 20px; font-weight: 800; font-size: 11.5px; cursor: pointer; transition: all 0.2s ease;">
+            Go Off Duty
+          </button>
+        </div>
+
+        <!-- Today's Shift Earnings -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; background: #090d16; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 12px;">
+          <div style="text-align: center;">
+            <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">TODAY'S PAYOUT</div>
+            <div style="font-size: 16px; font-weight: 900; color: #34d399;" id="driver-stat-earnings">₹0</div>
+          </div>
+          <div style="text-align: center; border-left: 1px solid #1e293b; border-right: 1px solid #1e293b;">
+            <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">TRIPS SERVED</div>
+            <div style="font-size: 16px; font-weight: 900; color: #38bdf8;" id="driver-stat-trips">0</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">KM DRIVEN</div>
+            <div style="font-size: 16px; font-weight: 900; color: #f59e0b;" id="driver-stat-km">0 KM</div>
+          </div>
+        </div>
+      </div>
+
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
         <div style="display: flex; gap: 8px;">
           <button type="button" class="driver-tab-pill active" id="btn-tab-active" onclick="switchDriverTab('active')">Active Trips</button>
@@ -238,6 +619,12 @@
     let _driverProfile = null;
     let _currentTab = "active";
     let _allDriverTrips = [];
+    let _driverNotificationsEnabled = localStorage.getItem("otb_driver_notifications") !== "false";
+    let _driverAudioAlertsEnabled = localStorage.getItem("otb_driver_audio") !== "false";
+    let _knownDriverTripStates = new Map();
+    let _driverPollingTimer = null;
+    let _driverInitialSyncDone = false;
+    let _audioContext = null;
 
     try {
       _driverProfile = JSON.parse(localStorage.getItem("otb_driver_profile") || "null");
@@ -245,6 +632,10 @@
 
     async function initDriver() {
       if (!_driverToken) {
+        if (_driverPollingTimer) {
+          clearInterval(_driverPollingTimer);
+          _driverPollingTimer = null;
+        }
         document.getElementById("driver-login-view").style.display = "block";
         document.getElementById("driver-dashboard-view").style.display = "none";
         return;
@@ -257,7 +648,105 @@
         document.getElementById("driver-name-display").textContent = `${_driverProfile.name} (${_driverProfile.vehicleNumber})`;
       }
 
+      updateDriverNotificationUiState();
+
+      // Auto-prompt notifications on login if not yet granted/denied
+      if ("Notification" in window && Notification.permission === "default") {
+        setTimeout(requestDriverNotificationPermission, 1200);
+      }
+
       await loadDriverTrips();
+      startDriverPolling();
+    }
+
+    function switchAuthMode(mode) {
+      const loginForm = document.getElementById("driver-login-form");
+      const signupForm = document.getElementById("driver-signup-form");
+      const successBox = document.getElementById("driver-signup-success");
+      const tabLogin = document.getElementById("tab-login-btn");
+      const tabSignup = document.getElementById("tab-signup-btn");
+      const tabsBar = document.getElementById("driver-auth-tabs");
+
+      if (mode === 'signup') {
+        loginForm.style.display = "none";
+        signupForm.style.display = "block";
+        successBox.style.display = "none";
+        tabsBar.style.display = "flex";
+        tabLogin.classList.remove("active");
+        tabSignup.classList.add("active");
+      } else if (mode === 'success') {
+        loginForm.style.display = "none";
+        signupForm.style.display = "none";
+        successBox.style.display = "block";
+        tabsBar.style.display = "none";
+      } else {
+        loginForm.style.display = "block";
+        signupForm.style.display = "none";
+        successBox.style.display = "none";
+        tabsBar.style.display = "flex";
+        tabLogin.classList.add("active");
+        tabSignup.classList.remove("active");
+      }
+    }
+
+    async function handleDriverRegistration() {
+      const name = document.getElementById("reg-driver-name").value.trim();
+      const phone = document.getElementById("reg-driver-phone").value.trim();
+      const city = document.getElementById("reg-driver-city").value;
+      const vehicleModel = document.getElementById("reg-driver-model").value;
+      const vehicleNumber = document.getElementById("reg-driver-vehno").value.trim();
+      const licenseNumber = document.getElementById("reg-driver-dl").value.trim();
+      const experienceYears = document.getElementById("reg-driver-exp").value;
+
+      if (!name) {
+        alert("Please enter your Full Name.");
+        document.getElementById("reg-driver-name").focus();
+        return;
+      }
+      const cleanPhone = phone.replace(/\D/g, '').slice(-10);
+      if (cleanPhone.length !== 10) {
+        alert("Please enter a valid 10-digit mobile number.");
+        document.getElementById("reg-driver-phone").focus();
+        return;
+      }
+      if (!vehicleNumber) {
+        alert("Please enter your Commercial Vehicle Registration Number (e.g. BR 01 PB 1234).");
+        document.getElementById("reg-driver-vehno").focus();
+        return;
+      }
+      if (!licenseNumber) {
+        alert("Please enter your Commercial Driving License (DL) Number.");
+        document.getElementById("reg-driver-dl").focus();
+        return;
+      }
+
+      const btn = document.getElementById("btn-submit-reg");
+      btn.disabled = true;
+      btn.textContent = "Submitting Application...";
+
+      try {
+        const res = await ApiClient.driverSignup({
+          name,
+          phone: cleanPhone,
+          city,
+          vehicleModel,
+          vehicleNumber,
+          licenseNumber,
+          experienceYears
+        });
+
+        if (res && res.success) {
+          document.getElementById("reg-app-ref-badge").textContent = `REF: #${res.applicationId || 'DRV-APP-SUCCESS'}`;
+          switchAuthMode('success');
+        } else {
+          alert(res?.message || "Failed to submit application. Please try again.");
+        }
+      } catch (err) {
+        alert("Connection error. Please check your network and try again.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Submit Driver Application →";
+      }
     }
 
     async function handleDriverLogin() {
@@ -277,6 +766,12 @@
     }
 
     function handleDriverLogout() {
+      if (_driverPollingTimer) {
+        clearInterval(_driverPollingTimer);
+        _driverPollingTimer = null;
+      }
+      _driverInitialSyncDone = false;
+      _knownDriverTripStates.clear();
       localStorage.removeItem("otb_driver_token");
       localStorage.removeItem("otb_driver_profile");
       _driverToken = null;
@@ -295,13 +790,282 @@
       const res = await ApiClient.driverGetTrips(_driverToken);
       if (res && res.success && Array.isArray(res.trips)) {
         _allDriverTrips = res.trips;
+        res.trips.forEach(t => _knownDriverTripStates.set(t.bookingId, t.bookingStatus));
+        _driverInitialSyncDone = true;
         renderTrips();
       } else if (res && res.status === 401) {
         handleDriverLogout();
       }
     }
 
+    /* Driver Acoustic Chime Generator (Web Audio API) */
+    function playDriverChime(type = "assignment") {
+      if (!_driverAudioAlertsEnabled) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!_audioContext) _audioContext = new AudioCtx();
+        if (_audioContext.state === "suspended") _audioContext.resume();
+
+        const now = _audioContext.currentTime;
+        // Two-tone professional chime
+        const notes = type === "assignment" ? [523.25, 659.25, 783.99] : [587.33, 880.00];
+        notes.forEach((freq, idx) => {
+          const osc = _audioContext.createOscillator();
+          const gain = _audioContext.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+          gain.gain.setValueAtTime(0.001, now + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.12 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+          osc.connect(gain);
+          gain.connect(_audioContext.destination);
+          osc.start(now + idx * 0.12);
+          osc.stop(now + idx * 0.12 + 0.36);
+        });
+      } catch (e) {
+        console.warn("Driver audio chime notice:", e);
+      }
+    }
+
+    /* Driver Web Notification API */
+    async function requestDriverNotificationPermission() {
+      if (!("Notification" in window)) return;
+      try {
+        const res = await Notification.requestPermission();
+        updateDriverNotificationUiState();
+        if (res === "granted") {
+          playDriverChime("assignment");
+          sendDriverNotification(
+            "OneWayTaxiBihar | Chauffeur Alerts Active",
+            "This device will now receive instant alerts whenever Central Dispatch assigns a ride.",
+            "drv_perm_granted"
+          );
+        }
+      } catch (e) {
+        console.warn("Driver notification permission error:", e);
+      }
+    }
+
+    function toggleDriverNotifications() {
+      if (!("Notification" in window)) {
+        alert("This browser/device does not support native notifications.");
+        return;
+      }
+      if (Notification.permission !== "granted") {
+        requestDriverNotificationPermission();
+        return;
+      }
+      _driverNotificationsEnabled = !_driverNotificationsEnabled;
+      localStorage.setItem("otb_driver_notifications", _driverNotificationsEnabled ? "true" : "false");
+      updateDriverNotificationUiState();
+      if (_driverNotificationsEnabled) playDriverChime();
+    }
+
+    function toggleDriverAudioAlerts() {
+      _driverAudioAlertsEnabled = !_driverAudioAlertsEnabled;
+      localStorage.setItem("otb_driver_audio", _driverAudioAlertsEnabled ? "true" : "false");
+      updateDriverNotificationUiState();
+      if (_driverAudioAlertsEnabled) playDriverChime();
+    }
+
+    function updateDriverNotificationUiState() {
+      const btnNotif = document.getElementById("btn-driver-device-alerts");
+      const txtNotif = document.getElementById("txt-driver-alerts");
+      const btnAudio = document.getElementById("btn-driver-audio-alerts");
+      const txtAudio = document.getElementById("txt-driver-audio");
+
+      const hasPerm = ("Notification" in window) && Notification.permission === "granted" && _driverNotificationsEnabled;
+
+      if (btnNotif && txtNotif) {
+        if (hasPerm) {
+          btnNotif.className = "driver-alert-btn";
+          btnNotif.innerHTML = `<span class="hud-indicator hud-pulse-driver"></span><span>Alerts: Active</span>`;
+        } else {
+          btnNotif.className = "driver-alert-btn inactive";
+          const lbl = ("Notification" in window && Notification.permission === "denied")
+            ? "Alerts Blocked"
+            : "Enable Alerts";
+          btnNotif.innerHTML = `<span class="hud-indicator" style="background:#ef4444;"></span><span>${lbl}</span>`;
+        }
+      }
+
+      if (btnAudio && txtAudio) {
+        if (_driverAudioAlertsEnabled) {
+          btnAudio.className = "driver-sound-btn active";
+          btnAudio.innerHTML = `<span>🔊 Sound: ON</span>`;
+        } else {
+          btnAudio.className = "driver-sound-btn";
+          btnAudio.innerHTML = `<span>🔇 Sound: OFF</span>`;
+        }
+      }
+    }
+
+    function sendDriverNotification(title, body, tag = "") {
+      if (!("Notification" in window) || Notification.permission !== "granted" || !_driverNotificationsEnabled) {
+        return;
+      }
+      try {
+        const notif = new Notification(title, {
+          body: body,
+          icon: "favicon.svg",
+          badge: "favicon.svg",
+          tag: tag || ("drv_" + Date.now()),
+          vibrate: [300, 150, 300],
+          requireInteraction: true
+        });
+        notif.onclick = function() {
+          window.focus();
+          switchDriverTab("active");
+          notif.close();
+        };
+      } catch (err) {
+        console.warn("Driver notification send error:", err);
+      }
+    }
+
+    function showDriverDispatchAlert(trip) {
+      const container = document.getElementById("driver-live-alerts-hud");
+      if (!container) return;
+
+      const id = "drv_alert_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+      const el = document.createElement("div");
+      el.id = id;
+      el.className = "driver-hud-toast";
+      el.innerHTML = `
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="hud-indicator hud-pulse-driver"></div>
+            <strong style="font-size: 12px; letter-spacing: 0.5px; color: #34d399; font-weight: 800;">
+              NEW RIDE ASSIGNMENT • DISPATCH ALERT
+            </strong>
+          </div>
+          <button type="button" onclick="document.getElementById('${id}').remove()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">&times;</button>
+        </div>
+        <div style="margin: 8px 0 4px 0; font-size: 15px; font-weight: 900; color: #ffffff;">
+          ${trip.originCity} ➔ ${trip.destCity} (${trip.distanceKm || '100+'} KM)
+        </div>
+        <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.45;">
+          Passenger: <strong>${trip.passengerName || 'Valued Client'}</strong> • Pickup: ${trip.pickupAddress || trip.originCity}
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);">
+          <span style="font-size: 13px; color: #34d399; font-weight: 800;">₹${(trip.totalFare || 0).toLocaleString('en-IN')} (${trip.paymentMethod || 'Cash/UPI'})</span>
+          <button type="button" onclick="document.getElementById('${id}').remove(); switchDriverTab('active');" style="background:#10b981; border:none; color:white; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:6px; cursor:pointer;">
+            View Route Details →
+          </button>
+        </div>
+      `;
+
+      container.prepend(el);
+      setTimeout(() => {
+        if (el && el.parentNode) {
+          el.style.opacity = "0";
+          el.style.transform = "translateX(50px)";
+          setTimeout(() => el.remove(), 300);
+        }
+      }, 10000);
+    }
+
+    /* Continuous Driver Polling Loop (every 4s) */
+    function startDriverPolling() {
+      if (_driverPollingTimer) clearInterval(_driverPollingTimer);
+      _driverPollingTimer = setInterval(async () => {
+        if (!_driverToken) return;
+        await pollDriverTrips();
+      }, 4000);
+    }
+
+    async function pollDriverTrips() {
+      const res = await ApiClient.driverGetTrips(_driverToken);
+      if (res && res.success && Array.isArray(res.trips)) {
+        const trips = res.trips;
+        _allDriverTrips = trips;
+
+        if (!_driverInitialSyncDone) {
+          trips.forEach(t => _knownDriverTripStates.set(t.bookingId, t.bookingStatus));
+          _driverInitialSyncDone = true;
+          renderTrips();
+          return;
+        }
+
+        let hasChanges = false;
+        trips.forEach(t => {
+          const prevState = _knownDriverTripStates.get(t.bookingId);
+          if (!prevState) {
+            // New trip assigned to this driver!
+            _knownDriverTripStates.set(t.bookingId, t.bookingStatus);
+            hasChanges = true;
+            playDriverChime("assignment");
+            sendDriverNotification(
+              "NEW RIDE ASSIGNED: " + t.originCity + " ➔ " + t.destCity,
+              "Passenger: " + (t.passengerName || "Customer") + " • Fare: ₹" + (t.totalFare || 0) + " • " + t.pickupDate + " at " + t.pickupTime,
+              "drv_trip_" + t.bookingId
+            );
+            showDriverDispatchAlert(t);
+          } else if (prevState !== t.bookingStatus) {
+            // Status changed
+            _knownDriverTripStates.set(t.bookingId, t.bookingStatus);
+            hasChanges = true;
+            playDriverChime("status");
+            sendDriverNotification(
+              "Trip Status Updated: " + t.originCity + " ➔ " + t.destCity,
+              "Current Status: " + t.bookingStatus,
+              "drv_status_" + t.bookingId
+            );
+          }
+        });
+
+        if (hasChanges) {
+          renderTrips();
+        }
+      }
+    }
+
+    function toggleDriverDuty() {
+      const current = localStorage.getItem("otb_driver_duty") || "ON";
+      const next = current === "ON" ? "OFF" : "ON";
+      localStorage.setItem("otb_driver_duty", next);
+      renderDutyStatus();
+    }
+
+    function renderDutyStatus() {
+      const duty = localStorage.getItem("otb_driver_duty") || "ON";
+      const txt = document.getElementById("driver-duty-status-text");
+      const btn = document.getElementById("btn-toggle-duty");
+      if (!txt || !btn) return;
+
+      if (duty === "ON") {
+        txt.innerHTML = `🟢 ON DUTY • READY FOR DISPATCH`;
+        txt.style.color = "#34d399";
+        btn.textContent = "Go Off Duty";
+        btn.style.background = "rgba(16, 185, 129, 0.15)";
+        btn.style.borderColor = "#10b981";
+        btn.style.color = "#34d399";
+      } else {
+        txt.innerHTML = `⚪ OFF DUTY • RESTING / BREAK`;
+        txt.style.color = "#94a3b8";
+        btn.textContent = "Resume Duty";
+        btn.style.background = "rgba(148, 163, 184, 0.15)";
+        btn.style.borderColor = "#64748b";
+        btn.style.color = "#f8fafc";
+      }
+    }
+
     function renderTrips() {
+      renderDutyStatus();
+
+      // Calculate today's shift earnings metrics
+      const completed = _allDriverTrips.filter(t => t.bookingStatus === "COMPLETED");
+      const todayEarnings = completed.reduce((acc, t) => acc + Math.round((t.totalFare || 0) * 0.8), 0);
+      const totalKm = completed.reduce((acc, t) => acc + (t.distanceKm || 0), 0);
+
+      const elEarn = document.getElementById("driver-stat-earnings");
+      const elTrips = document.getElementById("driver-stat-trips");
+      const elKm = document.getElementById("driver-stat-km");
+      if (elEarn) elEarn.textContent = `₹${todayEarnings.toLocaleString('en-IN')}`;
+      if (elTrips) elTrips.textContent = `${completed.length}`;
+      if (elKm) elKm.textContent = `${totalKm} KM`;
+
       const listEl = document.getElementById("driver-trips-list");
       const filtered = _allDriverTrips.filter(t => {
         if (_currentTab === "active") return t.bookingStatus !== "COMPLETED" && t.bookingStatus !== "CANCELLED";
@@ -411,7 +1175,13 @@
     }
 
     // Initialize on load
-    window.addEventListener("DOMContentLoaded", initDriver);
+    window.addEventListener("DOMContentLoaded", () => {
+      initDriver();
+      if (new URLSearchParams(window.location.search).get("demo") === "1") {
+        const demoBtn = document.getElementById("btn-driver-demo-login");
+        if (demoBtn) demoBtn.style.display = "block";
+      }
+    });
   </script>
 </body>
 </html>
