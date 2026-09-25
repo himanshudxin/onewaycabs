@@ -1,3 +1,9 @@
+# Specific application routes
+/admin        /admin.html        200
+/driver       /driver.html       200
+/404          /404.html          200
+/500          /500.html          200
+
 # Canonical routing
 /index.html   /   301!
 

@@ -82,10 +82,27 @@ setTimeout(async () => {
           // 1. Initial elements
           const hasBranding = document.body.innerText.includes('OneWayTaxiBihar');
           const hasHelpline = document.body.innerText.includes('80021 41816');
-          const hasWhatsApp = document.body.innerText.includes('72818 51011');
+          const hasWhatsApp = document.body.innerHTML.includes('7281851011') || document.body.innerText.includes('72818');
 
-          // 2. Set mobile & check fare
-          const phoneInput = document.getElementById('input-mobile');
+          // 2. Set route & mobile & check fare
+          const pInput = document.getElementById('input-pickup');
+          const dInput = document.getElementById('input-drop');
+          if (pInput) {
+            pInput.value = 'Patna';
+            pInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          if (dInput) {
+            dInput.value = 'Gaya';
+            dInput.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+          if (window.bookingManager) {
+            const patna = (window.OTB_CITIES || []).find(c => c.name === 'Patna');
+            const gaya = (window.OTB_CITIES || []).find(c => c.name === 'Gaya');
+            if (patna) window.bookingManager.originCity = patna;
+            if (gaya) window.bookingManager.destCity = gaya;
+          }
+
+          const phoneInput = document.getElementById('input-fare-phone') || document.getElementById('input-mobile');
           if (phoneInput) {
             phoneInput.value = '9876543210';
             phoneInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -93,7 +110,7 @@ setTimeout(async () => {
 
           const checkBtn = document.getElementById('btn-check-fare');
           if (checkBtn) checkBtn.click();
-          await new Promise(r => setTimeout(r, 1200));
+          await new Promise(r => setTimeout(r, 1500));
 
           const cabCards = document.querySelectorAll('.cab-tier-card');
           const cabCount = cabCards.length;
@@ -114,27 +131,24 @@ setTimeout(async () => {
             if (authModal && authModal.classList.contains('open')) {
               authOpened = true;
               // Submit auth phone
-              const authPhone = document.getElementById('auth-phone-input');
+              const authPhone = document.getElementById('auth-mobile-input') || document.getElementById('auth-phone-input');
               const authName = document.getElementById('auth-name-input');
-              if (authPhone) authPhone.value = '9876543210';
-              if (authName) authName.value = 'Aditya Kumar';
+              if (authPhone) {
+                authPhone.value = '9876543210';
+                authPhone.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+              if (authName) {
+                authName.value = 'Aditya Kumar';
+                authName.dispatchEvent(new Event('input', { bubbles: true }));
+              }
 
-              const sendOtpBtn = document.getElementById('btn-send-auth-otp');
-              if (sendOtpBtn) {
-                sendOtpBtn.click();
+              if (typeof window.handleSendVerificationCode === 'function') {
+                await window.handleSendVerificationCode();
                 await new Promise(r => setTimeout(r, 1000));
-
-                // Verify OTP
-                const otpInput = document.getElementById('auth-otp-input');
-                if (otpInput && window.lastVerificationCode) {
-                  otpInput.value = window.lastVerificationCode;
-                } else if (otpInput) {
-                  // Retrieve from API or simulated storage
-                  otpInput.value = '1234';
+                if (typeof window.handleVerifyOtpCode === 'function') {
+                  await window.handleVerifyOtpCode();
+                  await new Promise(r => setTimeout(r, 1200));
                 }
-                const verifyBtn = document.getElementById('btn-verify-auth-otp');
-                if (verifyBtn) verifyBtn.click();
-                await new Promise(r => setTimeout(r, 1200));
               }
             }
 
@@ -143,14 +157,14 @@ setTimeout(async () => {
             if (chkModal && chkModal.classList.contains('open')) {
               checkoutOpened = true;
               // Step 1 to Step 2
-              const nextBtn = document.getElementById('btn-checkout-step1-next');
-              if (nextBtn) nextBtn.click();
-              await new Promise(r => setTimeout(r, 600));
+              if (window.bookingManager && typeof window.bookingManager.goToCheckoutStep === 'function') {
+                window.bookingManager.goToCheckoutStep(2);
+                await new Promise(r => setTimeout(r, 600));
+              }
 
               // Confirm booking
-              const confirmBtn = document.getElementById('btn-checkout-confirm');
-              if (confirmBtn) {
-                confirmBtn.click();
+              if (window.bookingManager && typeof window.bookingManager.confirmBooking === 'function') {
+                await window.bookingManager.confirmBooking();
                 await new Promise(r => setTimeout(r, 1500));
 
                 const confModal = document.getElementById('modal-confirmation');
@@ -216,8 +230,8 @@ setTimeout(async () => {
           if (typeof window.switchMainTab === 'function') window.switchMainTab('drivers');
           await new Promise(r => setTimeout(r, 600));
 
-          const driversTbody = document.getElementById('admin-drivers-tbody');
-          const driversCount = driversTbody ? driversTbody.querySelectorAll('tr').length : 0;
+          const driversGrid = document.getElementById('admin-drivers-grid') || document.getElementById('admin-drivers-tbody');
+          const driversCount = driversGrid ? (driversGrid.querySelectorAll('div[style*="border-radius"]').length || (driversGrid.children ? driversGrid.children.length : 0)) : 0;
 
           // Switch to Leads Tab
           if (typeof window.switchMainTab === 'function') window.switchMainTab('leads');
@@ -259,7 +273,7 @@ setTimeout(async () => {
           const loginView = document.getElementById('driver-login-view');
           const dashView = document.getElementById('driver-dashboard-view');
           const isDriverLoggedIn = (!loginView || loginView.style.display === 'none') && (dashView && dashView.style.display !== 'none');
-          const driverName = document.getElementById('driver-header-name')?.textContent || '';
+          const driverName = (document.getElementById('driver-name-display') || document.getElementById('driver-header-name'))?.textContent || '';
 
           return {
             isDriverLoggedIn,

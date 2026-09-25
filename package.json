@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node scripts/check-syntax.js"
+    "test": "node scripts/check-syntax.js && node scripts/check-html-scripts.js"
   },
   "repository": {
     "type": "git",

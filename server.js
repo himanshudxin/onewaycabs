@@ -4,6 +4,8 @@
  * Serves static web assets and routes /api/* to api/index.js
  */
 
+try { require('dotenv').config(); } catch (e) {}
+
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -49,7 +51,7 @@ const server = http.createServer(async (req, res) => {
   const pathname = url.pathname;
 
   // 1. API Route Handler
-  if (pathname.startsWith('/api/')) {
+  if (pathname === '/api' || pathname.startsWith('/api/')) {
     return apiHandler(req, res);
   }
 
@@ -66,6 +68,8 @@ const server = http.createServer(async (req, res) => {
   // If directory, try index.html
   if (fs.existsSync(safePath) && fs.statSync(safePath).isDirectory()) {
     safePath = path.join(safePath, 'index.html');
+  } else if (!fs.existsSync(safePath) && fs.existsSync(safePath + '.html')) {
+    safePath = safePath + '.html';
   }
 
   if (fs.existsSync(safePath) && fs.statSync(safePath).isFile()) {

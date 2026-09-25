@@ -1809,7 +1809,10 @@
       else if (tabName === "bookings") loadBookings();
       else if (tabName === "payments") loadPayments();
       else if (tabName === "wallet") loadWallet();
-      else if (tabName === "drivers") renderDriversGrid();
+      else if (tabName === "drivers") {
+        renderDriversGrid();
+        loadDrivers().then(() => renderDriversGrid());
+      }
       else if (tabName === "vehicles") loadVehicles();
       else if (tabName === "coupons") loadCoupons();
       else if (tabName === "audit") loadAuditLogs();

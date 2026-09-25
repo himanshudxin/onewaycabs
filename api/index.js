@@ -4,6 +4,8 @@
  * OneWayTaxiBihar Mobility Pvt Ltd
  */
 
+try { require('dotenv').config(); } catch (e) {}
+
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -119,6 +121,7 @@ async function syncToMongoAsync(db) {
     }
   } catch (err) {
     console.warn('[MongoDB Atlas] Async sync notice:', err.message);
+    mongoClientInstance = null;
   }
 }
 
@@ -948,7 +951,7 @@ module.exports = async (req, res) => {
       const auth = getSessionUser(req, db);
       if (!auth) {
         // Unauthenticated customers see empty list (Zero leakage)
-        return sendJson(200, { success: true, count: 0, bookings: [] });
+        return sendJson(200, { success: true, count: 0, bookings: [], rides: [] });
       }
 
       const cleanUserPhone = auth.user.phone.replace(/\D/g, '').slice(-10);
@@ -972,7 +975,8 @@ module.exports = async (req, res) => {
       return sendJson(200, {
         success: true,
         count: sanitized.length,
-        bookings: sanitized
+        bookings: sanitized,
+        rides: sanitized
       });
     }
 
@@ -1008,6 +1012,26 @@ module.exports = async (req, res) => {
       const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
       if (pickupDate && pickupDate < yesterdayStr) {
         return sendJson(400, { success: false, message: 'Pickup date cannot be in the past' });
+      }
+
+      // Concurrency & double-tap deduplication protection (15 seconds)
+      const now = Date.now();
+      const recentDuplicate = (db.bookings || []).find(b => {
+        if (!b.createdAt) return false;
+        const bPhone = (b.passengerPhone || '').replace(/\D/g, '').slice(-10);
+        if (bPhone !== cleanPhone) return false;
+        if (b.originCity !== (originCity || 'Patna') || b.destCity !== (destCity || 'Gaya')) return false;
+        const bTime = new Date(b.createdAt).getTime();
+        return (now - bTime) >= 0 && (now - bTime) < 15000;
+      });
+
+      if (recentDuplicate) {
+        return sendJson(200, {
+          success: true,
+          deduplicated: true,
+          booking: recentDuplicate,
+          message: 'Booking request already received. Duplicate submission prevented.'
+        });
       }
 
       // Server-side distance and fare recalculation (tamper-proof)

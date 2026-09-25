@@ -3,9 +3,12 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/api", "destination": "/api/index.js" },
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/driver", "destination": "/driver.html" }
+    { "source": "/driver", "destination": "/driver.html" },
+    { "source": "/404", "destination": "/404.html" },
+    { "source": "/500", "destination": "/500.html" }
   ],
   "headers": [
     {
