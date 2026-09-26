@@ -25,6 +25,7 @@
   "homepage": "https://github.com/himanshudxin/onewaycabs#readme",
   "dependencies": {
     "dotenv": "^17.4.2",
-    "mongodb": "^7.6.0"
+    "mongodb": "^7.6.0",
+    "pg": "^8.23.0"
   }
 }

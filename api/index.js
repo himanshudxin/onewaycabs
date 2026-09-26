@@ -10,134 +10,27 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-// Resolve database path (supports local repo and Vercel /tmp)
-const DB_LOCAL_PATH = path.join(process.cwd(), 'data', 'db.json');
-const DB_TMP_PATH = '/tmp/db.json';
+// Enterprise Service Layer Integrations
+const dbService = require('../services/db.js');
+const paymentService = require('../services/payment.js');
+const notificationService = require('../services/notification.js');
+
+// Auto-initialize Enterprise DB (MongoDB Atlas / PostgreSQL / Local Cache)
+dbService.initDatabase().catch(err => {
+  console.warn('[API Layer] Database service init notice:', err.message);
+});
+
 const activeVerificationCodes = new Map();
 const activeAdminOtps = new Map();
 
-function getDbPath() {
-  if (process.env.VERCEL) {
-    if (!fs.existsSync(DB_TMP_PATH)) {
-      if (fs.existsSync(DB_LOCAL_PATH)) {
-        try {
-          fs.copyFileSync(DB_LOCAL_PATH, DB_TMP_PATH);
-        } catch (e) {
-          console.warn('[DB] Failed to seed /tmp/db.json:', e.message);
-        }
-      }
-    }
-    return DB_TMP_PATH;
-  }
-  return DB_LOCAL_PATH;
-}
-
-// In-memory fallback for high-concurrency serverless execution
-let memoryDb = null;
-
 function loadDb() {
-  try {
-    const targetPath = getDbPath();
-    if (fs.existsSync(targetPath)) {
-      const data = fs.readFileSync(targetPath, 'utf8').replace(/^\uFEFF/, '');
-      memoryDb = JSON.parse(data);
-      return memoryDb;
-    }
-  } catch (e) {
-    console.warn('[DB] File read failed, using memory DB:', e.message);
-  }
-
-  if (!memoryDb) {
-    memoryDb = {
-      users: [],
-      sessions: [],
-      bookings: [],
-      drivers: [
-        {
-          id: "drv_101",
-          name: "Ramesh Kumar Sharma",
-          phone: "+91 94310 12345",
-          pin: "1234",
-          vehicleNumber: "BR 01 PA 4921",
-          vehicleModel: "Swift Dzire (White)",
-          fleetTier: "sedan",
-          rating: 4.9,
-          totalTrips: 342,
-          status: "Available"
-        },
-        {
-          id: "drv_102",
-          name: "Amit Kumar Singh",
-          phone: "+91 98350 67890",
-          pin: "5678",
-          vehicleNumber: "BR 01 PB 7712",
-          vehicleModel: "Maruti Ertiga (Silver)",
-          fleetTier: "suv",
-          rating: 4.85,
-          totalTrips: 286,
-          status: "Available"
-        }
-      ],
-      payments: [],
-      wallet_ledger: [],
-      audit_logs: [],
-      admins: [
-        {
-          id: "adm_01",
-          username: "admin",
-          passwordHash: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", // admin123
-          name: "Patna Central Dispatch",
-          role: "SUPER_ADMIN"
-        }
-      ],
-      reviews: [],
-      leads: []
-    };
-  }
-  return memoryDb;
-}
-
-let mongoClientInstance = null;
-async function syncToMongoAsync(db) {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) return;
-  try {
-    const { MongoClient } = require('mongodb');
-    if (!mongoClientInstance) {
-      mongoClientInstance = new MongoClient(uri, { serverSelectionTimeoutMS: 5000 });
-      await mongoClientInstance.connect();
-    }
-    const mdb = mongoClientInstance.db(process.env.MONGODB_DB_NAME || 'onewaytaxibihar');
-    if (Array.isArray(db.users)) {
-      for (const u of db.users) {
-        if (u.id) await mdb.collection('users').updateOne({ id: u.id }, { $set: u }, { upsert: true });
-      }
-    }
-    if (Array.isArray(db.bookings)) {
-      for (const b of db.bookings) {
-        const bId = b.bookingId || b.id;
-        if (bId) await mdb.collection('bookings').updateOne({ bookingId: bId }, { $set: { ...b, bookingId: bId } }, { upsert: true });
-      }
-    }
-  } catch (err) {
-    console.warn('[MongoDB Atlas] Async sync notice:', err.message);
-    mongoClientInstance = null;
-  }
+  return dbService.getDb();
 }
 
 function saveDb(db) {
-  memoryDb = db;
-  try {
-    const targetPath = getDbPath();
-    const dir = path.dirname(targetPath);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(targetPath, JSON.stringify(db, null, 2), 'utf8');
-    // Asynchronous push to MongoDB Atlas online cloud
-    syncToMongoAsync(db).catch(() => {});
-  } catch (e) {
-    console.warn('[DB] File save failed (using in-memory):', e.message);
-  }
+  dbService.saveDb(db);
 }
+
 
 let memoryCities = null;
 function loadCities() {
@@ -491,7 +384,14 @@ module.exports = async (req, res) => {
       const isNewUser = !existingUser;
 
       const waText = `OneWayTaxiBihar Verification Code for +91 ${cleanPhone} is: ${code}. Valid for 10 minutes. Welcome Reward: Rs 100 on first booking.`;
-      const waUrl = `https://wa.me/917281851011?text=${encodeURIComponent(waText)}`;
+      const waUrl = notificationService.generateWhatsAppDeepLink(cleanPhone, waText);
+
+      // Trigger real SMS via Fast2SMS / MSG91 / Twilio
+      const smsDispatch = await notificationService.sendSms({
+        phone: cleanPhone,
+        otp: code,
+        message: `Your OneWayTaxiBihar verification OTP is ${code}. Valid for 10 minutes. Do not share.`
+      });
 
       return sendJson(200, {
         success: true,
@@ -502,6 +402,7 @@ module.exports = async (req, res) => {
         rewardAmount: isNewUser ? 100 : 0,
         otpCode: code,
         whatsappUrl: waUrl,
+        smsStatus: smsDispatch,
         message: `Verification code dispatched to +91 ${cleanPhone} via SMS & WhatsApp.`
       });
     }
@@ -1152,6 +1053,11 @@ module.exports = async (req, res) => {
 
       saveDb(db);
 
+      // Trigger asynchronous real SMS & WhatsApp dispatch
+      notificationService.sendBookingConfirmationNotifications(newBooking).catch(err => {
+        console.warn('[Booking Confirmation Notice]:', err.message);
+      });
+
       return sendJson(201, {
         success: true,
         booking: newBooking,
@@ -1244,6 +1150,174 @@ module.exports = async (req, res) => {
         success: true,
         token,
         admin: { id: admin ? admin.id : 'adm_01', username: 'admin', name: admin ? admin.name : 'Patna Central Dispatch' }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 8B. ENTERPRISE PAYMENT GATEWAY (Razorpay & Cashfree)
+    // -------------------------------------------------------------
+    if (pathname === '/payments/config' && method === 'GET') {
+      return sendJson(200, {
+        success: true,
+        ...paymentService.getPaymentConfig()
+      });
+    }
+
+    if (pathname === '/payments/create-order' && method === 'POST') {
+      const { amount, bookingId, passengerName, passengerPhone, notes } = body;
+      const orderAmount = Number(amount) || 299; // Default token advance ₹299
+      
+      try {
+        const orderResult = await paymentService.createRazorpayOrder({
+          amountInRupees: orderAmount,
+          bookingId: bookingId || `OTB_${Date.now()}`,
+          passengerName: passengerName || 'Passenger',
+          passengerPhone: passengerPhone || '',
+          notes: notes || {}
+        });
+
+        // Record initial pending payment in database
+        await dbService.recordPayment({
+          orderId: orderResult.orderId,
+          bookingId: bookingId || null,
+          passengerPhone: passengerPhone || '',
+          amount: orderAmount,
+          currency: 'INR',
+          provider: orderResult.provider,
+          status: 'ORDER_CREATED',
+          isSandbox: !!orderResult.isSandbox
+        });
+
+        return sendJson(200, orderResult);
+      } catch (pErr) {
+        return sendJson(500, { success: false, message: pErr.message });
+      }
+    }
+
+    if (pathname === '/payments/verify' && method === 'POST') {
+      const { orderId, paymentId, signature, bookingId, amount } = body;
+      
+      const verification = paymentService.verifyRazorpayPayment({
+        orderId,
+        paymentId,
+        signature
+      });
+
+      if (!verification.verified) {
+        return sendJson(400, {
+          success: false,
+          verified: false,
+          message: verification.error || 'Payment signature verification failed'
+        });
+      }
+
+      const advanceAmt = Number(amount) || 299;
+
+      // Update payment record in database
+      await dbService.recordPayment({
+        orderId,
+        paymentId,
+        bookingId,
+        amount: advanceAmt,
+        status: 'PAID_TOKEN_ADVANCE',
+        signature,
+        verifiedAt: new Date().toISOString()
+      });
+
+      // Update booking status if bookingId was provided
+      let updatedBooking = null;
+      if (bookingId) {
+        const b = (db.bookings || []).find(x => x.bookingId === bookingId || x.id === bookingId);
+        if (b) {
+          b.advancePaid = advanceAmt;
+          b.balanceDue = Math.max(0, (b.totalFare || b.originalFare || 0) - advanceAmt);
+          b.paymentStatus = 'PARTIALLY PAID (Token Advance Verified)';
+          b.paymentMethod = 'Razorpay UPI / Cards';
+          b.bookingStatus = 'CONFIRMED';
+          b.statusHistory.push({
+            status: 'CONFIRMED',
+            timestamp: new Date().toISOString(),
+            actor: 'Payment Gateway',
+            note: `Online advance ₹${advanceAmt} received via ${orderId}`
+          });
+          saveDb(db);
+          updatedBooking = b;
+
+          // Dispatch confirmation SMS & WhatsApp
+          notificationService.sendBookingConfirmationNotifications(b).catch(err => {
+            console.warn('[Payment Confirmation Alert]:', err.message);
+          });
+        }
+      }
+
+      await dbService.addAuditLog('PAYMENT_VERIFIED', bookingId || orderId, `Advance ₹${advanceAmt} verified`);
+
+      return sendJson(200, {
+        success: true,
+        verified: true,
+        paymentId,
+        orderId,
+        advancePaid: advanceAmt,
+        booking: updatedBooking,
+        message: 'Payment verified and booking confirmed successfully.'
+      });
+    }
+
+    if (pathname === '/payments/webhook' && method === 'POST') {
+      const webhookSignature = req.headers['x-razorpay-signature'] || '';
+      const rawBody = JSON.stringify(body);
+      
+      const isAuthentic = paymentService.verifyRazorpayWebhook(rawBody, webhookSignature);
+      if (!isAuthentic && process.env.RAZORPAY_WEBHOOK_SECRET) {
+        return sendJson(400, { success: false, message: 'Invalid webhook signature' });
+      }
+
+      const event = body.event;
+      if (event === 'payment.captured' || event === 'order.paid') {
+        const payload = body.payload?.payment?.entity || {};
+        const bId = payload.notes?.bookingId;
+        if (bId) {
+          const b = (db.bookings || []).find(x => x.bookingId === bId);
+          if (b) {
+            b.advancePaid = (payload.amount || 29900) / 100;
+            b.balanceDue = Math.max(0, b.totalFare - b.advancePaid);
+            b.paymentStatus = 'PARTIALLY PAID (Webhook Verified)';
+            b.bookingStatus = 'CONFIRMED';
+            saveDb(db);
+          }
+        }
+      }
+
+      return sendJson(200, { status: 'ok' });
+    }
+
+    // -------------------------------------------------------------
+    // 8C. REAL-TIME SYSTEM & NOTIFICATION STATUS
+    // -------------------------------------------------------------
+    if (pathname === '/admin/system-status' && method === 'GET') {
+      return sendJson(200, {
+        success: true,
+        timestamp: new Date().toISOString(),
+        database: dbService.getDatabaseStatus(),
+        payment: paymentService.getPaymentConfig(),
+        notifications: notificationService.getNotificationConfig()
+      });
+    }
+
+    if (pathname === '/notifications/test' && method === 'POST') {
+      const targetPhone = body.phone || '6206494214';
+      const testMsg = body.message || 'OneWayTaxiBihar Telecom Test: System ready for live operations across Bihar.';
+      
+      const result = await notificationService.sendSms({
+        phone: targetPhone,
+        message: testMsg
+      });
+
+      return sendJson(200, {
+        success: true,
+        targetPhone: `+91 ${targetPhone}`,
+        result,
+        whatsappLink: notificationService.generateWhatsAppDeepLink(targetPhone, testMsg)
       });
     }
 
@@ -1483,6 +1557,12 @@ module.exports = async (req, res) => {
       });
 
       saveDb(db);
+
+      // Trigger asynchronous driver details SMS & WhatsApp alert to passenger
+      notificationService.sendDriverAssignmentNotifications(booking, driver).catch(err => {
+        console.warn('[Driver Assignment Notice]:', err.message);
+      });
+
       return sendJson(200, { success: true, booking });
     }
 

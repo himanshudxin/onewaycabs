@@ -948,6 +948,29 @@ class ApiClient {
       body: JSON.stringify({ bookingId, phone })
     });
   }
+
+  // Enterprise Payment Gateway API Integrations
+  static async getPaymentConfig() {
+    return await this.request("/api/payments/config");
+  }
+
+  static async createPaymentOrder({ amount, bookingId, passengerName, passengerPhone, notes }) {
+    return await this.request("/api/payments/create-order", {
+      method: "POST",
+      body: JSON.stringify({ amount, bookingId, passengerName, passengerPhone, notes })
+    });
+  }
+
+  static async verifyPayment({ orderId, paymentId, signature, bookingId, amount }) {
+    return await this.request("/api/payments/verify", {
+      method: "POST",
+      body: JSON.stringify({ orderId, paymentId, signature, bookingId, amount })
+    });
+  }
+
+  static async getSystemStatus() {
+    return await this.request("/api/admin/system-status");
+  }
 }
 
 if (typeof window !== "undefined") {

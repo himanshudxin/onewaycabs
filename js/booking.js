@@ -2227,12 +2227,26 @@ class BookingManager {
           <!-- Payment Options -->
           <div class="checkout-methods-list" style="margin-top: 10px;">
             
-            <!-- Method 1: PhonePe UPI QR -->
-            <label class="checkout-method-item active" id="pay-card-upi">
+            <!-- Method 0: Razorpay Live Advance (Fastest Instant Confirmation) -->
+            <label class="checkout-method-item" id="pay-card-razorpay" style="border: 1.5px solid #0070f3; background: rgba(0, 112, 243, 0.04); margin-bottom: 8px;">
               <div class="checkout-method-header">
-                <input type="radio" name="pay-method" value="UPI / PhonePe QR Code" checked onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
+                <input type="radio" name="pay-method" value="Razorpay Online Advance (₹299)" checked onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
                 <div style="flex: 1;">
-                  <strong style="color: var(--owc-text); font-size: 13.5px; display: block;">Pay via PhonePe / UPI QR Code (Instant Confirmation)</strong>
+                  <strong style="color: #0070f3; font-size: 13.5px; display: flex; align-items: center; justify-content: space-between;">
+                    <span>⚡ Pay ₹299 Token Advance (Instant Confirmation)</span>
+                    <span style="font-size: 9.5px; background: #0070f3; color: #fff; padding: 2px 7px; border-radius: 4px; font-weight: 800;">ONLINE / UPI</span>
+                  </strong>
+                  <div style="font-size: 11.5px; color: var(--owc-text-muted); margin-top: 2px;">Instant cab guarantee via PhonePe, Google Pay, UPI, Cards, Netbanking. Balance payable to driver.</div>
+                </div>
+              </div>
+            </label>
+
+            <!-- Method 1: PhonePe UPI QR -->
+            <label class="checkout-method-item" id="pay-card-upi">
+              <div class="checkout-method-header">
+                <input type="radio" name="pay-method" value="UPI / PhonePe QR Code" onchange="window.bookingManager.handlePaymentMethodChange(this.value)">
+                <div style="flex: 1;">
+                  <strong style="color: var(--owc-text); font-size: 13.5px; display: block;">Pay via PhonePe / UPI QR Code Direct</strong>
                   <div style="font-size: 11.5px; color: var(--owc-text-muted);">Scan QR using PhonePe, Google Pay, Paytm, or BHIM.</div>
                 </div>
               </div>
@@ -2927,6 +2941,65 @@ class BookingManager {
         useWallet: isUsingWallet,
         couponCode: this.appliedCouponCode || ""
       };
+
+      // Live Razorpay Checkout flow if Razorpay is selected
+      if (method.includes('Razorpay') && typeof window.Razorpay !== 'undefined') {
+        try {
+          const tempBId = `OTB-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+          const orderRes = await ApiClient.createPaymentOrder({
+            amount: 299,
+            bookingId: tempBId,
+            passengerName: name,
+            passengerPhone: phone,
+            notes: { origin: this.originCity.name, dest: this.destCity.name }
+          });
+
+          if (orderRes && orderRes.orderId && !orderRes.isSandbox) {
+            const self = this;
+            const rzp = new window.Razorpay({
+              key: orderRes.keyId,
+              amount: orderRes.amount,
+              currency: "INR",
+              name: "OneWayTaxiBihar",
+              description: `Cab Advance: ${this.originCity.name} to ${this.destCity.name}`,
+              image: "https://onewaytaxibihar.com/favicon.svg",
+              order_id: orderRes.orderId,
+              prefill: { name: name, contact: phone, email: email },
+              theme: { color: "#0070f3" },
+              modal: {
+                ondismiss: function () {
+                  if (btnConfirm) {
+                    btnConfirm.disabled = false;
+                    btnConfirm.innerText = "Confirm & Request Cab →";
+                  }
+                  self.isSubmittingBooking = false;
+                }
+              },
+              handler: async function (paymentResp) {
+                payload.paymentMethod = "Razorpay Advance (₹299 Paid)";
+                payload.paymentTxnId = paymentResp.razorpay_payment_id;
+                payload.advancePaid = 299;
+                
+                const finalRes = await ApiClient.createBooking(payload);
+                if (finalRes && finalRes.booking) {
+                  await ApiClient.verifyPayment({
+                    orderId: paymentResp.razorpay_order_id,
+                    paymentId: paymentResp.razorpay_payment_id,
+                    signature: paymentResp.razorpay_signature,
+                    bookingId: finalRes.booking.bookingId,
+                    amount: 299
+                  });
+                  self.renderBookingSuccessModal(finalRes.booking);
+                }
+              }
+            });
+            rzp.open();
+            return;
+          }
+        } catch (rzpErr) {
+          console.warn('[Razorpay Flow Note]', rzpErr.message);
+        }
+      }
 
       const res = await ApiClient.createBooking(payload);
 
