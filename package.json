@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node scripts/check-syntax.js && node scripts/check-html-scripts.js"
+    "test": "node scripts/check-syntax.js && node scripts/check-html-scripts.js",
+    "deploy": "git add -A && git commit -m \"deploy: $(date '+%Y-%m-%d %H:%M')\" && git push origin main"
   },
   "repository": {
     "type": "git",
