@@ -1,11 +1,171 @@
 {
-  "users": [],
-  "sessions": [],
-  "bookings": [],
+  "users": [
+    {
+      "id": "usr_6206494214",
+      "name": "aman kumar",
+      "phone": "+91 6206494214",
+      "email": "",
+      "walletBalance": 0,
+      "memberSince": "2026",
+      "createdAt": "2026-09-29T14:09:07.643Z"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "otb_sess_819bb4e7cb2155d9c54890a53a276b50",
+      "userId": "usr_6206494214",
+      "phone": "+91 6206494214",
+      "role": "customer",
+      "createdAt": "2026-09-29T14:09:07.644Z"
+    },
+    {
+      "token": "adm_sess_8f2f9f2571821bedb5ffa4b9da728ec7",
+      "adminId": "adm_01",
+      "role": "admin",
+      "createdAt": "2026-09-29T15:26:01.751Z"
+    }
+  ],
+  "bookings": [
+    {
+      "bookingId": "OTB-2026-5888",
+      "customerId": "usr_6206494214",
+      "paymentTxnId": "TXN_1790690964524_8975",
+      "passengerName": "aman kumar",
+      "passengerPhone": "+91 6206494214",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Muzaffarpur",
+      "pickupAddress": "Patna City Area",
+      "dropAddress": "Muzaffarpur City Area",
+      "pickupDate": "2026-09-29",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 75,
+      "duration": "1h 39m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 75,
+        "duration": "1h 39m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 1050,
+        "distanceCharge": 1500,
+        "extraKm": 60,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 59,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 130,
+        "totalFare": 2739
+      },
+      "totalFare": 2639,
+      "originalFare": 2739,
+      "walletUsed": 100,
+      "paymentMethod": "Razorpay Online Advance (₹299)",
+      "paymentStatus": "PENDING",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-09-29T14:09:24.524Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-5888\n*Passenger:* aman kumar (+91 6206494214)\n*Route:* Patna ➔ Muzaffarpur (75 KM)\n*Schedule:* 2026-09-29 at 10:00 AM\n*Total Fare:* ₹2639 (Razorpay Online Advance (₹299))\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-5888%0A*Passenger%3A*%20aman%20kumar%20(%2B91%206206494214)%0A*Route%3A*%20Patna%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B92639",
+      "createdAt": "2026-09-29T14:09:24.563Z"
+    }
+  ],
   "drivers": [],
-  "payments": [],
-  "wallet_ledger": [],
-  "audit_logs": [],
+  "payments": [
+    {
+      "id": "TXN_1790690964524_8975",
+      "bookingId": "OTB_TEST_101",
+      "customerId": "usr_6206494214",
+      "passengerPhone": "8002141816",
+      "amount": 299,
+      "originalAmount": 2739,
+      "walletDeducted": 100,
+      "method": "Razorpay Online Advance (₹299)",
+      "status": "PAID_TOKEN_ADVANCE",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": "2026-09-29T15:26:01.762Z",
+      "createdAt": "2026-09-29T14:09:24.524Z",
+      "orderId": "order_demo_1790695561760",
+      "currency": "INR",
+      "provider": "razorpay_sandbox",
+      "isSandbox": true,
+      "updatedAt": "2026-09-29T15:26:01.762Z",
+      "paymentId": "pay_test_12345",
+      "signature": "sig_demo"
+    },
+    {
+      "orderId": "order_demo_1790690964325",
+      "bookingId": "OTB-2026-9966",
+      "passengerPhone": "6206494214",
+      "amount": 299,
+      "currency": "INR",
+      "provider": "razorpay_sandbox",
+      "status": "ORDER_CREATED",
+      "isSandbox": true,
+      "createdAt": "2026-09-29T14:09:24.325Z"
+    }
+  ],
+  "wallet_ledger": [
+    {
+      "id": "WLT_1790690947643_207",
+      "userId": "usr_6206494214",
+      "phone": "+91 6206494214",
+      "type": "CREDIT",
+      "amount": 100,
+      "balanceAfter": 100,
+      "description": "Welcome Bonus Credit",
+      "createdAt": "2026-09-29T14:09:07.643Z"
+    },
+    {
+      "id": "WLT_1790690964524",
+      "userId": "usr_6206494214",
+      "phone": "+91 6206494214",
+      "type": "DEBIT",
+      "amount": 100,
+      "balanceAfter": 0,
+      "description": "Applied to Booking Patna to Muzaffarpur",
+      "createdAt": "2026-09-29T14:09:24.524Z"
+    }
+  ],
+  "audit_logs": [
+    {
+      "id": "log_1790695561763_553",
+      "action": "PAYMENT_VERIFIED",
+      "actor": "OTB_TEST_101",
+      "details": "Advance ₹299 verified",
+      "timestamp": "2026-09-29T15:26:01.763Z"
+    },
+    {
+      "id": "AUD_1790690964563",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-5888",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 6206494214",
+      "details": "Patna → Muzaffarpur for ₹2639",
+      "createdAt": "2026-09-29T14:09:24.563Z"
+    },
+    {
+      "id": "AUD_1790695561755",
+      "entity": "PAYMENT_SETTINGS",
+      "entityId": "global_payment_config",
+      "action": "UPDATE_PAYMENT_SETTINGS",
+      "actor": "admin",
+      "details": "Updated payment gateway & UPI configuration (UPI ID: 8002141816@ybl, Token Advance: ₹299)",
+      "createdAt": "2026-09-29T15:26:01.755Z"
+    }
+  ],
   "admins": [
     {
       "id": "adm_01",
@@ -16,7 +176,29 @@
     }
   ],
   "reviews": [],
-  "leads": [],
+  "leads": [
+    {
+      "id": "LEAD_1790690936710_760",
+      "phone": "+91 6206494214",
+      "cleanPhone": "6206494214",
+      "passengerName": "Fare Check Visitor",
+      "originCity": "Patna",
+      "destCity": "Muzaffarpur",
+      "tripType": "oneway",
+      "pickupDate": "2026-09-29",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 78,
+      "duration": "1h 45m",
+      "estFareHatch": 1698,
+      "estFareSedan": 2198,
+      "estFareSuv": 3398,
+      "source": "Check Fare & Availability",
+      "status": "NEW",
+      "notes": "",
+      "createdAt": "2026-09-29T14:08:56.710Z",
+      "updatedAt": "2026-09-29T14:09:12.957Z"
+    }
+  ],
   "payment_transactions": [],
   "wallet": [],
   "wallet_transactions": [],
@@ -142,5 +324,23 @@
   ],
   "support_tickets": [],
   "ai_events": [],
-  "driver_applications": []
+  "driver_applications": [],
+  "settings": {
+    "payment": {
+      "upiId": "8002141816@ybl",
+      "payeeName": "HIMANSHU KUMAR DUBEY",
+      "razorpayKeyId": "",
+      "razorpayKeySecret": "",
+      "razorpayWebhookSecret": "",
+      "cashfreeAppId": "",
+      "cashfreeSecretKey": "",
+      "cashfreeEnv": "production",
+      "defaultAdvanceAmount": 299,
+      "enableRazorpay": true,
+      "enableDirectUpi": true,
+      "enableCashToDriver": true,
+      "enableTokenAdvance": true,
+      "autoConfirmOnAdvance": true
+    }
+  }
 }

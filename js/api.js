@@ -771,6 +771,41 @@ class ApiClient {
     });
   }
 
+  static async adminGetPaymentSettings(token) {
+    const res = await this.request("/api/admin/payment-settings", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res && res.success) return res;
+    // Fallback default settings if offline
+    return {
+      success: true,
+      settings: {
+        upiId: "8002141816@ybl",
+        payeeName: "HIMANSHU KUMAR DUBEY",
+        razorpayKeyId: "",
+        razorpayKeySecret: "",
+        razorpayWebhookSecret: "",
+        cashfreeAppId: "",
+        cashfreeSecretKey: "",
+        cashfreeEnv: "sandbox",
+        defaultAdvanceAmount: 299,
+        enableRazorpay: true,
+        enableDirectUpi: true,
+        enableCashToDriver: true,
+        enableTokenAdvance: true,
+        autoConfirmOnAdvance: true
+      }
+    };
+  }
+
+  static async adminUpdatePaymentSettings(settings, token) {
+    return await this.request("/api/admin/payment-settings", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(settings)
+    });
+  }
+
   static async adminGetWalletLedger(token) {
     return await this.request("/api/admin/wallet-ledger", {
       headers: { Authorization: `Bearer ${token}` }

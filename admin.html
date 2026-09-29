@@ -633,6 +633,9 @@
         <button type="button" class="admin-nav-tab" id="main-tab-payments" onclick="switchMainTab('payments')">
           💳 Payments &amp; UTR Verification
         </button>
+        <button type="button" class="admin-nav-tab" id="main-tab-pay-settings" onclick="switchMainTab('pay-settings')">
+          ⚙️ Payment &amp; Gateway Settings
+        </button>
         <button type="button" class="admin-nav-tab" id="main-tab-wallet" onclick="switchMainTab('wallet')">
           👛 Customer Wallet Ledger
         </button>
@@ -785,9 +788,15 @@
 
       <!-- ================= VIEW 2: PAYMENTS & VERIFICATION ================= -->
       <div id="view-payments" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-          <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Payment Transactions &amp; UTR Audit (Req 157, 158)</h3>
-          <button type="button" class="btn-action-sm btn-confirm" onclick="loadPayments()">↻ Refresh Payments</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="margin: 0; font-size: 17px; font-weight: 800;">Payment Transactions &amp; UTR Audit</h3>
+            <p style="font-size: 12.5px; color: var(--admin-muted); margin: 3px 0 0 0;">Review bank settlements, UPI UTR numbers, and manual dispatch verifications.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn-action-sm btn-assign" onclick="switchMainTab('pay-settings')">⚙️ Configure Gateways</button>
+            <button type="button" class="btn-action-sm btn-confirm" onclick="loadPayments()">↻ Refresh Payments</button>
+          </div>
         </div>
         <div class="admin-table-wrap">
           <table class="admin-table">
@@ -808,6 +817,155 @@
               <tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--admin-muted);">Loading payments...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 2B: PAYMENT & GATEWAY SETTINGS ================= -->
+      <div id="view-pay-settings" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h3 style="margin: 0; font-size: 17px; font-weight: 800;">⚙️ Payment Gateway &amp; UPI Collection Settings</h3>
+            <p style="font-size: 12.5px; color: var(--admin-muted); margin: 3px 0 0 0;">Manage live bank credentials, UPI QR VPA parameters, advance token amount, and passenger checkout options.</p>
+          </div>
+          <button type="button" class="btn-action-sm btn-confirm" onclick="savePaymentSettings()">💾 Save All Payment Settings</button>
+        </div>
+
+        <div id="pay-settings-alert" style="display: none; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; font-weight: 700;"></div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+          
+          <!-- Card 1: Direct UPI QR & VPA Collection -->
+          <div style="background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 12px; padding: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">📲</span>
+                <strong style="font-size: 14.5px; color: #f8fafc;">Direct PhonePe / BHIM UPI</strong>
+              </div>
+              <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 4px;">0% Gateway Fee</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">MERCHANT UPI ID (VPA) *</label>
+                <input type="text" id="set-upi-id" placeholder="e.g. 8002141816@ybl" value="8002141816@ybl" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #38bdf8; font-weight: 700; font-family: monospace; font-size: 13.5px; margin-top: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">PAYEE ACCOUNT NAME *</label>
+                <input type="text" id="set-payee-name" placeholder="e.g. HIMANSHU KUMAR DUBEY" value="HIMANSHU KUMAR DUBEY" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-weight: 700; font-size: 13.5px; margin-top: 4px;">
+              </div>
+              <div style="background: #0f172a; padding: 10px; border-radius: 6px; font-size: 11.5px; color: #cbd5e1; line-height: 1.4;">
+                💡 Directly generates dynamic PhonePe, GPay, Paytm, and BHIM intent buttons and QR codes on passenger checkout without 2% gateway deductions.
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Razorpay Indian Gateway -->
+          <div style="background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 12px; padding: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">💳</span>
+                <strong style="font-size: 14.5px; color: #f8fafc;">Razorpay Gateway (Instant Confirmation)</strong>
+              </div>
+              <span id="badge-rzp-status" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 4px;">Active / Ready</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">RAZORPAY KEY ID</label>
+                <input type="text" id="set-rzp-key-id" placeholder="rzp_live_... or rzp_test_..." style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-family: monospace; font-size: 12.5px; margin-top: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">RAZORPAY KEY SECRET</label>
+                <input type="password" id="set-rzp-key-secret" placeholder="Enter secret or leave blank to keep existing" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-size: 12.5px; margin-top: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">WEBHOOK SECRET (OPTIONAL)</label>
+                <input type="password" id="set-rzp-webhook-secret" placeholder="Enter webhook secret" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-size: 12.5px; margin-top: 4px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Token Advance Policy & Passenger Checkout Toggles -->
+          <div style="background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 12px; padding: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">🛡️</span>
+                <strong style="font-size: 14.5px; color: #f8fafc;">Advance Booking Policy &amp; Checkout</strong>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">DEFAULT TOKEN ADVANCE AMOUNT (₹)</label>
+                <div style="display: flex; align-items: center; margin-top: 4px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0 10px;">
+                  <span style="color: #34d399; font-weight: 800; font-size: 14px;">₹</span>
+                  <input type="number" id="set-adv-amount" value="299" min="0" max="5000" style="width: 100%; box-sizing: border-box; padding: 10px; background: transparent; border: none; color: white; font-weight: 800; font-size: 14px; outline: none;">
+                </div>
+              </div>
+
+              <div style="border-top: 1px dashed #334155; padding-top: 10px;">
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; display: block;">ENABLED CHECKOUT PAYMENT METHODS</label>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer;">
+                    <input type="checkbox" id="set-enable-rzp" checked>
+                    <span>⚡ Razorpay Online UPI / Cards Advance (Instant Confirm)</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer;">
+                    <input type="checkbox" id="set-enable-upi" checked>
+                    <span>📲 PhonePe / BHIM UPI QR Code Direct</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer;">
+                    <input type="checkbox" id="set-enable-cash" checked>
+                    <span>💵 100% Cash / UPI to Driver upon Arrival</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer;">
+                    <input type="checkbox" id="set-enable-token" checked>
+                    <span>🎟️ Token Advance Option (₹200 Confirm)</span>
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer;">
+                    <input type="checkbox" id="set-autoconfirm" checked>
+                    <span>✅ Auto-Confirm Ride on Verified Advance Payment</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Cashfree PG (Optional Backup) -->
+          <div style="background: var(--admin-card); border: 1px solid var(--admin-border); border-radius: 12px; padding: 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">🏦</span>
+                <strong style="font-size: 14.5px; color: #f8fafc;">Cashfree PG (Secondary Backup)</strong>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">CASHFREE APP ID</label>
+                <input type="text" id="set-cf-app-id" placeholder="e.g. CF_APP_12345" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-family: monospace; font-size: 12.5px; margin-top: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">CASHFREE SECRET KEY</label>
+                <input type="password" id="set-cf-secret" placeholder="Enter secret or leave blank" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; font-size: 12.5px; margin-top: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">ENVIRONMENT</label>
+                <select id="set-cf-env" style="width: 100%; box-sizing: border-box; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; margin-top: 4px;">
+                  <option value="sandbox">Sandbox (Testing)</option>
+                  <option value="production">Production (Live)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" class="btn-action-sm btn-confirm" style="padding: 12px 24px; font-size: 14px;" onclick="savePaymentSettings()">
+            💾 Save Payment Settings
+          </button>
         </div>
       </div>
 
@@ -1797,7 +1955,7 @@
 
     function switchMainTab(tabName) {
       _currentMainTab = tabName;
-      const tabs = ["leads", "bookings", "payments", "wallet", "drivers", "vehicles", "coupons", "audit"];
+      const tabs = ["leads", "bookings", "payments", "pay-settings", "wallet", "drivers", "vehicles", "coupons", "audit"];
       tabs.forEach(t => {
         const view = document.getElementById(`view-${t}`);
         const btn = document.getElementById(`main-tab-${t}`);
@@ -1808,6 +1966,7 @@
       if (tabName === "leads") loadLeads();
       else if (tabName === "bookings") loadBookings();
       else if (tabName === "payments") loadPayments();
+      else if (tabName === "pay-settings") loadPaymentSettings();
       else if (tabName === "wallet") loadWallet();
       else if (tabName === "drivers") {
         renderDriversGrid();
@@ -2362,27 +2521,143 @@
     async function loadPayments() {
       const res = await ApiClient.adminGetPayments(_adminToken);
       const tbody = document.getElementById("admin-payments-tbody");
+      if (!tbody) return;
       if (!res || !res.success || !res.payments || res.payments.length === 0) {
         tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 30px; color: var(--admin-muted);">No payment transactions found.</td></tr>`;
         return;
       }
-      tbody.innerHTML = res.payments.map(p => `
-        <tr>
-          <td><code style="color: #38bdf8;">${p.id}</code></td>
-          <td><strong>${p.bookingId}</strong></td>
-          <td>${p.passengerPhone || 'N/A'}</td>
-          <td><strong>₹${(p.amount || 0).toLocaleString('en-IN')}</strong></td>
-          <td>${p.method}</td>
-          <td><span class="admin-status-badge ${p.status.includes('PAID') ? 'status-COMPLETED' : 'status-REQUESTED'}">${p.status}</span></td>
-          <td>${p.upiUtr ? `<code style="color: #34d399;">${p.upiUtr}</code>` : '<span style="color:#94a3b8;">Pending UTR</span>'}</td>
-          <td>${p.verifiedBy || 'Unverified'}</td>
-          <td>
-            ${!p.status.includes('PAID') ? `
-              <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${p.bookingId}')">Verify</button>
-            ` : '✓ Verified'}
-          </td>
-        </tr>
-      `).join("");
+      tbody.innerHTML = res.payments.map(p => {
+        const statusStr = String(p.status || 'PENDING');
+        const isPaid = statusStr.toUpperCase().includes('PAID');
+        const txnId = p.id || p.orderId || p.paymentId || 'TXN';
+        const bId = p.bookingId || 'N/A';
+        const phone = p.passengerPhone || 'N/A';
+        const method = p.method || p.provider || 'UPI / Online';
+        const utr = p.upiUtr || p.signature || '';
+        const verifiedBy = p.verifiedBy || (isPaid ? 'Auto Verified' : 'Unverified');
+        return `
+          <tr>
+            <td><code style="color: #38bdf8;">${txnId}</code></td>
+            <td><strong>${bId}</strong></td>
+            <td>${phone}</td>
+            <td><strong>₹${(p.amount || 0).toLocaleString('en-IN')}</strong></td>
+            <td>${method}</td>
+            <td><span class="admin-status-badge ${isPaid ? 'status-COMPLETED' : 'status-REQUESTED'}">${statusStr}</span></td>
+            <td>${utr ? `<code style="color: #34d399;">${utr}</code>` : '<span style="color:#94a3b8;">Pending UTR</span>'}</td>
+            <td>${verifiedBy}</td>
+            <td>
+              ${!isPaid && bId !== 'N/A' ? `
+                <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${bId}')">Verify</button>
+              ` : (isPaid ? '✓ Verified' : '—')}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // Payment & Gateway Settings Controller
+    async function loadPaymentSettings() {
+      const alertEl = document.getElementById("pay-settings-alert");
+      if (alertEl) alertEl.style.display = "none";
+
+      try {
+        const res = await ApiClient.adminGetPaymentSettings(_adminToken);
+        if (res && res.success && res.settings) {
+          const s = res.settings;
+          const setVal = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+          const setChk = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.checked = Boolean(val); };
+
+          setVal("set-upi-id", s.upiId || "8002141816@ybl");
+          setVal("set-payee-name", s.payeeName || "HIMANSHU KUMAR DUBEY");
+          setVal("set-rzp-key-id", s.razorpayKeyId || "");
+          setVal("set-rzp-key-secret", s.razorpayKeySecret || "");
+          setVal("set-rzp-webhook-secret", s.razorpayWebhookSecret || "");
+          setVal("set-adv-amount", s.defaultAdvanceAmount || 299);
+          setVal("set-cf-app-id", s.cashfreeAppId || "");
+          setVal("set-cf-secret", s.cashfreeSecretKey || "");
+          setVal("set-cf-env", s.cashfreeEnv || "sandbox");
+
+          setChk("set-enable-rzp", s.enableRazorpay !== false);
+          setChk("set-enable-upi", s.enableDirectUpi !== false);
+          setChk("set-enable-cash", s.enableCashToDriver !== false);
+          setChk("set-enable-token", s.enableTokenAdvance !== false);
+          setChk("set-autoconfirm", s.autoConfirmOnAdvance !== false);
+
+          const rzpBadge = document.getElementById("badge-rzp-status");
+          if (rzpBadge) {
+            if (s.razorpayKeyId && s.razorpayKeySecretSet) {
+              rzpBadge.style.background = "rgba(16, 185, 129, 0.15)";
+              rzpBadge.style.color = "#34d399";
+              rzpBadge.textContent = "✓ Live Keys Connected";
+            } else {
+              rzpBadge.style.background = "rgba(56, 189, 248, 0.15)";
+              rzpBadge.style.color = "#38bdf8";
+              rzpBadge.textContent = "⚡ Demo / Sandbox Mode";
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Payment settings load note:", err);
+      }
+    }
+
+    async function savePaymentSettings() {
+      const alertEl = document.getElementById("pay-settings-alert");
+      if (alertEl) {
+        alertEl.style.display = "block";
+        alertEl.style.background = "rgba(56, 189, 248, 0.15)";
+        alertEl.style.color = "#38bdf8";
+        alertEl.style.border = "1px solid #0284c7";
+        alertEl.textContent = "⏳ Saving and activating payment settings across all portals...";
+      }
+
+      const getVal = (id) => document.getElementById(id)?.value?.trim() || "";
+      const getChk = (id) => Boolean(document.getElementById(id)?.checked);
+
+      const payload = {
+        upiId: getVal("set-upi-id") || "8002141816@ybl",
+        payeeName: getVal("set-payee-name") || "HIMANSHU KUMAR DUBEY",
+        razorpayKeyId: getVal("set-rzp-key-id"),
+        razorpayKeySecret: getVal("set-rzp-key-secret"),
+        razorpayWebhookSecret: getVal("set-rzp-webhook-secret"),
+        defaultAdvanceAmount: parseInt(getVal("set-adv-amount"), 10) || 299,
+        cashfreeAppId: getVal("set-cf-app-id"),
+        cashfreeSecretKey: getVal("set-cf-secret"),
+        cashfreeEnv: getVal("set-cf-env") || "sandbox",
+        enableRazorpay: getChk("set-enable-rzp"),
+        enableDirectUpi: getChk("set-enable-upi"),
+        enableCashToDriver: getChk("set-enable-cash"),
+        enableTokenAdvance: getChk("set-enable-token"),
+        autoConfirmOnAdvance: getChk("set-autoconfirm")
+      };
+
+      try {
+        const res = await ApiClient.adminUpdatePaymentSettings(payload, _adminToken);
+        if (res && res.success) {
+          if (alertEl) {
+            alertEl.style.background = "rgba(16, 185, 129, 0.15)";
+            alertEl.style.color = "#34d399";
+            alertEl.style.border = "1px solid #10b981";
+            alertEl.textContent = "✓ Payment settings successfully saved and active across Passenger & Admin portals!";
+          }
+          await loadPaymentSettings();
+        } else {
+          if (alertEl) {
+            alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+            alertEl.style.color = "#fca5a5";
+            alertEl.style.border = "1px solid #ef4444";
+            alertEl.textContent = res?.message || "Failed to update payment settings.";
+          }
+        }
+      } catch (err) {
+        console.error("Save payment settings error:", err);
+        if (alertEl) {
+          alertEl.style.background = "rgba(239, 68, 68, 0.15)";
+          alertEl.style.color = "#fca5a5";
+          alertEl.style.border = "1px solid #ef4444";
+          alertEl.textContent = "Network error saving payment settings. Please try again.";
+        }
+      }
     }
 
     // Wallet View

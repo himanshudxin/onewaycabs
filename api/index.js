@@ -1154,18 +1154,21 @@ module.exports = async (req, res) => {
     }
 
     // -------------------------------------------------------------
-    // 8B. ENTERPRISE PAYMENT GATEWAY (Razorpay & Cashfree)
+    // 8B. ENTERPRISE PAYMENT GATEWAY (Razorpay, Cashfree & UPI Settings)
     // -------------------------------------------------------------
     if (pathname === '/payments/config' && method === 'GET') {
+      const paymentSettings = db.settings?.payment || null;
       return sendJson(200, {
         success: true,
-        ...paymentService.getPaymentConfig()
+        ...paymentService.getPaymentConfig(paymentSettings)
       });
     }
 
     if (pathname === '/payments/create-order' && method === 'POST') {
       const { amount, bookingId, passengerName, passengerPhone, notes } = body;
-      const orderAmount = Number(amount) || 299; // Default token advance ₹299
+      const paymentSettings = db.settings?.payment || null;
+      const defaultAmt = paymentSettings?.defaultAdvanceAmount || 299;
+      const orderAmount = Number(amount) || defaultAmt;
       
       try {
         const orderResult = await paymentService.createRazorpayOrder({
@@ -1174,7 +1177,7 @@ module.exports = async (req, res) => {
           passengerName: passengerName || 'Passenger',
           passengerPhone: passengerPhone || '',
           notes: notes || {}
-        });
+        }, paymentSettings);
 
         // Record initial pending payment in database
         await dbService.recordPayment({
@@ -1196,12 +1199,13 @@ module.exports = async (req, res) => {
 
     if (pathname === '/payments/verify' && method === 'POST') {
       const { orderId, paymentId, signature, bookingId, amount } = body;
+      const paymentSettings = db.settings?.payment || null;
       
       const verification = paymentService.verifyRazorpayPayment({
         orderId,
         paymentId,
         signature
-      });
+      }, paymentSettings);
 
       if (!verification.verified) {
         return sendJson(400, {
@@ -1211,7 +1215,8 @@ module.exports = async (req, res) => {
         });
       }
 
-      const advanceAmt = Number(amount) || 299;
+      const defaultAmt = paymentSettings?.defaultAdvanceAmount || 299;
+      const advanceAmt = Number(amount) || defaultAmt;
 
       // Update payment record in database
       await dbService.recordPayment({
@@ -1234,6 +1239,7 @@ module.exports = async (req, res) => {
           b.paymentStatus = 'PARTIALLY PAID (Token Advance Verified)';
           b.paymentMethod = 'Razorpay UPI / Cards';
           b.bookingStatus = 'CONFIRMED';
+          if (!b.statusHistory) b.statusHistory = [];
           b.statusHistory.push({
             status: 'CONFIRMED',
             timestamp: new Date().toISOString(),
@@ -1266,8 +1272,9 @@ module.exports = async (req, res) => {
     if (pathname === '/payments/webhook' && method === 'POST') {
       const webhookSignature = req.headers['x-razorpay-signature'] || '';
       const rawBody = JSON.stringify(body);
+      const paymentSettings = db.settings?.payment || null;
       
-      const isAuthentic = paymentService.verifyRazorpayWebhook(rawBody, webhookSignature);
+      const isAuthentic = paymentService.verifyRazorpayWebhook(rawBody, webhookSignature, paymentSettings);
       if (!isAuthentic && process.env.RAZORPAY_WEBHOOK_SECRET) {
         return sendJson(400, { success: false, message: 'Invalid webhook signature' });
       }
@@ -1280,7 +1287,7 @@ module.exports = async (req, res) => {
           const b = (db.bookings || []).find(x => x.bookingId === bId);
           if (b) {
             b.advancePaid = (payload.amount || 29900) / 100;
-            b.balanceDue = Math.max(0, b.totalFare - b.advancePaid);
+            b.balanceDue = Math.max(0, (b.totalFare || 0) - b.advancePaid);
             b.paymentStatus = 'PARTIALLY PAID (Webhook Verified)';
             b.bookingStatus = 'CONFIRMED';
             saveDb(db);
@@ -1289,6 +1296,95 @@ module.exports = async (req, res) => {
       }
 
       return sendJson(200, { status: 'ok' });
+    }
+
+    // -------------------------------------------------------------
+    // 8B-2. ADMIN PAYMENT SETTINGS (CRUD)
+    // -------------------------------------------------------------
+    if (pathname === '/admin/payment-settings' && method === 'GET') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      if (!db.settings) db.settings = {};
+      if (!db.settings.payment) {
+        db.settings.payment = {
+          upiId: '8002141816@ybl',
+          payeeName: 'HIMANSHU KUMAR DUBEY',
+          razorpayKeyId: process.env.RAZORPAY_KEY_ID || '',
+          razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET || '',
+          razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
+          cashfreeAppId: process.env.CASHFREE_APP_ID || '',
+          cashfreeSecretKey: process.env.CASHFREE_SECRET_KEY || '',
+          cashfreeEnv: process.env.CASHFREE_ENV || 'sandbox',
+          defaultAdvanceAmount: 299,
+          enableRazorpay: true,
+          enableDirectUpi: true,
+          enableCashToDriver: true,
+          enableTokenAdvance: true,
+          autoConfirmOnAdvance: true
+        };
+        saveDb(db);
+      }
+
+      return sendJson(200, {
+        success: true,
+        settings: paymentService.getAdminPaymentConfig(db.settings.payment)
+      });
+    }
+
+    if (pathname === '/admin/payment-settings' && method === 'POST') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      if (!db.settings) db.settings = {};
+      if (!db.settings.payment) db.settings.payment = {};
+
+      const current = db.settings.payment;
+
+      // Update fields, preserving existing secrets if placeholder/masked string sent
+      const isMasked = (str) => typeof str === 'string' && (str.includes('••••') || str === '******');
+
+      if (body.upiId !== undefined) current.upiId = String(body.upiId).trim();
+      if (body.payeeName !== undefined) current.payeeName = String(body.payeeName).trim();
+      if (body.razorpayKeyId !== undefined) current.razorpayKeyId = String(body.razorpayKeyId).trim();
+      if (body.razorpayKeySecret !== undefined && !isMasked(body.razorpayKeySecret)) {
+        current.razorpayKeySecret = String(body.razorpayKeySecret).trim();
+      }
+      if (body.razorpayWebhookSecret !== undefined && !isMasked(body.razorpayWebhookSecret)) {
+        current.razorpayWebhookSecret = String(body.razorpayWebhookSecret).trim();
+      }
+      if (body.cashfreeAppId !== undefined) current.cashfreeAppId = String(body.cashfreeAppId).trim();
+      if (body.cashfreeSecretKey !== undefined && !isMasked(body.cashfreeSecretKey)) {
+        current.cashfreeSecretKey = String(body.cashfreeSecretKey).trim();
+      }
+      if (body.cashfreeEnv !== undefined) current.cashfreeEnv = String(body.cashfreeEnv).trim();
+      if (body.defaultAdvanceAmount !== undefined) current.defaultAdvanceAmount = parseInt(body.defaultAdvanceAmount, 10) || 299;
+      if (body.enableRazorpay !== undefined) current.enableRazorpay = Boolean(body.enableRazorpay);
+      if (body.enableDirectUpi !== undefined) current.enableDirectUpi = Boolean(body.enableDirectUpi);
+      if (body.enableCashToDriver !== undefined) current.enableCashToDriver = Boolean(body.enableCashToDriver);
+      if (body.enableTokenAdvance !== undefined) current.enableTokenAdvance = Boolean(body.enableTokenAdvance);
+      if (body.autoConfirmOnAdvance !== undefined) current.autoConfirmOnAdvance = Boolean(body.autoConfirmOnAdvance);
+
+      paymentService.updateDynamicConfig(current);
+
+      if (!db.audit_logs) db.audit_logs = [];
+      db.audit_logs.push({
+        id: `AUD_${Date.now()}`,
+        entity: 'PAYMENT_SETTINGS',
+        entityId: 'global_payment_config',
+        action: 'UPDATE_PAYMENT_SETTINGS',
+        actor: admin.username || 'admin',
+        details: `Updated payment gateway & UPI configuration (UPI ID: ${current.upiId}, Token Advance: ₹${current.defaultAdvanceAmount})`,
+        createdAt: new Date().toISOString()
+      });
+
+      saveDb(db);
+
+      return sendJson(200, {
+        success: true,
+        message: 'Payment configuration updated successfully!',
+        settings: paymentService.getAdminPaymentConfig(current)
+      });
     }
 
     // -------------------------------------------------------------
