@@ -24,6 +24,14 @@
       "email": "",
       "walletBalance": 0,
       "createdAt": "2026-09-29T16:06:14.441Z"
+    },
+    {
+      "id": "usr_9876500001",
+      "name": "Ananya Sharma",
+      "phone": "+91 9876500001",
+      "email": "",
+      "walletBalance": 100,
+      "createdAt": "2026-09-29T16:40:32.841Z"
     }
   ],
   "sessions": [
@@ -46,9 +54,192 @@
       "phone": "+91 6206494214",
       "role": "customer",
       "createdAt": "2026-09-29T15:30:36.759Z"
+    },
+    {
+      "token": "drv_sess_fd64acb0ecba3e9ef7ac59fadac6136a",
+      "driverId": "drv_9876543210",
+      "role": "driver",
+      "createdAt": "2026-09-29T16:38:08.054Z"
+    },
+    {
+      "token": "drv_sess_7c58dddbe8df8931257fdf16c75b73e1",
+      "driverId": "drv_9876543210",
+      "role": "driver",
+      "createdAt": "2026-09-29T16:38:08.077Z"
+    },
+    {
+      "token": "drv_sess_f74a28a1c96df4eea628958aa87cfb42",
+      "driverId": "drv_9876543210",
+      "role": "driver",
+      "createdAt": "2026-09-29T16:40:32.796Z"
+    },
+    {
+      "token": "drv_sess_9a6c2a6840bba70dfbfee845ad7b6dad",
+      "driverId": "drv_9876543210",
+      "role": "driver",
+      "createdAt": "2026-09-29T16:40:32.814Z"
     }
   ],
   "bookings": [
+    {
+      "bookingId": "OTB-2026-3980",
+      "tripOtp": "3561",
+      "customerId": "usr_9876500001",
+      "paymentTxnId": "TXN_1790700032841_4081",
+      "passengerName": "Ananya Sharma",
+      "passengerPhone": "+91 9876500001",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "pickupAddress": "Boring Road, Patna",
+      "dropAddress": "Bodhgaya Temple Gate, Gaya",
+      "pickupDate": "2026-10-02",
+      "pickupTime": "08:30 AM",
+      "distanceKm": 35,
+      "duration": "0h 46m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 35,
+        "duration": "0h 46m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 875,
+        "extraKm": 20,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 28,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "totalFare": 2198,
+      "originalFare": 2198,
+      "walletUsed": 0,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "paymentMethod": "Cash / UPI to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "bookingStatus": "COMPLETED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": {
+        "name": "Santosh Chauffeur",
+        "phone": "+91 9876543210",
+        "vehicleNumber": "BR 01 PB PENDING",
+        "vehicleModel": "Swift Dzire (Prime Sedan)",
+        "rating": 5
+      },
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-09-29T16:40:32.841Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        },
+        {
+          "status": "ACCEPTED",
+          "timestamp": "2026-09-29T16:40:32.863Z",
+          "actor": "Driver (Santosh Chauffeur)",
+          "note": "Chauffeur Santosh Chauffeur accepted trip from live queue"
+        },
+        {
+          "status": "ON THE WAY",
+          "timestamp": "2026-09-29T16:40:32.870Z",
+          "actor": "Driver (Santosh Chauffeur)",
+          "note": "Chauffeur updated status to ON THE WAY"
+        },
+        {
+          "status": "ARRIVED",
+          "timestamp": "2026-09-29T16:40:32.884Z",
+          "actor": "Driver (Santosh Chauffeur)",
+          "note": "Chauffeur updated status to ARRIVED"
+        },
+        {
+          "status": "TRIP STARTED",
+          "timestamp": "2026-09-29T16:40:32.899Z",
+          "actor": "Driver (Santosh Chauffeur)",
+          "note": "Chauffeur updated status to TRIP STARTED"
+        },
+        {
+          "status": "COMPLETED",
+          "timestamp": "2026-09-29T16:40:32.916Z",
+          "actor": "Driver (Santosh Chauffeur)",
+          "note": "Chauffeur updated status to COMPLETED"
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-3980\n*Passenger:* Ananya Sharma (+91 9876500001)\n*Route:* Patna ➔ Gaya (35 KM)\n*Schedule:* 2026-10-02 at 08:30 AM\n*Total Fare:* ₹2198 (Advance: ₹0, Balance Due: ₹2198)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-3980%0A*Passenger%3A*%20Ananya%20Sharma%20(%2B91%209876500001)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92198",
+      "createdAt": "2026-09-29T16:40:32.841Z",
+      "assignedDriverId": "drv_9876543210",
+      "assignedDriverName": "Santosh Chauffeur",
+      "assignedDriverPhone": "+91 9876543210",
+      "assignedVehicleNumber": "BR 01 PB PENDING",
+      "assignedVehicleModel": "Swift Dzire (Prime Sedan)"
+    },
+    {
+      "bookingId": "OTB-2026-4381",
+      "tripOtp": "7264",
+      "customerId": "usr_6206494214",
+      "paymentTxnId": "TXN_1790699004903_7321",
+      "passengerName": "aman kumar",
+      "passengerPhone": "+91 6206494214",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "pickupAddress": "Patna City Area",
+      "dropAddress": "Gaya City Area",
+      "pickupDate": "2026-09-29",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 104,
+      "duration": "2h 18m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 104,
+        "duration": "2h 18m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 2600,
+        "extraKm": 89,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 82,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2600
+      },
+      "totalFare": 2600,
+      "originalFare": 2600,
+      "walletUsed": 0,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 299,
+      "balanceDue": 2301,
+      "paymentMethod": "Razorpay Online Advance (₹299)",
+      "paymentStatus": "PARTIALLY PAID (Awaiting Advance Verification)",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-09-29T16:23:24.903Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-4381\n*Passenger:* aman kumar (+91 6206494214)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-09-29 at 10:00 AM\n*Total Fare:* ₹2600 (Advance: ₹299, Balance Due: ₹2301)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-4381%0A*Passenger%3A*%20aman%20kumar%20(%2B91%206206494214)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92600",
+      "createdAt": "2026-09-29T16:23:24.903Z"
+    },
     {
       "bookingId": "OTB-2026-5057",
       "tripOtp": "3870",
@@ -276,25 +467,88 @@
       "createdAt": "2026-09-29T14:09:24.563Z"
     }
   ],
-  "drivers": [],
+  "drivers": [
+    {
+      "id": "drv_9876543210",
+      "name": "Santosh Chauffeur",
+      "phone": "+91 9876543210",
+      "pin": "9999",
+      "vehicleModel": "Swift Dzire (Prime Sedan)",
+      "vehicleNumber": "BR 01 PB PENDING",
+      "isVerified": false,
+      "status": "PENDING_VERIFICATION",
+      "rating": 5,
+      "totalTrips": 1,
+      "applicationId": "DRV-APP-3719",
+      "city": "Patna",
+      "licenseNumber": "DL PENDING",
+      "experienceYears": "3+",
+      "dutyStatus": "ON_DUTY",
+      "earningsToday": 1868,
+      "kmToday": 35,
+      "helpline": "6206494214",
+      "createdAt": "2026-09-29T16:40:32.794Z"
+    }
+  ],
   "payments": [
     {
-      "id": "TXN_1790697974441_9742",
-      "bookingId": "OTB-2026-5057",
-      "customerId": "usr_9876585360",
-      "passengerPhone": "+91 9876585360",
-      "amount": 1898,
+      "id": "TXN_1790700032841_4081",
+      "bookingId": "OTB-2026-3980",
+      "customerId": "usr_9876500001",
+      "passengerPhone": "+91 9876500001",
+      "amount": 2198,
       "advancePaid": 0,
-      "balanceDue": 1898,
-      "originalAmount": 1998,
-      "walletDeducted": 100,
+      "balanceDue": 2198,
+      "originalAmount": 2198,
+      "walletDeducted": 0,
       "couponDiscount": 0,
       "method": "Cash / UPI to Driver",
       "status": "PAYABLE TO DRIVER",
       "upiUtr": "",
       "verifiedBy": null,
       "verifiedAt": null,
-      "createdAt": "2026-09-29T16:06:14.441Z"
+      "createdAt": "2026-09-29T16:40:32.841Z"
+    },
+    {
+      "id": "TXN_1790699004903_7321",
+      "bookingId": "OTB-2026-4381",
+      "customerId": "usr_6206494214",
+      "passengerPhone": "+91 6206494214",
+      "amount": 2600,
+      "advancePaid": 299,
+      "balanceDue": 2301,
+      "originalAmount": 2600,
+      "walletDeducted": 0,
+      "couponDiscount": 0,
+      "method": "Razorpay Online Advance (₹299)",
+      "status": "PARTIALLY PAID (Awaiting Advance Verification)",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-09-29T16:23:24.903Z"
+    },
+    {
+      "id": "TXN_1790697974441_9742",
+      "bookingId": "OTB-2026-5147",
+      "customerId": "usr_9876585360",
+      "passengerPhone": "6206494214",
+      "amount": 299,
+      "advancePaid": 0,
+      "balanceDue": 1898,
+      "originalAmount": 1998,
+      "walletDeducted": 100,
+      "couponDiscount": 0,
+      "method": "Cash / UPI to Driver",
+      "status": "ORDER_CREATED",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-09-29T16:06:14.441Z",
+      "orderId": "order_demo_1790699004787",
+      "currency": "INR",
+      "provider": "razorpay_sandbox",
+      "isSandbox": true,
+      "updatedAt": "2026-09-29T16:23:24.788Z"
     },
     {
       "id": "TXN_1790697974427_2814",
@@ -458,6 +712,60 @@
       "actor": "+91 9876585360",
       "details": "Patna → Muzaffarpur for ₹1898 (Cash / UPI to Driver)",
       "createdAt": "2026-09-29T16:06:14.441Z"
+    },
+    {
+      "id": "AUD_1790699004903",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-4381",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 6206494214",
+      "details": "Patna → Gaya for ₹2600 (Razorpay Online Advance (₹299))",
+      "createdAt": "2026-09-29T16:23:24.903Z"
+    },
+    {
+      "id": "AUD_1790700032841",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-3980",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 9876500001",
+      "details": "undefined → undefined for ₹2198 (Cash / UPI to Driver)",
+      "createdAt": "2026-09-29T16:40:32.841Z"
+    },
+    {
+      "id": "AUD_1790700032870",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-3980",
+      "action": "DRIVER_STATUS_UPDATE",
+      "actor": "driver_drv_9876543210",
+      "details": "Status set to ON THE WAY",
+      "createdAt": "2026-09-29T16:40:32.870Z"
+    },
+    {
+      "id": "AUD_1790700032884",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-3980",
+      "action": "DRIVER_STATUS_UPDATE",
+      "actor": "driver_drv_9876543210",
+      "details": "Status set to ARRIVED",
+      "createdAt": "2026-09-29T16:40:32.884Z"
+    },
+    {
+      "id": "AUD_1790700032899",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-3980",
+      "action": "DRIVER_STATUS_UPDATE",
+      "actor": "driver_drv_9876543210",
+      "details": "Status set to TRIP STARTED",
+      "createdAt": "2026-09-29T16:40:32.899Z"
+    },
+    {
+      "id": "AUD_1790700032916",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-3980",
+      "action": "DRIVER_STATUS_UPDATE",
+      "actor": "driver_drv_9876543210",
+      "details": "Status set to COMPLETED",
+      "createdAt": "2026-09-29T16:40:32.916Z"
     }
   ],
   "admins": [
@@ -471,6 +779,38 @@
   ],
   "reviews": [],
   "leads": [
+    {
+      "id": "LEAD_DRV_1790700032795",
+      "customerPhone": "+91 9876543210",
+      "phone": "+91 9876543210",
+      "passengerName": "[Chauffeur Partner] Santosh Chauffeur",
+      "name": "Santosh Chauffeur",
+      "source": "Driver Partner App Onboarding",
+      "status": "NEW_DRIVER_REGISTRATION",
+      "city": "Patna",
+      "cabCategory": "Commercial Cab",
+      "vehicleNumber": "Pending Verification",
+      "licenseNumber": "Pending Verification",
+      "helpline": "6206494214",
+      "notes": "New chauffeur Santosh Chauffeur (+91 9876543210) signed up with vehicle undefined. Online verification hotline: 6206494214.",
+      "createdAt": "2026-09-29T16:40:32.795Z"
+    },
+    {
+      "id": "LEAD_DRV_1790699888053",
+      "customerPhone": "+91 9876543210",
+      "phone": "+91 9876543210",
+      "passengerName": "[Chauffeur Partner] Ramesh Kumar",
+      "name": "Ramesh Kumar",
+      "source": "Driver Partner App Onboarding",
+      "status": "NEW_DRIVER_REGISTRATION",
+      "city": "Patna",
+      "cabCategory": "Commercial Cab",
+      "vehicleNumber": "Pending Verification",
+      "licenseNumber": "Pending Verification",
+      "helpline": "6206494214",
+      "notes": "New chauffeur Ramesh Kumar (+91 9876543210) signed up with vehicle undefined. Online verification hotline: 6206494214.",
+      "createdAt": "2026-09-29T16:38:08.053Z"
+    },
     {
       "id": "LEAD_1790695826013_806",
       "phone": "+91 6206494214",
@@ -490,7 +830,7 @@
       "status": "NEW",
       "notes": "",
       "createdAt": "2026-09-29T15:30:26.013Z",
-      "updatedAt": "2026-09-29T15:30:40.416Z"
+      "updatedAt": "2026-09-29T16:23:19.456Z"
     },
     {
       "id": "LEAD_1790690936710_760",
@@ -520,7 +860,45 @@
   "routes": [],
   "fare_rules": [],
   "invoices": [],
-  "notifications": [],
+  "notifications": [
+    {
+      "id": "NOTIF_ACCEPT_1790700032863",
+      "type": "TRIP_ACCEPTED_BY_DRIVER",
+      "title": "Trip OTB-2026-3980 Accepted",
+      "message": "Chauffeur Santosh Chauffeur accepted Patna ➔ Gaya. Customer: +91 9876500001.",
+      "createdAt": "2026-09-29T16:40:32.863Z"
+    },
+    {
+      "id": "NOTIF_LOGIN_1790700032814",
+      "type": "DRIVER_LOGGED_IN",
+      "title": "🟢 Driver Online: Santosh Chauffeur",
+      "message": "Chauffeur Santosh Chauffeur (+91 9876543210) is active on duty. Direct Contact: +91 9876543210, Admin Support: 6206494214.",
+      "createdAt": "2026-09-29T16:40:32.814Z"
+    },
+    {
+      "id": "NOTIF_DRV_1790700032795",
+      "type": "NEW_DRIVER_REGISTERED",
+      "title": "🚖 New Driver Registered: Santosh Chauffeur",
+      "message": "Chauffeur Santosh Chauffeur (+91 9876543210) from Patna joined fleet with undefined. Document verification helpline: 6206494214.",
+      "driverPhone": "+91 9876543210",
+      "createdAt": "2026-09-29T16:40:32.795Z"
+    },
+    {
+      "id": "NOTIF_LOGIN_1790699888078",
+      "type": "DRIVER_LOGGED_IN",
+      "title": "🟢 Driver Online: Ramesh Kumar",
+      "message": "Chauffeur Ramesh Kumar (+91 9876543210) is active on duty. Direct Contact: +91 9876543210, Admin Support: 6206494214.",
+      "createdAt": "2026-09-29T16:38:08.078Z"
+    },
+    {
+      "id": "NOTIF_DRV_1790699888053",
+      "type": "NEW_DRIVER_REGISTERED",
+      "title": "🚖 New Driver Registered: Ramesh Kumar",
+      "message": "Chauffeur Ramesh Kumar (+91 9876543210) from Patna joined fleet with undefined. Document verification helpline: 6206494214.",
+      "driverPhone": "+91 9876543210",
+      "createdAt": "2026-09-29T16:38:08.053Z"
+    }
+  ],
   "vehicles": [
     {
       "id": "veh_01",
@@ -639,7 +1017,64 @@
   ],
   "support_tickets": [],
   "ai_events": [],
-  "driver_applications": [],
+  "driver_applications": [
+    {
+      "id": "drv_9876543210",
+      "applicationId": "DRV-APP-3719",
+      "name": "Santosh Chauffeur",
+      "phone": "+91 9876543210",
+      "pin": "9999",
+      "city": "Patna",
+      "vehicleModel": "Swift Dzire (Prime Sedan)",
+      "vehicleNumber": "BR 01 PB PENDING",
+      "licenseNumber": "DL PENDING",
+      "experienceYears": "3+",
+      "isVerified": false,
+      "dutyStatus": "ON_DUTY",
+      "status": "PENDING_VERIFICATION",
+      "rating": 5,
+      "totalTrips": 0,
+      "earningsToday": 0,
+      "kmToday": 0,
+      "helpline": "6206494214",
+      "createdAt": "2026-09-29T16:40:32.794Z"
+    },
+    {
+      "id": "drv_9876543210",
+      "applicationId": "DRV-APP-1480",
+      "name": "Ramesh Kumar",
+      "phone": "+91 9876543210",
+      "pin": "4321",
+      "city": "Patna",
+      "vehicleModel": "Swift Dzire (Prime Sedan)",
+      "vehicleNumber": "BR 01 PB PENDING",
+      "licenseNumber": "DL PENDING",
+      "experienceYears": "3+",
+      "isVerified": false,
+      "dutyStatus": "ON_DUTY",
+      "status": "PENDING_VERIFICATION",
+      "rating": 5,
+      "totalTrips": 0,
+      "earningsToday": 0,
+      "kmToday": 0,
+      "helpline": "6206494214",
+      "createdAt": "2026-09-29T16:38:08.051Z"
+    },
+    {
+      "applicationId": "DRV-APP-2356",
+      "id": "drv_9876543210",
+      "name": "Ramesh Kumar",
+      "phone": "+91 9876543210",
+      "city": "Patna",
+      "vehicleModel": "Commercial Taxi",
+      "vehicleNumber": "Pending",
+      "licenseNumber": "Pending",
+      "experienceYears": "3+",
+      "isVerified": false,
+      "status": "PENDING_VERIFICATION",
+      "createdAt": "2026-09-29T16:36:35.620Z"
+    }
+  ],
   "settings": {
     "payment": {
       "upiId": "8002141816@ybl",

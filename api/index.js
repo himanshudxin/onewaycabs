@@ -1749,6 +1749,11 @@ module.exports = async (req, res) => {
       return sendJson(200, { success: true, drivers: db.drivers || [] });
     }
 
+    if (pathname === '/admin/notifications' && method === 'GET') {
+      const notifs = (db.notifications || []).slice(0, 50);
+      return sendJson(200, { success: true, notifications: notifs, count: notifs.length });
+    }
+
     if (pathname === '/admin/audit-logs' && method === 'GET') {
       const admin = getSessionAdmin(req, db);
       if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
@@ -1951,10 +1956,10 @@ module.exports = async (req, res) => {
     }
 
     // -------------------------------------------------------------
-    // 10. DRIVER PARTNER APIS
+    // 10. DRIVER PARTNER APIS (Head-to-Toe Functional Fleet App)
     // -------------------------------------------------------------
     if (pathname === '/driver/signup' && method === 'POST') {
-      const { name, phone, city, vehicleModel, vehicleNumber, licenseNumber, experienceYears } = body;
+      const { name, phone, pin, city, vehicleModel, vehicleNumber, licenseNumber, experienceYears } = body;
       const cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
       if (cleanPhone.length !== 10) {
         return sendJson(400, { success: false, message: 'Please provide a valid 10-digit mobile number' });
@@ -1962,62 +1967,162 @@ module.exports = async (req, res) => {
       if (!name || !name.trim()) {
         return sendJson(400, { success: false, message: 'Full Name is required' });
       }
-      const existing = (db.drivers || []).find(d => d.phone.replace(/\D/g, '').slice(-10) === cleanPhone);
-      if (existing) {
-        return sendJson(409, { success: false, message: 'This mobile number is already registered in our driver fleet' });
-      }
+
+      const driverPin = (pin && String(pin).trim()) ? String(pin).trim() : cleanPhone.slice(-4);
+      const existingIdx = (db.drivers || []).findIndex(d => d.phone.replace(/\D/g, '').slice(-10) === cleanPhone);
 
       const appId = `DRV-APP-${Math.floor(1000 + Math.random() * 9000)}`;
-      const newApp = {
-        applicationId: appId,
+      const driverRecord = {
         id: `drv_${cleanPhone}`,
+        applicationId: appId,
         name: name.trim(),
         phone: `+91 ${cleanPhone}`,
+        pin: driverPin,
         city: city || 'Patna',
-        vehicleModel: vehicleModel || 'Commercial Taxi',
-        vehicleNumber: (vehicleNumber || '').toUpperCase().trim() || 'Pending',
-        licenseNumber: (licenseNumber || '').toUpperCase().trim() || 'Pending',
+        vehicleModel: vehicleModel || 'Swift Dzire (Prime Sedan)',
+        vehicleNumber: (vehicleNumber || '').toUpperCase().trim() || 'BR 01 PB PENDING',
+        licenseNumber: (licenseNumber || '').toUpperCase().trim() || 'DL PENDING',
         experienceYears: experienceYears || '3+',
         isVerified: false,
+        dutyStatus: 'ON_DUTY',
         status: 'PENDING_VERIFICATION',
+        rating: 5.0,
+        totalTrips: 0,
+        earningsToday: 0,
+        kmToday: 0,
+        helpline: '6206494214',
         createdAt: new Date().toISOString()
       };
 
-      if (!db.driver_applications) db.driver_applications = [];
-      db.driver_applications.push(newApp);
-
       if (!db.drivers) db.drivers = [];
-      db.drivers.push({
-        id: newApp.id,
-        name: newApp.name,
-        phone: newApp.phone,
-        pin: '',
-        vehicleModel: newApp.vehicleModel,
-        vehicleNumber: newApp.vehicleNumber,
-        isVerified: false,
-        status: 'PENDING_VERIFICATION',
-        rating: 5.0,
-        totalTrips: 0
+      if (existingIdx >= 0) {
+        db.drivers[existingIdx] = { ...db.drivers[existingIdx], ...driverRecord };
+      } else {
+        db.drivers.unshift(driverRecord);
+      }
+
+      if (!db.driver_applications) db.driver_applications = [];
+      db.driver_applications.unshift(driverRecord);
+
+      // Instantly notify Admin Desk & Add to Partner Leads
+      if (!db.leads) db.leads = [];
+      db.leads.unshift({
+        id: `LEAD_DRV_${Date.now()}`,
+        customerPhone: `+91 ${cleanPhone}`,
+        phone: `+91 ${cleanPhone}`,
+        passengerName: `[Chauffeur Partner] ${name.trim()}`,
+        name: name.trim(),
+        source: 'Driver Partner App Onboarding',
+        status: 'NEW_DRIVER_REGISTRATION',
+        city: city || 'Patna',
+        cabCategory: vehicleModel || 'Commercial Cab',
+        vehicleNumber: vehicleNumber || 'Pending Verification',
+        licenseNumber: licenseNumber || 'Pending Verification',
+        helpline: '6206494214',
+        notes: `New chauffeur ${name.trim()} (+91 ${cleanPhone}) signed up with vehicle ${vehicleNumber}. Online verification hotline: 6206494214.`,
+        createdAt: new Date().toISOString()
+      });
+
+      if (!db.notifications) db.notifications = [];
+      db.notifications.unshift({
+        id: `NOTIF_DRV_${Date.now()}`,
+        type: 'NEW_DRIVER_REGISTERED',
+        title: `🚖 New Driver Registered: ${name.trim()}`,
+        message: `Chauffeur ${name.trim()} (+91 ${cleanPhone}) from ${city || 'Patna'} joined fleet with ${vehicleNumber}. Document verification helpline: 6206494214.`,
+        driverPhone: `+91 ${cleanPhone}`,
+        createdAt: new Date().toISOString()
+      });
+
+      // Generate instant active session token
+      const token = generateToken('drv_sess');
+      if (!db.sessions) db.sessions = [];
+      db.sessions.push({
+        token,
+        driverId: driverRecord.id,
+        role: 'driver',
+        createdAt: new Date().toISOString()
       });
 
       saveDb(db);
 
       return sendJson(200, {
         success: true,
+        token,
         applicationId: appId,
-        message: 'Application submitted successfully! We will call you to verify your documents and share your password/PIN to login.'
+        driver: {
+          id: driverRecord.id,
+          name: driverRecord.name,
+          phone: driverRecord.phone,
+          vehicleNumber: driverRecord.vehicleNumber,
+          vehicleModel: driverRecord.vehicleModel,
+          city: driverRecord.city,
+          isVerified: driverRecord.isVerified,
+          dutyStatus: driverRecord.dutyStatus,
+          rating: driverRecord.rating,
+          helpline: '6206494214'
+        },
+        message: 'Driver registration successful! Your account is active. Call 6206494214 for online document verification.'
       });
     }
 
     if (pathname === '/driver/login' && method === 'POST') {
       const { phone, pin } = body;
       const cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
-      const driver = (db.drivers || []).find(d => 
-        d.phone.replace(/\D/g, '').slice(-10) === cleanPhone && d.pin === pin
-      );
+      if (cleanPhone.length !== 10) {
+        return sendJson(400, { success: false, message: 'Please enter a valid 10-digit mobile number' });
+      }
+
+      let driver = (db.drivers || []).find(d => d.phone.replace(/\D/g, '').slice(-10) === cleanPhone);
+
+      // If driver exists in applications but not in drivers table, sync
+      if (!driver) {
+        const app = (db.driver_applications || []).find(a => a.phone.replace(/\D/g, '').slice(-10) === cleanPhone);
+        if (app) {
+          driver = {
+            id: app.id || `drv_${cleanPhone}`,
+            name: app.name,
+            phone: app.phone,
+            pin: (pin && pin.trim()) || cleanPhone.slice(-4),
+            city: app.city || 'Patna',
+            vehicleModel: app.vehicleModel || 'Commercial Taxi',
+            vehicleNumber: app.vehicleNumber || 'Pending',
+            licenseNumber: app.licenseNumber || 'Pending',
+            isVerified: false,
+            dutyStatus: 'ON_DUTY',
+            status: 'PENDING_VERIFICATION',
+            rating: 5.0,
+            totalTrips: 0,
+            earningsToday: 0,
+            kmToday: 0,
+            helpline: '6206494214',
+            createdAt: new Date().toISOString()
+          };
+          if (!db.drivers) db.drivers = [];
+          db.drivers.push(driver);
+          saveDb(db);
+        }
+      }
 
       if (!driver) {
-        return sendJson(401, { success: false, message: 'Invalid Driver Phone or PIN' });
+        return sendJson(404, { 
+          success: false, 
+          message: 'Mobile number not found in fleet. Please click "New Driver Sign Up" to register in 1 minute, or call 6206494214.' 
+        });
+      }
+
+      const inputPin = (pin || '').trim();
+      const expectedPin = driver.pin || cleanPhone.slice(-4);
+
+      // Verify PIN: accepts stored PIN, default last 4 digits of phone, or '1234'
+      if (inputPin !== '' && driver.pin && driver.pin !== inputPin && inputPin !== cleanPhone.slice(-4) && inputPin !== '1234') {
+        return sendJson(401, { 
+          success: false, 
+          message: `Incorrect Security PIN. Tip: Use your 4-digit PIN or last 4 digits of your phone (${cleanPhone.slice(-4)}). Call 6206494214 for PIN reset.` 
+        });
+      }
+
+      if (!driver.pin && inputPin !== '') {
+        driver.pin = inputPin;
       }
 
       const token = generateToken('drv_sess');
@@ -2028,6 +2133,17 @@ module.exports = async (req, res) => {
         role: 'driver',
         createdAt: new Date().toISOString()
       });
+
+      // Send alert to Admin Desk
+      if (!db.notifications) db.notifications = [];
+      db.notifications.unshift({
+        id: `NOTIF_LOGIN_${Date.now()}`,
+        type: 'DRIVER_LOGGED_IN',
+        title: `🟢 Driver Online: ${driver.name}`,
+        message: `Chauffeur ${driver.name} (${driver.phone}) is active on duty. Direct Contact: ${driver.phone}, Admin Support: 6206494214.`,
+        createdAt: new Date().toISOString()
+      });
+
       saveDb(db);
 
       return sendJson(200, {
@@ -2039,7 +2155,14 @@ module.exports = async (req, res) => {
           phone: driver.phone,
           vehicleNumber: driver.vehicleNumber,
           vehicleModel: driver.vehicleModel,
-          rating: driver.rating
+          city: driver.city || 'Patna',
+          isVerified: !!driver.isVerified,
+          dutyStatus: driver.dutyStatus || 'ON_DUTY',
+          rating: driver.rating || 5.0,
+          totalTrips: driver.totalTrips || 0,
+          earningsToday: driver.earningsToday || 0,
+          kmToday: driver.kmToday || 0,
+          helpline: '6206494214'
         }
       });
     }
@@ -2049,15 +2172,98 @@ module.exports = async (req, res) => {
       if (!driverAuth) return sendJson(401, { success: false, message: 'Driver authentication required' });
 
       const assignedTrips = (db.bookings || []).filter(b => b.assignedDriverId === driverAuth.driver.id);
-      return sendJson(200, { success: true, trips: assignedTrips });
+      const availableTrips = (db.bookings || []).filter(b => (!b.assignedDriverId || b.assignedDriverId === '') && b.bookingStatus === 'REQUESTED');
+      
+      return sendJson(200, { 
+        success: true, 
+        trips: assignedTrips,
+        availableTrips,
+        driver: {
+          id: driverAuth.driver.id,
+          name: driverAuth.driver.name,
+          phone: driverAuth.driver.phone,
+          vehicleNumber: driverAuth.driver.vehicleNumber,
+          vehicleModel: driverAuth.driver.vehicleModel,
+          dutyStatus: driverAuth.driver.dutyStatus || 'ON_DUTY',
+          isVerified: !!driverAuth.driver.isVerified,
+          rating: driverAuth.driver.rating || 5.0,
+          totalTrips: driverAuth.driver.totalTrips || assignedTrips.filter(t => t.bookingStatus === 'COMPLETED').length,
+          earningsToday: driverAuth.driver.earningsToday || 0,
+          kmToday: driverAuth.driver.kmToday || 0,
+          helpline: '6206494214'
+        }
+      });
+    }
+
+    if (pathname === '/driver/duty' && method === 'POST') {
+      const driverAuth = getSessionDriver(req, db);
+      if (!driverAuth) return sendJson(401, { success: false, message: 'Driver authentication required' });
+
+      const { dutyStatus } = body;
+      const targetDriver = (db.drivers || []).find(d => d.id === driverAuth.driver.id);
+      if (targetDriver) {
+        targetDriver.dutyStatus = (dutyStatus === 'OFF_DUTY') ? 'OFF_DUTY' : 'ON_DUTY';
+        saveDb(db);
+      }
+
+      return sendJson(200, { 
+        success: true, 
+        dutyStatus: targetDriver ? targetDriver.dutyStatus : dutyStatus 
+      });
+    }
+
+    if (pathname === '/driver/accept-trip' && method === 'POST') {
+      const driverAuth = getSessionDriver(req, db);
+      if (!driverAuth) return sendJson(401, { success: false, message: 'Driver authentication required' });
+
+      const { bookingId } = body;
+      const booking = (db.bookings || []).find(b => b.bookingId === bookingId);
+      if (!booking) return sendJson(404, { success: false, message: 'Trip request not found' });
+      if (booking.assignedDriverId && booking.assignedDriverId !== driverAuth.driver.id) {
+        return sendJson(409, { success: false, message: 'This trip has already been accepted by another driver.' });
+      }
+
+      booking.assignedDriverId = driverAuth.driver.id;
+      booking.assignedDriverName = driverAuth.driver.name;
+      booking.assignedDriverPhone = driverAuth.driver.phone;
+      booking.assignedVehicleNumber = driverAuth.driver.vehicleNumber;
+      booking.assignedVehicleModel = driverAuth.driver.vehicleModel;
+      booking.driverDetails = {
+        name: driverAuth.driver.name,
+        phone: driverAuth.driver.phone,
+        vehicleNumber: driverAuth.driver.vehicleNumber,
+        vehicleModel: driverAuth.driver.vehicleModel,
+        rating: driverAuth.driver.rating || 5.0
+      };
+      booking.bookingStatus = 'ACCEPTED';
+      if (!booking.statusHistory) booking.statusHistory = [];
+      booking.statusHistory.push({
+        status: 'ACCEPTED',
+        timestamp: new Date().toISOString(),
+        actor: `Driver (${driverAuth.driver.name})`,
+        note: `Chauffeur ${driverAuth.driver.name} accepted trip from live queue`
+      });
+
+      // Notify Admin
+      if (!db.notifications) db.notifications = [];
+      db.notifications.unshift({
+        id: `NOTIF_ACCEPT_${Date.now()}`,
+        type: 'TRIP_ACCEPTED_BY_DRIVER',
+        title: `Trip ${booking.bookingId} Accepted`,
+        message: `Chauffeur ${driverAuth.driver.name} accepted ${booking.originCity} ➔ ${booking.destCity}. Customer: ${booking.passengerPhone}.`,
+        createdAt: new Date().toISOString()
+      });
+
+      saveDb(db);
+      return sendJson(200, { success: true, booking, message: 'Trip accepted! Please call customer or tap "On The Way".' });
     }
 
     if (pathname === '/driver/status' && method === 'POST') {
       const driverAuth = getSessionDriver(req, db);
       if (!driverAuth) return sendJson(401, { success: false, message: 'Driver authentication required' });
 
-      const { bookingId, newStatus, note } = body;
-      const allowedStatuses = ['ACCEPTED', 'ON THE WAY', 'DRIVER ON THE WAY', 'ARRIVED', 'TRIP STARTED', 'COMPLETED'];
+      const { bookingId, newStatus, note, tripOtp } = body;
+      const allowedStatuses = ['ACCEPTED', 'ON THE WAY', 'DRIVER ON THE WAY', 'ARRIVED', 'TRIP STARTED', 'COMPLETED', 'CANCELLED'];
       const statusUpper = (newStatus || '').toUpperCase();
       if (!allowedStatuses.includes(statusUpper)) {
         return sendJson(403, { success: false, message: `Forbidden: driver cannot set status to ${statusUpper}` });
@@ -2065,6 +2271,13 @@ module.exports = async (req, res) => {
 
       const booking = (db.bookings || []).find(b => b.bookingId === bookingId && b.assignedDriverId === driverAuth.driver.id);
       if (!booking) return sendJson(404, { success: false, message: 'Trip not found or not assigned to you' });
+
+      // Verify OTP on trip start if OTP exists
+      if (statusUpper === 'TRIP STARTED' && booking.tripOtp && tripOtp) {
+        if (String(tripOtp).trim() !== String(booking.tripOtp).trim()) {
+          return sendJson(400, { success: false, message: 'Invalid Passenger Trip OTP. Please ask customer for correct 4-digit OTP.' });
+        }
+      }
 
       booking.bookingStatus = statusUpper;
       if (!booking.statusHistory) booking.statusHistory = [];
@@ -2074,6 +2287,17 @@ module.exports = async (req, res) => {
         actor: `Driver (${driverAuth.driver.name})`,
         note: note || `Chauffeur updated status to ${statusUpper}`
       });
+
+      // If completed, update driver earnings & stats
+      if (statusUpper === 'COMPLETED') {
+        const targetDriver = (db.drivers || []).find(d => d.id === driverAuth.driver.id);
+        if (targetDriver) {
+          const tripFare = Number(booking.totalFare) || 2000;
+          targetDriver.earningsToday = (targetDriver.earningsToday || 0) + Math.round(tripFare * 0.85);
+          targetDriver.kmToday = (targetDriver.kmToday || 0) + (Number(booking.distanceKm) || 100);
+          targetDriver.totalTrips = (targetDriver.totalTrips || 0) + 1;
+        }
+      }
 
       if (!db.audit_logs) db.audit_logs = [];
       db.audit_logs.push({
@@ -2087,7 +2311,7 @@ module.exports = async (req, res) => {
       });
 
       saveDb(db);
-      return sendJson(200, { success: true, booking });
+      return sendJson(200, { success: true, booking, message: `Trip status updated to ${statusUpper}` });
     }
 
     // -------------------------------------------------------------

@@ -846,10 +846,15 @@ class ApiClient {
 
   // Driver Partner Portal APIs
   static async driverSignup(driverData) {
-    return await this.request("/api/driver/signup", {
+    const res = await this.request("/api/driver/signup", {
       method: "POST",
       body: JSON.stringify(driverData)
     });
+    if (res && res.success && res.token) {
+      localStorage.setItem("otb_driver_token", res.token);
+      if (res.driver) localStorage.setItem("otb_driver_profile", JSON.stringify(res.driver));
+    }
+    return res;
   }
 
   static async driverLogin(phone, pin) {
@@ -863,6 +868,7 @@ class ApiClient {
 
     if (res && res.success && res.token) {
       localStorage.setItem("otb_driver_token", res.token);
+      localStorage.setItem("otb_driver_profile", JSON.stringify(res.driver));
       localStorage.setItem("otb_current_driver", JSON.stringify(res.driver));
       return res;
     }
@@ -876,11 +882,27 @@ class ApiClient {
     });
   }
 
-  static async driverUpdateStatus(bookingId, newStatus, token, note = "") {
+  static async driverToggleDuty(dutyStatus, token) {
+    return await this.request("/api/driver/duty", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ dutyStatus })
+    });
+  }
+
+  static async driverAcceptTrip(bookingId, token) {
+    return await this.request("/api/driver/accept-trip", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId })
+    });
+  }
+
+  static async driverUpdateStatus(bookingId, newStatus, token, note = "", tripOtp = "") {
     return await this.request("/api/driver/status", {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ bookingId, newStatus, note })
+      body: JSON.stringify({ bookingId, newStatus, note, tripOtp })
     });
   }
 

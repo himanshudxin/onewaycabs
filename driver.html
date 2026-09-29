@@ -14,6 +14,7 @@
       --driver-border: #1e293b;
       --driver-text: #f8fafc;
       --driver-primary: #10b981;
+      --driver-accent: #38bdf8;
     }
     body.driver-body {
       background: var(--driver-bg);
@@ -24,6 +25,17 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+    .driver-topbar {
+      background: #047857;
+      color: white;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
     }
     .driver-navbar {
       background: rgba(19, 27, 46, 0.95);
@@ -45,16 +57,8 @@
       font-weight: 800;
       color: #34d399;
     }
-    .driver-badge {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
     .driver-container {
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto;
       width: 100%;
       box-sizing: border-box;
@@ -66,7 +70,7 @@
       border: 1px solid var(--driver-border);
       border-radius: 16px;
       padding: 24px;
-      margin-top: 30px;
+      margin-top: 14px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
     .auth-tab-bar {
@@ -129,22 +133,6 @@
     .form-group-driver select:focus {
       border-color: #10b981;
     }
-    .driver-success-box {
-      text-align: center;
-      padding: 12px 6px;
-    }
-    .success-badge-pulse {
-      width: 58px;
-      height: 58px;
-      margin: 0 auto 14px;
-      background: rgba(16, 185, 129, 0.15);
-      border: 2px solid #10b981;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-    }
     .driver-trip-card {
       background: var(--driver-card);
       border: 1px solid var(--driver-border);
@@ -153,8 +141,6 @@
       margin-bottom: 16px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    
-    /* Stepper Bar */
     .driver-stepper {
       display: flex;
       align-items: center;
@@ -179,7 +165,6 @@
     .step-item.completed {
       color: #34d399;
     }
-
     .driver-step-btn {
       width: 100%;
       padding: 14px;
@@ -229,9 +214,9 @@
       background: var(--driver-card);
       border: 1px solid var(--driver-border);
       color: #94a3b8;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
     }
@@ -240,8 +225,6 @@
       color: white;
       border-color: #34d399;
     }
-
-    /* Real-Time Dispatch Alert Controls for Driver */
     .driver-alert-btn {
       display: inline-flex;
       align-items: center;
@@ -260,25 +243,6 @@
       background: rgba(239, 68, 68, 0.1);
       border-color: rgba(239, 68, 68, 0.3);
       color: #f87171;
-    }
-    .driver-sound-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 800;
-      cursor: pointer;
-      border: 1px solid var(--driver-border);
-      background: rgba(255, 255, 255, 0.05);
-      color: #cbd5e1;
-      transition: all 0.2s ease;
-    }
-    .driver-sound-btn.active {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: rgba(56, 189, 248, 0.3);
-      color: #38bdf8;
     }
     .hud-indicator {
       width: 7px;
@@ -316,58 +280,13 @@
       border-radius: 12px;
       padding: 14px 16px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.2);
-      animation: driverHudSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      transition: all 0.3s ease;
     }
-    @keyframes driverHudSlide {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    /* ==========================================================================
-       MOBILE RESPONSIVENESS (< 768px) FOR DRIVER CONSOLE
-       ========================================================================== */
     @media (max-width: 768px) {
       .driver-navbar {
         flex-direction: column !important;
         align-items: stretch !important;
         gap: 8px !important;
         padding: 10px 14px !important;
-      }
-      .driver-brand {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        min-width: 0 !important;
-      }
-      .driver-brand-content {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        min-width: 0 !important;
-        flex: 1 !important;
-      }
-      .driver-brand-title {
-        white-space: nowrap !important;
-        font-weight: 900 !important;
-        font-size: 14.5px !important;
-        color: #ffffff !important;
-      }
-      .driver-brand-sub {
-        font-size: 8px !important;
-        font-weight: 800 !important;
-        color: #34d399 !important;
-        letter-spacing: 0.6px !important;
-        white-space: nowrap !important;
-      }
-      .driver-nav-actions {
-        display: flex !important;
-        align-items: center !important;
-        gap: 6px !important;
-        flex-wrap: wrap !important;
-        width: 100% !important;
-        justify-content: flex-start !important;
       }
       .driver-container {
         padding: 12px 10px !important;
@@ -376,6 +295,14 @@
   </style>
 </head>
 <body class="driver-body">
+
+  <!-- Verified Onboarding & Dispatch Hotline Banner -->
+  <div class="driver-topbar">
+    <span>📞 Driver Onboarding &amp; Verification Hotline: <strong>+91 6206494214</strong></span>
+    <a href="https://wa.me/916206494214?text=Hi%20OneWayTaxiBihar%20Dispatch,%20I%20am%20a%20driver%20partner%20requesting%20online%20verification." target="_blank" rel="noopener noreferrer" style="color: #a7f3d0; text-decoration: underline; font-weight: 800;">
+      WhatsApp KYC ➔
+    </a>
+  </div>
 
   <!-- Driver Auth Screen (Login + Sign Up) -->
   <div id="driver-login-view" style="display: none; padding: 16px;">
@@ -405,34 +332,46 @@
           <input type="tel" id="driver-phone-input" placeholder="e.g. 9431012345" maxlength="10">
         </div>
 
-        <div class="form-group-driver" style="margin-bottom: 20px;">
+        <div class="form-group-driver" style="margin-bottom: 12px;">
           <label>4-DIGIT SECURITY PIN</label>
-          <input type="password" id="driver-pin-input" placeholder="Enter 4-digit PIN" maxlength="4">
+          <input type="password" id="driver-pin-input" placeholder="Enter 4-digit PIN (default: last 4 digits)" maxlength="6">
+          <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">
+            💡 First time? Use the <strong>last 4 digits of your phone number</strong> as PIN.
+          </div>
         </div>
 
-        <button type="button" onclick="handleDriverLogin()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer;">
-          Log In as Partner Driver →
+        <button type="button" id="btn-driver-login-submit" onclick="handleDriverLogin()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer;">
+          Log In to Driver Console →
         </button>
 
-        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #1e293b; text-align: center; font-size: 12.5px; color: #94a3b8;">
-          New Driver? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color: #34d399; font-weight: 800; text-decoration: none;">Join Fleet & Register Your Cab →</a>
+        <div style="margin-top: 14px; background: #090d16; border: 1px dashed #1e293b; border-radius: 8px; padding: 10px; text-align: center; font-size: 12px; color: #94a3b8;">
+          Need Login Help or PIN Reset? Call: <a href="tel:+916206494214" style="color: #34d399; font-weight: 800; text-decoration: none;">+91 6206494214</a>
+        </div>
+
+        <div style="margin-top: 14px; text-align: center; font-size: 12.5px; color: #94a3b8;">
+          New Driver? <a href="javascript:void(0)" onclick="switchAuthMode('signup')" style="color: #34d399; font-weight: 800; text-decoration: none;">Register Vehicle &amp; Join Fleet →</a>
         </div>
       </div>
 
       <!-- 2. SIGNUP FORM -->
       <div id="driver-signup-form" style="display: none;">
         <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; font-size: 12.5px; color: #a7f3d0; text-align: left;">
-          💡 <strong>Earn ₹30,000 to ₹65,000+/month</strong> on one-way intercity trips across Bihar. Guaranteed instant payments.
+          💡 <strong>Earn ₹35,000 to ₹70,000+/month</strong> on outstation &amp; intercity routes across Bihar. Instant payout settlement.
         </div>
 
         <div class="form-group-driver">
-          <label>FULL NAME (CHAUFFEUR NAME) *</label>
+          <label>CHAUFFEUR FULL NAME *</label>
           <input type="text" id="reg-driver-name" placeholder="e.g. Ramesh Kumar Sharma">
         </div>
 
         <div class="form-group-driver">
-          <label>WHATSAPP MOBILE NUMBER *</label>
+          <label>10-DIGIT MOBILE NUMBER (WHATSAPP) *</label>
           <input type="tel" id="reg-driver-phone" placeholder="10-digit Mobile Number" maxlength="10">
+        </div>
+
+        <div class="form-group-driver">
+          <label>SET 4-DIGIT LOGIN PIN *</label>
+          <input type="password" id="reg-driver-pin" placeholder="Set 4-Digit PIN (e.g. 1234)" maxlength="4">
         </div>
 
         <div class="form-group-driver">
@@ -454,9 +393,9 @@
         </div>
 
         <div class="form-group-driver">
-          <label>VEHICLE MODEL & CATEGORY *</label>
+          <label>VEHICLE CATEGORY *</label>
           <select id="reg-driver-model">
-            <option value="Swift Dzire (Prime Sedan)">Swift Dzire / Etios (Sedan)</option>
+            <option value="Swift Dzire (Prime Sedan)">Swift Dzire / Etios / Amaze (Sedan)</option>
             <option value="Maruti Ertiga (Ertiga 6-Seater)">Maruti Ertiga (6-Seater SUV)</option>
             <option value="Innova Crysta (Luxury SUV)">Toyota Innova Crysta (Luxury SUV)</option>
             <option value="WagonR / Tiago (Compact Hatchback)">WagonR / Tiago (Hatchback)</option>
@@ -465,7 +404,7 @@
         </div>
 
         <div class="form-group-driver">
-          <label>VEHICLE REGISTRATION NUMBER (COMMERCIAL PLATE) *</label>
+          <label>COMMERCIAL NUMBER PLATE (YELLOW BOARD) *</label>
           <input type="text" id="reg-driver-vehno" placeholder="e.g. BR 01 PB 4921" style="text-transform: uppercase;">
         </div>
 
@@ -477,7 +416,7 @@
         <div class="form-group-driver" style="margin-bottom: 20px;">
           <label>DRIVING EXPERIENCE</label>
           <select id="reg-driver-exp">
-            <option value="3-5 Years">3 to 5 Years (Commercial Intercity)</option>
+            <option value="3-5 Years">3 to 5 Years (Intercity Outstation)</option>
             <option value="1-3 Years">1 to 3 Years</option>
             <option value="5-10 Years">5 to 10 Years</option>
             <option value="10+ Years">10+ Years (Senior Chauffeur)</option>
@@ -485,7 +424,7 @@
         </div>
 
         <button type="button" id="btn-submit-reg" onclick="handleDriverRegistration()" style="width: 100%; padding: 14px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-          Submit Driver Application →
+          Register Vehicle &amp; Start Duty →
         </button>
 
         <div style="margin-top: 14px; text-align: center; font-size: 12.5px; color: #94a3b8;">
@@ -495,32 +434,28 @@
 
       <!-- 3. SIGNUP SUCCESS VERIFICATION SCREEN -->
       <div id="driver-signup-success" style="display: none;" class="driver-success-box">
-        <div class="success-badge-pulse">✅</div>
-        <h3 style="font-size: 18px; font-weight: 900; color: #f8fafc; margin: 0 0 8px;">Application Submitted Successfully!</h3>
+        <div style="width: 58px; height: 58px; margin: 0 auto 14px; background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px;">✅</div>
+        <h3 style="font-size: 18px; font-weight: 900; color: #f8fafc; margin: 0 0 8px;">Registration Active &amp; Verified!</h3>
         <div style="display: inline-block; background: rgba(56, 189, 248, 0.15); border: 1px solid #0284c7; color: #38bdf8; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 16px;" id="reg-app-ref-badge">
           REF: #DRV-APP-1024
         </div>
 
-        <!-- HIGHLIGHT BOX AS SPECIFIED BY USER -->
-        <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid #059669; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left;">
-          <div style="font-size: 14px; font-weight: 800; color: #34d399; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
-            <span>📞</span> Next Step: Document Verification & Password Sharing
+        <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid #059669; border-radius: 12px; padding: 16px; margin-bottom: 18px; text-align: left;">
+          <div style="font-size: 14px; font-weight: 800; color: #34d399; margin-bottom: 6px;">
+            📞 Online Document KYC &amp; Helpline: 6206494214
           </div>
-          <p style="font-size: 13.5px; color: #f1f5f9; line-height: 1.5; margin: 0 0 10px; font-weight: 600;">
-            We will call you to verify your documents and share your password/PIN to log in.
+          <p style="font-size: 13px; color: #f1f5f9; line-height: 1.5; margin: 0 0 10px;">
+            Your driver partner profile has been sent to our central dispatch desk. You can now access your dashboard and receive live ride requests.
           </p>
-          <div style="font-size: 12px; color: #94a3b8; line-height: 1.4; border-top: 1px dashed rgba(16, 185, 129, 0.3); padding-top: 8px;">
-            हमारे फ्लीट मैनेजर 24 घंटे के अंदर आपके डाक्यूमेंट्स वेरीफाई करने के लिए आपसे संपर्क करेंगे और लॉगिन करने के लिए आपका पासवर्ड/पिन शेयर करेंगे।
-          </div>
+          <a href="https://wa.me/916206494214?text=Hi%20OneWayTaxiBihar%20Dispatch,%20I%20have%20registered%20as%20a%20driver%20partner.%20Please%20verify%20my%20documents." target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #25D366; color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 800; text-decoration: none;">
+            Send Documents on WhatsApp (+91 6206494214) ➔
+          </a>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button type="button" onclick="switchAuthMode('login')" style="width: 100%; padding: 12px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
-            ← Go to Driver Login
+          <button type="button" onclick="initDriver()" style="width: 100%; padding: 13px; background: #10b981; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+            Enter Driver Console →
           </button>
-          <a href="tel:+918002141816" style="display: block; padding: 11px; background: #090d16; border: 1px solid #1e293b; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 700;">
-            📞 Need Urgent Assistance? Call Dispatch: +91 8002141816
-          </a>
         </div>
       </div>
 
@@ -534,29 +469,30 @@
   <div id="driver-dashboard-view">
     <header class="driver-navbar">
       <div class="driver-brand">
-        <div class="driver-brand-content">
+        <div style="display: flex; align-items: center; gap: 8px;">
           <div style="width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3); flex-shrink: 0;">
             <img src="img/logo-reframed.png?v=20260905" alt="OneWayTaxiBihar Driver Partner" width="32" height="32" style="width: 32px; height: 32px; object-fit: contain; display: block; border-radius: 9px;">
           </div>
           <div style="display: flex; flex-direction: column; min-width: 0;">
-            <span class="driver-brand-title">OneWay<span style="color: #34d399;">TaxiBihar</span></span>
-            <span class="driver-brand-sub">CHAUFFEUR CREW CONSOLE</span>
+            <span style="font-weight: 900; font-size: 14.5px; color: #ffffff;">OneWay<span style="color: #34d399;">TaxiBihar</span></span>
+            <span style="font-size: 8px; font-weight: 800; color: #34d399; letter-spacing: 0.6px;">CHAUFFEUR CONSOLE</span>
           </div>
         </div>
-        <button type="button" onclick="handleDriverLogout()" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer; flex-shrink: 0;">
-          Logout
-        </button>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <a href="tel:+916206494214" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-decoration: none;">
+            📞 6206494214
+          </a>
+          <button type="button" onclick="handleDriverLogout()" style="background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11.5px; cursor: pointer;">
+            Logout
+          </button>
+        </div>
       </div>
-      <div class="driver-nav-actions">
-        <!-- Live Real-Time Device Notifications Control -->
-        <button type="button" id="btn-driver-device-alerts" onclick="toggleDriverNotifications()" class="driver-alert-btn" title="Toggle native device notifications (works even when tab is backgrounded)">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px;">
+        <button type="button" id="btn-driver-device-alerts" onclick="toggleDriverNotifications()" class="driver-alert-btn">
           <span class="hud-indicator hud-pulse-driver"></span>
           <span id="txt-driver-alerts">Alerts: Active</span>
         </button>
-        <button type="button" id="btn-driver-audio-alerts" onclick="toggleDriverAudioAlerts()" class="driver-sound-btn active" title="Toggle audio chime">
-          <span id="txt-driver-audio">🔊 Sound</span>
-        </button>
-        <span id="driver-name-display" style="font-size: 12.5px; font-weight: 700; color: #f8fafc; padding: 3px 8px; background: rgba(255,255,255,0.06); border-radius: 6px;"></span>
+        <span id="driver-name-display" style="font-size: 12px; font-weight: 700; color: #f8fafc; padding: 3px 8px; background: rgba(255,255,255,0.06); border-radius: 6px;"></span>
       </div>
     </header>
 
@@ -568,10 +504,10 @@
       <div style="background: var(--driver-card); border: 1px solid var(--driver-border); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <div>
-            <div style="font-size: 10.5px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">CHAUFFEUR DUTY STATUS</div>
+            <div style="font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">CHAUFFEUR DUTY STATUS</div>
             <div id="driver-duty-status-text" style="font-size: 13.5px; font-weight: 900; color: #34d399; margin-top: 2px;">🟢 ON DUTY • READY FOR DISPATCH</div>
           </div>
-          <button type="button" id="btn-toggle-duty" onclick="toggleDriverDuty()" style="background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; color: #34d399; padding: 7px 14px; border-radius: 20px; font-weight: 800; font-size: 11.5px; cursor: pointer; transition: all 0.2s ease;">
+          <button type="button" id="btn-toggle-duty" onclick="toggleDriverDuty()" style="background: rgba(16, 185, 129, 0.15); border: 1.5px solid #10b981; color: #34d399; padding: 7px 14px; border-radius: 20px; font-weight: 800; font-size: 11.5px; cursor: pointer;">
             Go Off Duty
           </button>
         </div>
@@ -579,30 +515,39 @@
         <!-- Today's Shift Earnings -->
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; background: #090d16; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 12px;">
           <div style="text-align: center;">
-            <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">TODAY'S PAYOUT</div>
+            <div style="font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">TODAY'S PAYOUT</div>
             <div style="font-size: 16px; font-weight: 900; color: #34d399;" id="driver-stat-earnings">₹0</div>
           </div>
           <div style="text-align: center; border-left: 1px solid #1e293b; border-right: 1px solid #1e293b;">
-            <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">TRIPS SERVED</div>
+            <div style="font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">TRIPS SERVED</div>
             <div style="font-size: 16px; font-weight: 900; color: #38bdf8;" id="driver-stat-trips">0</div>
           </div>
           <div style="text-align: center;">
-            <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">KM DRIVEN</div>
+            <div style="font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase;">KM DRIVEN</div>
             <div style="font-size: 16px; font-weight: 900; color: #f59e0b;" id="driver-stat-km">0 KM</div>
           </div>
         </div>
       </div>
 
+      <!-- Tab Switcher -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-        <div style="display: flex; gap: 8px;">
-          <button type="button" class="driver-tab-pill active" id="btn-tab-active" onclick="switchDriverTab('active')">Active Trips</button>
-          <button type="button" class="driver-tab-pill" id="btn-tab-history" onclick="switchDriverTab('history')">Completed History</button>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button type="button" class="driver-tab-pill active" id="btn-tab-active" onclick="switchDriverTab('active')">
+            Active Trips (<span id="count-active">0</span>)
+          </button>
+          <button type="button" class="driver-tab-pill" id="btn-tab-available" onclick="switchDriverTab('available')">
+            ⚡ Live Queue (<span id="count-available">0</span>)
+          </button>
+          <button type="button" class="driver-tab-pill" id="btn-tab-history" onclick="switchDriverTab('history')">
+            History
+          </button>
         </div>
         <button type="button" onclick="loadDriverTrips()" style="background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
           🔄 Refresh
         </button>
       </div>
 
+      <!-- Main Trip Cards Container -->
       <div id="driver-trips-list">
         <!-- Injected via JS -->
       </div>
@@ -615,12 +560,11 @@
     let _driverProfile = null;
     let _currentTab = "active";
     let _allDriverTrips = [];
+    let _availableQueueTrips = [];
     let _driverNotificationsEnabled = localStorage.getItem("otb_driver_notifications") !== "false";
-    let _driverAudioAlertsEnabled = localStorage.getItem("otb_driver_audio") !== "false";
     let _knownDriverTripStates = new Map();
     let _driverPollingTimer = null;
     let _driverInitialSyncDone = false;
-    let _audioContext = null;
 
     try {
       _driverProfile = JSON.parse(localStorage.getItem("otb_driver_profile") || "null");
@@ -641,16 +585,10 @@
       document.getElementById("driver-dashboard-view").style.display = "block";
 
       if (_driverProfile) {
-        document.getElementById("driver-name-display").textContent = `${_driverProfile.name} (${_driverProfile.vehicleNumber})`;
+        document.getElementById("driver-name-display").textContent = `${_driverProfile.name || 'Chauffeur'} (${_driverProfile.vehicleNumber || 'Taxi'})`;
       }
 
       updateDriverNotificationUiState();
-
-      // Auto-prompt notifications on login if not yet granted/denied
-      if ("Notification" in window && Notification.permission === "default") {
-        setTimeout(requestDriverNotificationPermission, 1200);
-      }
-
       await loadDriverTrips();
       startDriverPolling();
     }
@@ -688,6 +626,7 @@
     async function handleDriverRegistration() {
       const name = document.getElementById("reg-driver-name").value.trim();
       const phone = document.getElementById("reg-driver-phone").value.trim();
+      const pin = document.getElementById("reg-driver-pin").value.trim();
       const city = document.getElementById("reg-driver-city").value;
       const vehicleModel = document.getElementById("reg-driver-model").value;
       const vehicleNumber = document.getElementById("reg-driver-vehno").value.trim();
@@ -706,24 +645,20 @@
         return;
       }
       if (!vehicleNumber) {
-        alert("Please enter your Commercial Vehicle Registration Number (e.g. BR 01 PB 1234).");
+        alert("Please enter your Commercial Vehicle Registration Number.");
         document.getElementById("reg-driver-vehno").focus();
-        return;
-      }
-      if (!licenseNumber) {
-        alert("Please enter your Commercial Driving License (DL) Number.");
-        document.getElementById("reg-driver-dl").focus();
         return;
       }
 
       const btn = document.getElementById("btn-submit-reg");
       btn.disabled = true;
-      btn.textContent = "Submitting Application...";
+      btn.textContent = "Registering Driver Account...";
 
       try {
         const res = await ApiClient.driverSignup({
           name,
           phone: cleanPhone,
+          pin: pin || cleanPhone.slice(-4),
           city,
           vehicleModel,
           vehicleNumber,
@@ -732,32 +667,55 @@
         });
 
         if (res && res.success) {
-          document.getElementById("reg-app-ref-badge").textContent = `REF: #${res.applicationId || 'DRV-APP-SUCCESS'}`;
+          _driverToken = res.token;
+          _driverProfile = res.driver;
+          localStorage.setItem("otb_driver_token", _driverToken);
+          localStorage.setItem("otb_driver_profile", JSON.stringify(_driverProfile));
+          document.getElementById("reg-app-ref-badge").textContent = `REF: #${res.applicationId || 'DRV-SUCCESS'}`;
           switchAuthMode('success');
         } else {
-          alert(res?.message || "Failed to submit application. Please try again.");
+          alert(res?.message || "Registration notice. Please call 6206494214 for onboarding assistance.");
         }
       } catch (err) {
-        alert("Connection error. Please check your network and try again.");
+        alert("Connection error. Please call +91 6206494214 for direct driver onboarding.");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Submit Driver Application →";
+        btn.textContent = "Register Vehicle & Start Duty →";
       }
     }
 
     async function handleDriverLogin() {
-      const phone = document.getElementById("driver-phone-input").value.trim();
-      const pin = document.getElementById("driver-pin-input").value.trim();
+      const phoneInput = document.getElementById("driver-phone-input");
+      const pinInput = document.getElementById("driver-pin-input");
+      const phone = phoneInput.value.trim();
+      const pin = pinInput.value.trim();
 
-      const res = await ApiClient.driverLogin(phone, pin);
-      if (res && res.success && res.token) {
-        _driverToken = res.token;
-        _driverProfile = res.driver;
-        localStorage.setItem("otb_driver_token", _driverToken);
-        localStorage.setItem("otb_driver_profile", JSON.stringify(_driverProfile));
-        initDriver();
-      } else {
-        alert(res?.message || "Invalid Driver Mobile or PIN");
+      if (!phone) {
+        alert("Please enter your 10-digit mobile number.");
+        phoneInput.focus();
+        return;
+      }
+
+      const btn = document.getElementById("btn-driver-login-submit");
+      btn.disabled = true;
+      btn.textContent = "Logging in...";
+
+      try {
+        const res = await ApiClient.driverLogin(phone, pin);
+        if (res && res.success && res.token) {
+          _driverToken = res.token;
+          _driverProfile = res.driver;
+          localStorage.setItem("otb_driver_token", _driverToken);
+          localStorage.setItem("otb_driver_profile", JSON.stringify(_driverProfile));
+          initDriver();
+        } else {
+          alert(res?.message || "Invalid Driver Mobile or PIN. Please call 6206494214 for assistance.");
+        }
+      } catch (e) {
+        alert("Connection error. Please call +91 6206494214 for driver assistance.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Log In to Driver Console →";
       }
     }
 
@@ -778,15 +736,23 @@
     function switchDriverTab(tab) {
       _currentTab = tab;
       document.getElementById("btn-tab-active").classList.toggle("active", tab === "active");
+      document.getElementById("btn-tab-available").classList.toggle("active", tab === "available");
       document.getElementById("btn-tab-history").classList.toggle("active", tab === "history");
       renderTrips();
     }
 
     async function loadDriverTrips() {
+      if (!_driverToken) return;
       const res = await ApiClient.driverGetTrips(_driverToken);
-      if (res && res.success && Array.isArray(res.trips)) {
-        _allDriverTrips = res.trips;
-        res.trips.forEach(t => _knownDriverTripStates.set(t.bookingId, t.bookingStatus));
+      if (res && res.success) {
+        _allDriverTrips = res.trips || [];
+        _availableQueueTrips = res.availableTrips || [];
+        if (res.driver) {
+          _driverProfile = { ..._driverProfile, ...res.driver };
+          localStorage.setItem("otb_driver_profile", JSON.stringify(_driverProfile));
+          document.getElementById("driver-name-display").textContent = `${res.driver.name} (${res.driver.vehicleNumber})`;
+        }
+        _allDriverTrips.forEach(t => _knownDriverTripStates.set(t.bookingId, t.bookingStatus));
         _driverInitialSyncDone = true;
         renderTrips();
       } else if (res && res.status === 401) {
@@ -794,233 +760,23 @@
       }
     }
 
-    /* Driver Acoustic Chime Generator (Web Audio API) */
-    function playDriverChime(type = "assignment") {
-      if (!_driverAudioAlertsEnabled) return;
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        if (!_audioContext) _audioContext = new AudioCtx();
-        if (_audioContext.state === "suspended") _audioContext.resume();
-
-        const now = _audioContext.currentTime;
-        // Two-tone professional chime
-        const notes = type === "assignment" ? [523.25, 659.25, 783.99] : [587.33, 880.00];
-        notes.forEach((freq, idx) => {
-          const osc = _audioContext.createOscillator();
-          const gain = _audioContext.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-          gain.gain.setValueAtTime(0.001, now + idx * 0.12);
-          gain.gain.exponentialRampToValueAtTime(0.18, now + idx * 0.12 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
-          osc.connect(gain);
-          gain.connect(_audioContext.destination);
-          osc.start(now + idx * 0.12);
-          osc.stop(now + idx * 0.12 + 0.36);
-        });
-      } catch (e) {
-        console.warn("Driver audio chime notice:", e);
-      }
-    }
-
-    /* Driver Web Notification API */
-    async function requestDriverNotificationPermission() {
-      if (!("Notification" in window)) return;
-      try {
-        const res = await Notification.requestPermission();
-        updateDriverNotificationUiState();
-        if (res === "granted") {
-          playDriverChime("assignment");
-          sendDriverNotification(
-            "OneWayTaxiBihar | Chauffeur Alerts Active",
-            "This device will now receive instant alerts whenever Central Dispatch assigns a ride.",
-            "drv_perm_granted"
-          );
-        }
-      } catch (e) {
-        console.warn("Driver notification permission error:", e);
-      }
-    }
-
-    function toggleDriverNotifications() {
-      if (!("Notification" in window)) {
-        alert("This browser/device does not support native notifications.");
-        return;
-      }
-      if (Notification.permission !== "granted") {
-        requestDriverNotificationPermission();
-        return;
-      }
-      _driverNotificationsEnabled = !_driverNotificationsEnabled;
-      localStorage.setItem("otb_driver_notifications", _driverNotificationsEnabled ? "true" : "false");
-      updateDriverNotificationUiState();
-      if (_driverNotificationsEnabled) playDriverChime();
-    }
-
-    function toggleDriverAudioAlerts() {
-      _driverAudioAlertsEnabled = !_driverAudioAlertsEnabled;
-      localStorage.setItem("otb_driver_audio", _driverAudioAlertsEnabled ? "true" : "false");
-      updateDriverNotificationUiState();
-      if (_driverAudioAlertsEnabled) playDriverChime();
-    }
-
-    function updateDriverNotificationUiState() {
-      const btnNotif = document.getElementById("btn-driver-device-alerts");
-      const txtNotif = document.getElementById("txt-driver-alerts");
-      const btnAudio = document.getElementById("btn-driver-audio-alerts");
-      const txtAudio = document.getElementById("txt-driver-audio");
-
-      const hasPerm = ("Notification" in window) && Notification.permission === "granted" && _driverNotificationsEnabled;
-
-      if (btnNotif && txtNotif) {
-        if (hasPerm) {
-          btnNotif.className = "driver-alert-btn";
-          btnNotif.innerHTML = `<span class="hud-indicator hud-pulse-driver"></span><span>Alerts: Active</span>`;
-        } else {
-          btnNotif.className = "driver-alert-btn inactive";
-          const lbl = ("Notification" in window && Notification.permission === "denied")
-            ? "Alerts Blocked"
-            : "Enable Alerts";
-          btnNotif.innerHTML = `<span class="hud-indicator" style="background:#ef4444;"></span><span>${lbl}</span>`;
-        }
-      }
-
-      if (btnAudio && txtAudio) {
-        if (_driverAudioAlertsEnabled) {
-          btnAudio.className = "driver-sound-btn active";
-          btnAudio.innerHTML = `<span>🔊 Sound: ON</span>`;
-        } else {
-          btnAudio.className = "driver-sound-btn";
-          btnAudio.innerHTML = `<span>🔇 Sound: OFF</span>`;
-        }
-      }
-    }
-
-    function sendDriverNotification(title, body, tag = "") {
-      if (!("Notification" in window) || Notification.permission !== "granted" || !_driverNotificationsEnabled) {
-        return;
-      }
-      try {
-        const notif = new Notification(title, {
-          body: body,
-          icon: "favicon.svg",
-          badge: "favicon.svg",
-          tag: tag || ("drv_" + Date.now()),
-          vibrate: [300, 150, 300],
-          requireInteraction: true
-        });
-        notif.onclick = function() {
-          window.focus();
-          switchDriverTab("active");
-          notif.close();
-        };
-      } catch (err) {
-        console.warn("Driver notification send error:", err);
-      }
-    }
-
-    function showDriverDispatchAlert(trip) {
-      const container = document.getElementById("driver-live-alerts-hud");
-      if (!container) return;
-
-      const id = "drv_alert_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-      const el = document.createElement("div");
-      el.id = id;
-      el.className = "driver-hud-toast";
-      el.innerHTML = `
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <div class="hud-indicator hud-pulse-driver"></div>
-            <strong style="font-size: 12px; letter-spacing: 0.5px; color: #34d399; font-weight: 800;">
-              NEW RIDE ASSIGNMENT • DISPATCH ALERT
-            </strong>
-          </div>
-          <button type="button" onclick="document.getElementById('${id}').remove()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">&times;</button>
-        </div>
-        <div style="margin: 8px 0 4px 0; font-size: 15px; font-weight: 900; color: #ffffff;">
-          ${trip.originCity} ➔ ${trip.destCity} (${trip.distanceKm || '100+'} KM)
-        </div>
-        <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.45;">
-          Passenger: <strong>${trip.passengerName || 'Valued Client'}</strong> • Pickup: ${trip.pickupAddress || trip.originCity}
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);">
-          <span style="font-size: 13px; color: #34d399; font-weight: 800;">₹${(trip.totalFare || 0).toLocaleString('en-IN')} (${trip.paymentMethod || 'Cash/UPI'})</span>
-          <button type="button" onclick="document.getElementById('${id}').remove(); switchDriverTab('active');" style="background:#10b981; border:none; color:white; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:6px; cursor:pointer;">
-            View Route Details →
-          </button>
-        </div>
-      `;
-
-      container.prepend(el);
-      setTimeout(() => {
-        if (el && el.parentNode) {
-          el.style.opacity = "0";
-          el.style.transform = "translateX(50px)";
-          setTimeout(() => el.remove(), 300);
-        }
-      }, 10000);
-    }
-
-    /* Continuous Driver Polling Loop (every 4s) */
     function startDriverPolling() {
       if (_driverPollingTimer) clearInterval(_driverPollingTimer);
       _driverPollingTimer = setInterval(async () => {
         if (!_driverToken) return;
-        await pollDriverTrips();
-      }, 4000);
+        await loadDriverTrips();
+      }, 5000);
     }
 
-    async function pollDriverTrips() {
-      const res = await ApiClient.driverGetTrips(_driverToken);
-      if (res && res.success && Array.isArray(res.trips)) {
-        const trips = res.trips;
-        _allDriverTrips = trips;
-
-        if (!_driverInitialSyncDone) {
-          trips.forEach(t => _knownDriverTripStates.set(t.bookingId, t.bookingStatus));
-          _driverInitialSyncDone = true;
-          renderTrips();
-          return;
-        }
-
-        let hasChanges = false;
-        trips.forEach(t => {
-          const prevState = _knownDriverTripStates.get(t.bookingId);
-          if (!prevState) {
-            // New trip assigned to this driver!
-            _knownDriverTripStates.set(t.bookingId, t.bookingStatus);
-            hasChanges = true;
-            playDriverChime("assignment");
-            sendDriverNotification(
-              "NEW RIDE ASSIGNED: " + t.originCity + " ➔ " + t.destCity,
-              "Passenger: " + (t.passengerName || "Customer") + " • Fare: ₹" + (t.totalFare || 0) + " • " + t.pickupDate + " at " + t.pickupTime,
-              "drv_trip_" + t.bookingId
-            );
-            showDriverDispatchAlert(t);
-          } else if (prevState !== t.bookingStatus) {
-            // Status changed
-            _knownDriverTripStates.set(t.bookingId, t.bookingStatus);
-            hasChanges = true;
-            playDriverChime("status");
-            sendDriverNotification(
-              "Trip Status Updated: " + t.originCity + " ➔ " + t.destCity,
-              "Current Status: " + t.bookingStatus,
-              "drv_status_" + t.bookingId
-            );
-          }
-        });
-
-        if (hasChanges) {
-          renderTrips();
-        }
-      }
-    }
-
-    function toggleDriverDuty() {
+    async function toggleDriverDuty() {
       const current = localStorage.getItem("otb_driver_duty") || "ON";
       const next = current === "ON" ? "OFF" : "ON";
       localStorage.setItem("otb_driver_duty", next);
+      
+      try {
+        await ApiClient.driverToggleDuty(next === "ON" ? "ON_DUTY" : "OFF_DUTY", _driverToken);
+      } catch(e) {}
+      
       renderDutyStatus();
     }
 
@@ -1047,62 +803,166 @@
       }
     }
 
+    function updateDriverNotificationUiState() {
+      const btnNotif = document.getElementById("btn-driver-device-alerts");
+      const txtNotif = document.getElementById("txt-driver-alerts");
+      if (!btnNotif || !txtNotif) return;
+
+      const hasPerm = ("Notification" in window) && Notification.permission === "granted" && _driverNotificationsEnabled;
+      if (hasPerm) {
+        btnNotif.className = "driver-alert-btn";
+        btnNotif.innerHTML = `<span class="hud-indicator hud-pulse-driver"></span><span>Alerts: Active</span>`;
+      } else {
+        btnNotif.className = "driver-alert-btn inactive";
+        btnNotif.innerHTML = `<span class="hud-indicator" style="background:#ef4444;"></span><span>Enable Alerts</span>`;
+      }
+    }
+
+    function toggleDriverNotifications() {
+      if (!("Notification" in window)) {
+        alert("Native notifications not supported on this browser.");
+        return;
+      }
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(() => updateDriverNotificationUiState());
+        return;
+      }
+      _driverNotificationsEnabled = !_driverNotificationsEnabled;
+      localStorage.setItem("otb_driver_notifications", _driverNotificationsEnabled ? "true" : "false");
+      updateDriverNotificationUiState();
+    }
+
+    async function acceptAvailableTrip(bookingId) {
+      if (!confirm("Are you sure you want to accept this trip?")) return;
+      const res = await ApiClient.driverAcceptTrip(bookingId, _driverToken);
+      if (res && res.success) {
+        alert("Trip accepted successfully! Switching to Active Trips.");
+        _currentTab = "active";
+        await loadDriverTrips();
+      } else {
+        alert(res?.message || "Could not accept trip. It may have already been assigned.");
+        await loadDriverTrips();
+      }
+    }
+
+    async function updateTripStatus(bookingId, newStatus, note = "") {
+      let tripOtp = "";
+      if (newStatus === "TRIP STARTED") {
+        tripOtp = prompt("Please enter the 4-digit Customer Trip OTP:") || "";
+        if (!tripOtp) {
+          alert("Trip OTP is required to start ride.");
+          return;
+        }
+      }
+
+      const res = await ApiClient.driverUpdateStatus(bookingId, newStatus, _driverToken, note, tripOtp);
+      if (res && res.success) {
+        await loadDriverTrips();
+      } else {
+        alert(res?.message || "Failed to update trip status.");
+      }
+    }
+
     function renderTrips() {
       renderDutyStatus();
 
-      // Calculate today's shift earnings metrics
-      const completed = _allDriverTrips.filter(t => t.bookingStatus === "COMPLETED");
-      const todayEarnings = completed.reduce((acc, t) => acc + Math.round((t.totalFare || 0) * 0.8), 0);
-      const totalKm = completed.reduce((acc, t) => acc + (t.distanceKm || 0), 0);
+      const activeTrips = _allDriverTrips.filter(t => t.bookingStatus !== "COMPLETED" && t.bookingStatus !== "CANCELLED");
+      const completedTrips = _allDriverTrips.filter(t => t.bookingStatus === "COMPLETED");
+
+      document.getElementById("count-active").textContent = activeTrips.length;
+      document.getElementById("count-available").textContent = _availableQueueTrips.length;
+
+      const todayEarnings = completedTrips.reduce((acc, t) => acc + Math.round((Number(t.totalFare) || 0) * 0.85), 0);
+      const totalKm = completedTrips.reduce((acc, t) => acc + (Number(t.distanceKm) || 0), 0);
 
       const elEarn = document.getElementById("driver-stat-earnings");
       const elTrips = document.getElementById("driver-stat-trips");
       const elKm = document.getElementById("driver-stat-km");
       if (elEarn) elEarn.textContent = `₹${todayEarnings.toLocaleString('en-IN')}`;
-      if (elTrips) elTrips.textContent = `${completed.length}`;
+      if (elTrips) elTrips.textContent = `${completedTrips.length}`;
       if (elKm) elKm.textContent = `${totalKm} KM`;
 
       const listEl = document.getElementById("driver-trips-list");
-      const filtered = _allDriverTrips.filter(t => {
-        if (_currentTab === "active") return t.bookingStatus !== "COMPLETED" && t.bookingStatus !== "CANCELLED";
-        return t.bookingStatus === "COMPLETED" || t.bookingStatus === "CANCELLED";
-      });
 
-      if (filtered.length === 0) {
+      // Tab 1: Available Trips in Live Queue
+      if (_currentTab === "available") {
+        if (_availableQueueTrips.length === 0) {
+          listEl.innerHTML = `
+            <div style="text-align: center; padding: 40px 16px; background: var(--driver-card); border-radius: 14px; border: 1px dashed var(--driver-border);">
+              <div style="font-size: 32px; margin-bottom: 8px;">⚡</div>
+              <h4 style="margin: 0 0 6px 0; font-size: 16px; color: #f8fafc;">Live Pool is Quiet</h4>
+              <p style="font-size: 13px; color: #94a3b8; margin: 0;">
+                All current requests have been assigned. New incoming bookings from passengers will appear here instantly!
+              </p>
+            </div>
+          `;
+          return;
+        }
+
+        listEl.innerHTML = _availableQueueTrips.map(t => {
+          return `
+            <div class="driver-trip-card" style="border: 1.5px solid #38bdf8; background: #0c1524;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                <div>
+                  <span style="font-size: 10.5px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.15); padding: 2px 8px; border-radius: 4px;">⚡ UNASSIGNED BOOKING</span>
+                  <h4 style="margin: 6px 0 0 0; font-size: 17px; font-weight: 800; color: #f8fafc;">${t.originCity} ➔ ${t.destCity}</h4>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 18px; font-weight: 900; color: #34d399;">₹${(t.totalFare || 0).toLocaleString('en-IN')}</span>
+                  <div style="font-size: 11px; color: #94a3b8;">${t.fleetClass || 'Cab'}</div>
+                </div>
+              </div>
+              <div style="font-size: 12.5px; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px; background: #090d16; padding: 10px; border-radius: 8px;">
+                <div>📍 Pickup: <strong>${t.pickupAddress || t.originCity}</strong></div>
+                <div>🎯 Drop: <strong>${t.dropAddress || t.destCity}</strong></div>
+                <div>⏰ Schedule: <strong>${t.pickupDate} at ${t.pickupTime} (~${t.distanceKm} KM)</strong></div>
+              </div>
+              <button type="button" class="driver-step-btn btn-step-accept" onclick="acceptAvailableTrip('${t.bookingId}')">
+                Accept Trip &amp; Start Dispatch →
+              </button>
+            </div>
+          `;
+        }).join("");
+        return;
+      }
+
+      // Tab 2 & 3: Active or History Trips
+      const displayTrips = _currentTab === "active" ? activeTrips : completedTrips;
+
+      if (displayTrips.length === 0) {
         listEl.innerHTML = `
           <div style="text-align: center; padding: 40px 16px; background: var(--driver-card); border-radius: 14px; border: 1px dashed var(--driver-border);">
             <div style="font-size: 32px; margin-bottom: 8px;">🛣️</div>
             <h4 style="margin: 0 0 6px 0; font-size: 16px; color: #f8fafc;">
-              ${_currentTab === 'active' ? 'No active trips assigned' : 'No completed trips in history'}
+              ${_currentTab === 'active' ? 'No active trips right now' : 'No completed trips in history'}
             </h4>
             <p style="font-size: 13px; color: #94a3b8; margin: 0;">
-              ${_currentTab === 'active' ? 'Patna central dispatch will notify you when a new ride is assigned to your vehicle.' : 'Your finished trips will appear here with fare receipts.'}
+              ${_currentTab === 'active' ? 'Check the "Live Queue" tab to accept unassigned passenger bookings or wait for dispatch.' : 'Finished trips will appear here with fare settlements.'}
             </p>
           </div>
         `;
         return;
       }
 
-      listEl.innerHTML = filtered.map(t => {
+      listEl.innerHTML = displayTrips.map(t => {
         const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(t.pickupAddress || t.originCity)}`;
-        const isAssigned = t.bookingStatus === "DRIVER ASSIGNED" || t.bookingStatus === "CONFIRMED";
+        const isAssigned = t.bookingStatus === "ACCEPTED" || t.bookingStatus === "DRIVER ASSIGNED" || t.bookingStatus === "CONFIRMED";
         const isWay = t.bookingStatus === "DRIVER ON THE WAY" || t.bookingStatus === "ON THE WAY";
         const isArrived = t.bookingStatus === "ARRIVED";
         const isStarted = t.bookingStatus === "TRIP STARTED";
         const isCompleted = t.bookingStatus === "COMPLETED";
 
-        // OneWay.Cab status lifecycle action buttons (Req 49, 175)
         let actionBtn = '';
         if (isAssigned) {
-          actionBtn = `<button type="button" class="driver-step-btn btn-step-accept" onclick="updateTripStatus('${t.bookingId}', 'DRIVER ON THE WAY', 'Chauffeur accepted and started moving to pickup')">Accept &amp; Depart (On the Way) →</button>`;
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-way" onclick="updateTripStatus('${t.bookingId}', 'DRIVER ON THE WAY', 'Chauffeur moving to pickup location')">I am On The Way (Heading to Pickup) →</button>`;
         } else if (isWay) {
-          actionBtn = `<button type="button" class="driver-step-btn btn-step-arrived" onclick="updateTripStatus('${t.bookingId}', 'ARRIVED', 'Chauffeur arrived at passenger pickup location')">Arrived at Doorstep →</button>`;
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-arrived" onclick="updateTripStatus('${t.bookingId}', 'ARRIVED', 'Chauffeur arrived at passenger doorstep')">Arrived at Passenger Doorstep →</button>`;
         } else if (isArrived) {
-          actionBtn = `<button type="button" class="driver-step-btn btn-step-start" onclick="updateTripStatus('${t.bookingId}', 'TRIP STARTED', 'Passenger boarded, journey started')">Start Journey →</button>`;
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-start" onclick="updateTripStatus('${t.bookingId}', 'TRIP STARTED', 'Passenger boarded, verified OTP')">Verify OTP &amp; Start Journey →</button>`;
         } else if (isStarted) {
-          actionBtn = `<button type="button" class="driver-step-btn btn-step-complete" onclick="updateTripStatus('${t.bookingId}', 'COMPLETED', 'Passenger safely reached destination')">Complete Journey →</button>`;
+          actionBtn = `<button type="button" class="driver-step-btn btn-step-complete" onclick="updateTripStatus('${t.bookingId}', 'COMPLETED', 'Passenger reached safely')">Complete Trip &amp; Collect ₹${(t.balanceDue !== undefined ? t.balanceDue : t.totalFare).toLocaleString('en-IN')} →</button>`;
         } else {
-          actionBtn = `<div style="text-align: center; font-weight: 800; color: #34d399; font-size: 14px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">✓ Journey Finished (${t.bookingStatus})</div>`;
+          actionBtn = `<div style="text-align: center; font-weight: 800; color: #34d399; font-size: 13.5px; padding: 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">✓ Finished (${t.bookingStatus})</div>`;
         }
 
         return `
@@ -1114,11 +974,10 @@
               </div>
               <div style="text-align: right;">
                 <span style="font-size: 18px; font-weight: 900; color: #34d399;">₹${(t.totalFare || 0).toLocaleString('en-IN')}</span>
-                <div style="font-size: 11px; color: #94a3b8;">${t.paymentMethod || 'UPI'} • ${t.paymentStatus || 'Pending'}</div>
+                <div style="font-size: 11px; color: #94a3b8;">${t.paymentMethod || 'Cash'} • Balance Due: ₹${(t.balanceDue !== undefined ? t.balanceDue : t.totalFare).toLocaleString('en-IN')}</div>
               </div>
             </div>
 
-            <!-- Stepper Progression Visualizer (Req 49) -->
             <div class="driver-stepper">
               <div class="step-item ${isAssigned ? 'active' : 'completed'}">1. Assigned</div>
               <span>➔</span>
@@ -1131,52 +990,30 @@
               <div class="step-item ${isCompleted ? 'completed active' : ''}">5. Done</div>
             </div>
 
-            <!-- Pickup & Drop Details -->
             <div style="font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 14px; background: #090d16; padding: 12px; border-radius: 8px; border: 1px solid #1e293b;">
               <div>📍 <strong>Pickup:</strong> ${t.pickupAddress}</div>
               <div>🏁 <strong>Drop:</strong> ${t.dropAddress}</div>
               <div style="margin-top: 4px; color: #94a3b8; font-size: 12px;">⏰ <strong>Schedule:</strong> ${t.pickupDate} at ${t.pickupTime} (~${t.distanceKm} KM)</div>
             </div>
 
-            <!-- Passenger Contact & Navigation (Req 171, 172, 173) -->
             <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-              ${isAssigned ? `
-                <div style="flex: 1; font-size: 12px; color: #94a3b8; display: flex; align-items: center; justify-content: center; background: #090d16; border-radius: 8px; padding: 8px;">
-                  👤 Passenger: <strong>${t.passengerName}</strong> (Contact revealed on accept)
-                </div>
-              ` : `
-                <a href="tel:${t.passengerPhone}" class="btn-call-customer" style="flex: 1; justify-content: center;">
-                  📞 Call ${t.passengerName} (${t.passengerPhone})
-                </a>
-              `}
+              <a href="tel:${t.passengerPhone}" class="btn-call-customer" style="flex: 1; justify-content: center;">
+                📞 Call ${t.passengerName} (${t.passengerPhone})
+              </a>
               <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="btn-nav-map">
                 🗺️ Maps
               </a>
             </div>
 
-            <!-- Trip Status Progression Button -->
             <div>${actionBtn}</div>
           </div>
         `;
       }).join("");
     }
 
-    async function updateTripStatus(bookingId, newStatus, note) {
-      const res = await ApiClient.driverUpdateStatus(bookingId, newStatus, _driverToken, note);
-      if (res && res.success) {
-        await loadDriverTrips();
-      } else {
-        alert(res?.message || "Failed to update status");
-      }
-    }
-
-    // Initialize on load
+    // Initialize
     window.addEventListener("DOMContentLoaded", () => {
       initDriver();
-      if (new URLSearchParams(window.location.search).get("demo") === "1") {
-        const demoBtn = document.getElementById("btn-driver-demo-login");
-        if (demoBtn) demoBtn.style.display = "block";
-      }
     });
   </script>
 </body>
