@@ -32,8 +32,8 @@ class BookingManager {
     this.isFareUnlocked = false;
 
     this.passengerDetails = {
-      name: "Passenger",
-      phone: "+91",
+      name: "",
+      phone: "",
       email: "",
       pickupAddress: "",
       dropAddress: "",

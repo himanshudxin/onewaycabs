@@ -806,17 +806,7 @@ class ApiClient {
     if (res && res.success && Array.isArray(res.drivers)) {
       return res;
     }
-
-    // Default verified Bihar Chauffeur fleet
-    return {
-      success: true,
-      drivers: [
-        { id: "drv_101", name: "Ramesh Kumar Singh", phone: "+91 98350 12345", vehicleNumber: "BR-01-PK-8890", vehicleModel: "Maruti Suzuki Dzire", rating: 4.9, fleetTier: "sedan", totalTrips: 412, pin: "1234" },
-        { id: "drv_102", name: "Amit Kumar Verma", phone: "+91 94310 98765", vehicleNumber: "BR-01-AB-1234", vehicleModel: "Toyota Etios", rating: 4.8, fleetTier: "sedan", totalTrips: 289, pin: "1234" },
-        { id: "drv_103", name: "Md. Tariq Anwar", phone: "+91 70045 67890", vehicleNumber: "BR-02-CD-5678", vehicleModel: "Maruti Suzuki Ertiga", rating: 4.9, fleetTier: "suv", totalTrips: 530, pin: "1234" },
-        { id: "drv_104", name: "Pankaj Kumar Yadav", phone: "+91 82103 45678", vehicleNumber: "BR-06-EF-9012", vehicleModel: "Maruti Suzuki WagonR", rating: 4.7, fleetTier: "hatchback", totalTrips: 198, pin: "1234" }
-      ]
-    };
+    return { success: true, drivers: (res && res.drivers) || [] };
   }
 
   // Driver Partner Portal APIs
@@ -842,16 +832,7 @@ class ApiClient {
       return res;
     }
 
-    // Resilient fallback for registered fleet driver
-    if (cleanPhone === "9835012345" && cleanPin === "1234") {
-      const drvToken = `drv_local_${Date.now()}`;
-      const drvObj = { id: "drv_101", name: "Ramesh Kumar Singh", phone: "+91 98350 12345", vehicleNumber: "BR-01-PK-8890", vehicleModel: "Maruti Suzuki Dzire", rating: 4.9 };
-      localStorage.setItem("otb_driver_token", drvToken);
-      localStorage.setItem("otb_current_driver", JSON.stringify(drvObj));
-      return { success: true, token: drvToken, driver: drvObj };
-    }
-
-    return res || { success: false, message: "Invalid driver credentials. Use phone: 9835012345 / PIN: 1234" };
+    return res || { success: false, message: "Invalid driver credentials. Please check your phone number and 4-digit PIN." };
   }
 
   static async driverGetTrips(token) {
