@@ -8,6 +8,22 @@
       "walletBalance": 0,
       "memberSince": "2026",
       "createdAt": "2026-09-29T14:09:07.643Z"
+    },
+    {
+      "id": "usr_9876591713",
+      "name": "Aarav Sharma",
+      "phone": "+91 9876591713",
+      "email": "",
+      "walletBalance": 0,
+      "createdAt": "2026-09-29T16:06:14.427Z"
+    },
+    {
+      "id": "usr_9876585360",
+      "name": "Pooja Verma",
+      "phone": "+91 9876585360",
+      "email": "",
+      "walletBalance": 0,
+      "createdAt": "2026-09-29T16:06:14.441Z"
     }
   ],
   "sessions": [
@@ -23,9 +39,188 @@
       "adminId": "adm_01",
       "role": "admin",
       "createdAt": "2026-09-29T15:26:01.751Z"
+    },
+    {
+      "token": "otb_sess_8a1732eed95bf49fa8d7ec8246131e0a",
+      "userId": "usr_6206494214",
+      "phone": "+91 6206494214",
+      "role": "customer",
+      "createdAt": "2026-09-29T15:30:36.759Z"
     }
   ],
   "bookings": [
+    {
+      "bookingId": "OTB-2026-5057",
+      "tripOtp": "3870",
+      "customerId": "usr_9876585360",
+      "paymentTxnId": "TXN_1790697974441_9742",
+      "passengerName": "Pooja Verma",
+      "passengerPhone": "+91 9876585360",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Muzaffarpur",
+      "pickupAddress": "Boring Road",
+      "dropAddress": "Zero Mile Muzaffarpur",
+      "pickupDate": "2026-10-01",
+      "pickupTime": "11:00 AM",
+      "distanceKm": 75,
+      "duration": "1h 39m",
+      "fleetClass": "Go Hatchback",
+      "fleetModel": "WagonR, Tiago, Celerio",
+      "fareBreakdown": {
+        "distanceKm": 75,
+        "duration": "1h 39m",
+        "tierId": "hatchback",
+        "tierName": "Go Hatchback",
+        "tierModel": "WagonR, Tiago, Celerio",
+        "baseFare": 1698,
+        "distanceCharge": 1575,
+        "extraKm": 60,
+        "perKmRate": 21,
+        "roundTripDiscount": 0,
+        "tollFastag": 59,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 1698
+      },
+      "totalFare": 1898,
+      "originalFare": 1998,
+      "walletUsed": 100,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 0,
+      "balanceDue": 1898,
+      "paymentMethod": "Cash / UPI to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-09-29T16:06:14.441Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-5057\n*Passenger:* Pooja Verma (+91 9876585360)\n*Route:* Patna ➔ Muzaffarpur (75 KM)\n*Schedule:* 2026-10-01 at 11:00 AM\n*Total Fare:* ₹1898 (Advance: ₹0, Balance Due: ₹1898)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-5057%0A*Passenger%3A*%20Pooja%20Verma%20(%2B91%209876585360)%0A*Route%3A*%20Patna%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B91898",
+      "createdAt": "2026-09-29T16:06:14.441Z"
+    },
+    {
+      "bookingId": "OTB-2026-1286",
+      "tripOtp": "4545",
+      "customerId": "usr_9876591713",
+      "paymentTxnId": "TXN_1790697974427_2814",
+      "passengerName": "Aarav Sharma",
+      "passengerPhone": "+91 9876591713",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "pickupAddress": "Patna Junction",
+      "dropAddress": "Bodh Gaya Temple",
+      "pickupDate": "2026-10-01",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 104,
+      "duration": "2h 18m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 104,
+        "duration": "2h 18m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 2600,
+        "extraKm": 89,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 82,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2600
+      },
+      "totalFare": 2500,
+      "originalFare": 2600,
+      "walletUsed": 100,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 299,
+      "balanceDue": 2201,
+      "paymentMethod": "Razorpay Online Advance (₹299)",
+      "paymentStatus": "PARTIALLY PAID (Awaiting Advance Verification)",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-09-29T16:06:14.427Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-1286\n*Passenger:* Aarav Sharma (+91 9876591713)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-10-01 at 10:00 AM\n*Total Fare:* ₹2500 (Advance: ₹299, Balance Due: ₹2201)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-1286%0A*Passenger%3A*%20Aarav%20Sharma%20(%2B91%209876591713)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92500",
+      "createdAt": "2026-09-29T16:06:14.427Z"
+    },
+    {
+      "bookingId": "OTB-2026-8326",
+      "customerId": "usr_6206494214",
+      "paymentTxnId": "TXN_1790695849123_4975",
+      "passengerName": "aman kumar",
+      "passengerPhone": "+91 6206494214",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "pickupAddress": "Patna City Area",
+      "dropAddress": "Gaya City Area",
+      "pickupDate": "2026-09-29",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 104,
+      "duration": "2h 18m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 104,
+        "duration": "2h 18m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 1050,
+        "distanceCharge": 2225,
+        "extraKm": 89,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 82,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 168,
+        "totalFare": 3525
+      },
+      "totalFare": 3525,
+      "originalFare": 3525,
+      "walletUsed": 0,
+      "paymentMethod": "Razorpay Online Advance (₹299)",
+      "paymentStatus": "PENDING",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-09-29T15:30:49.123Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-8326\n*Passenger:* aman kumar (+91 6206494214)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-09-29 at 10:00 AM\n*Total Fare:* ₹3525 (Razorpay Online Advance (₹299))\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-8326%0A*Passenger%3A*%20aman%20kumar%20(%2B91%206206494214)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B93525",
+      "createdAt": "2026-09-29T15:30:49.123Z"
+    },
     {
       "bookingId": "OTB-2026-5888",
       "customerId": "usr_6206494214",
@@ -84,6 +279,57 @@
   "drivers": [],
   "payments": [
     {
+      "id": "TXN_1790697974441_9742",
+      "bookingId": "OTB-2026-5057",
+      "customerId": "usr_9876585360",
+      "passengerPhone": "+91 9876585360",
+      "amount": 1898,
+      "advancePaid": 0,
+      "balanceDue": 1898,
+      "originalAmount": 1998,
+      "walletDeducted": 100,
+      "couponDiscount": 0,
+      "method": "Cash / UPI to Driver",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-09-29T16:06:14.441Z"
+    },
+    {
+      "id": "TXN_1790697974427_2814",
+      "bookingId": "OTB-2026-1286",
+      "customerId": "usr_9876591713",
+      "passengerPhone": "+91 9876591713",
+      "amount": 2500,
+      "advancePaid": 299,
+      "balanceDue": 2201,
+      "originalAmount": 2600,
+      "walletDeducted": 100,
+      "couponDiscount": 0,
+      "method": "Razorpay Online Advance (₹299)",
+      "status": "PARTIALLY PAID (Awaiting Advance Verification)",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-09-29T16:06:14.427Z"
+    },
+    {
+      "id": "TXN_1790695849123_4975",
+      "bookingId": "OTB-2026-8326",
+      "customerId": "usr_6206494214",
+      "passengerPhone": "+91 6206494214",
+      "amount": 3525,
+      "originalAmount": 3525,
+      "walletDeducted": 0,
+      "method": "Razorpay Online Advance (₹299)",
+      "status": "PENDING",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-09-29T15:30:49.123Z"
+    },
+    {
       "id": "TXN_1790690964524_8975",
       "bookingId": "OTB_TEST_101",
       "customerId": "usr_6206494214",
@@ -106,15 +352,16 @@
       "signature": "sig_demo"
     },
     {
-      "orderId": "order_demo_1790690964325",
-      "bookingId": "OTB-2026-9966",
+      "orderId": "order_demo_1790695849007",
+      "bookingId": "OTB-2026-1576",
       "passengerPhone": "6206494214",
       "amount": 299,
       "currency": "INR",
       "provider": "razorpay_sandbox",
       "status": "ORDER_CREATED",
       "isSandbox": true,
-      "createdAt": "2026-09-29T14:09:24.325Z"
+      "createdAt": "2026-09-29T14:09:24.325Z",
+      "updatedAt": "2026-09-29T15:30:49.007Z"
     }
   ],
   "wallet_ledger": [
@@ -137,6 +384,26 @@
       "balanceAfter": 0,
       "description": "Applied to Booking Patna to Muzaffarpur",
       "createdAt": "2026-09-29T14:09:24.524Z"
+    },
+    {
+      "id": "WLT_1790697974427",
+      "userId": "usr_9876591713",
+      "phone": "+91 9876591713",
+      "type": "DEBIT",
+      "amount": 100,
+      "balanceAfter": 0,
+      "description": "Applied to Booking Patna to Gaya",
+      "createdAt": "2026-09-29T16:06:14.427Z"
+    },
+    {
+      "id": "WLT_1790697974441",
+      "userId": "usr_9876585360",
+      "phone": "+91 9876585360",
+      "type": "DEBIT",
+      "amount": 100,
+      "balanceAfter": 0,
+      "description": "Applied to Booking Patna to Muzaffarpur",
+      "createdAt": "2026-09-29T16:06:14.441Z"
     }
   ],
   "audit_logs": [
@@ -164,6 +431,33 @@
       "actor": "admin",
       "details": "Updated payment gateway & UPI configuration (UPI ID: 8002141816@ybl, Token Advance: ₹299)",
       "createdAt": "2026-09-29T15:26:01.755Z"
+    },
+    {
+      "id": "AUD_1790695849123",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-8326",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 6206494214",
+      "details": "Patna → Gaya for ₹3525",
+      "createdAt": "2026-09-29T15:30:49.123Z"
+    },
+    {
+      "id": "AUD_1790697974427",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-1286",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 9876591713",
+      "details": "Patna → Gaya for ₹2500 (Razorpay Online Advance (₹299))",
+      "createdAt": "2026-09-29T16:06:14.427Z"
+    },
+    {
+      "id": "AUD_1790697974441",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-5057",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 9876585360",
+      "details": "Patna → Muzaffarpur for ₹1898 (Cash / UPI to Driver)",
+      "createdAt": "2026-09-29T16:06:14.441Z"
     }
   ],
   "admins": [
@@ -177,6 +471,27 @@
   ],
   "reviews": [],
   "leads": [
+    {
+      "id": "LEAD_1790695826013_806",
+      "phone": "+91 6206494214",
+      "cleanPhone": "6206494214",
+      "passengerName": "Fare Check Visitor",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "tripType": "oneway",
+      "pickupDate": "2026-09-29",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 104,
+      "duration": "2h 15m",
+      "estFareHatch": 2184,
+      "estFareSedan": 2600,
+      "estFareSuv": 3432,
+      "source": "Check Fare & Availability",
+      "status": "NEW",
+      "notes": "",
+      "createdAt": "2026-09-29T15:30:26.013Z",
+      "updatedAt": "2026-09-29T15:30:40.416Z"
+    },
     {
       "id": "LEAD_1790690936710_760",
       "phone": "+91 6206494214",

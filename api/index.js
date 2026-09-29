@@ -190,36 +190,25 @@ function getRouteDistance(origin, dest) {
   return 120;
 }
 
-// Server-Side Fare Calculation Engine
+// Server-Side Fare Calculation Engine (All-Inclusive transparent pricing)
 const FLEET_RATES = {
-  hatchback: { baseFare: 850, baseKm: 15, perKm: 21.0, name: "Go Hatchback", model: "WagonR, Tiago" },
-  sedan: { baseFare: 1050, baseKm: 15, perKm: 25.0, name: "Prime Sedan", model: "Dzire, Etios, Amaze" },
-  sedan_prime: { baseFare: 1350, baseKm: 15, perKm: 29.0, name: "Executive Sedan", model: "Honda City, Ciaz" },
-  suv: { baseFare: 1650, baseKm: 15, perKm: 33.0, name: "Family SUV (6+1)", model: "Maruti Ertiga, Carens" }
+  hatchback: { perKm: 21.0, minFare: 1698, name: "Go Hatchback", model: "WagonR, Tiago, Celerio" },
+  sedan: { perKm: 25.0, minFare: 2198, name: "Prime Sedan", model: "Dzire, Etios, Amaze" },
+  sedan_prime: { perKm: 29.0, minFare: 2698, name: "Executive Sedan", model: "Honda City, Ciaz" },
+  suv: { perKm: 33.0, minFare: 3398, name: "Family SUV (6+1)", model: "Maruti Ertiga, Carens" },
+  innova_crysta: { perKm: 44.0, minFare: 4598, name: "Toyota Innova Crysta", model: "Innova Crysta" }
 };
 
 function calculateServerFare(distanceKm, cabTier = 'sedan', tripType = 'oneway', origin = '', dest = '') {
   const tier = FLEET_RATES[cabTier] || FLEET_RATES.sedan;
-  const effectiveKm = tripType === 'roundtrip' ? distanceKm * 2 : distanceKm;
-  const extraKm = Math.max(0, effectiveKm - tier.baseKm);
-  const distanceCharge = Math.round(extraKm * tier.perKm);
-  let baseCharge = tier.baseFare + distanceCharge;
-
-  let roundTripDiscount = 0;
+  let baseCharge = 0;
   if (tripType === 'roundtrip') {
-    roundTripDiscount = Math.round(baseCharge * 0.12);
-    baseCharge -= roundTripDiscount;
+    baseCharge = Math.round(distanceKm * 2 * tier.perKm * 0.88) + 350;
+  } else {
+    baseCharge = Math.round(distanceKm * tier.perKm);
   }
-
+  const totalFare = Math.max(tier.minFare || 1698, baseCharge);
   const tollEst = Math.round((distanceKm / 70) * 55);
-  const driverAllowance = (tripType === 'roundtrip' || distanceKm > 200) ? 350 : 0;
-  const normOrigin = (origin || '').toLowerCase();
-  const normDest = (dest || '').toLowerCase();
-  const parkingCharge = (normOrigin.includes('airport') || normDest.includes('airport')) ? 100 : 0;
-
-  const subtotal = tier.baseFare + distanceCharge - roundTripDiscount + tollEst + driverAllowance + parkingCharge;
-  const gst = Math.round(subtotal * 0.05);
-  const totalFare = subtotal + gst;
 
   return {
     distanceKm,
@@ -227,15 +216,15 @@ function calculateServerFare(distanceKm, cabTier = 'sedan', tripType = 'oneway',
     tierId: cabTier,
     tierName: tier.name,
     tierModel: tier.model,
-    baseFare: tier.baseFare,
-    distanceCharge,
-    extraKm,
+    baseFare: tier.minFare,
+    distanceCharge: baseCharge,
+    extraKm: Math.max(0, distanceKm - 15),
     perKmRate: tier.perKm,
-    roundTripDiscount,
+    roundTripDiscount: tripType === 'roundtrip' ? Math.round(distanceKm * 2 * tier.perKm * 0.12) : 0,
     tollFastag: tollEst,
-    parking: parkingCharge,
-    driverAllowance,
-    gst,
+    parking: 0,
+    driverAllowance: tripType === 'roundtrip' ? 350 : 0,
+    gst: 0, // All-inclusive in fixed per-km price
     totalFare: Math.round(totalFare)
   };
 }
@@ -938,7 +927,8 @@ module.exports = async (req, res) => {
       // Server-side distance and fare recalculation (tamper-proof)
       const distanceKm = getRouteDistance(originCity, destCity);
       const serverFare = calculateServerFare(distanceKm, cabTier || 'sedan', 'oneway');
-      const baseTotal = serverFare.totalFare;
+      // If client provided totalFare (within reasonable floor), honor exact transparent quoted price
+      const baseTotal = (body.totalFare && Number(body.totalFare) >= 500) ? Math.round(Number(body.totalFare)) : serverFare.totalFare;
 
       // Find or create customer
       let user = (db.users || []).find(u => u.phone.replace(/\D/g, '').slice(-10) === cleanPhone);
@@ -972,12 +962,41 @@ module.exports = async (req, res) => {
         });
       }
 
-      const finalPayable = Math.max(0, baseTotal - walletDeducted);
+      // Coupon discount if applied
+      let couponDiscount = 0;
+      if (body.couponDiscount && Number(body.couponDiscount) > 0) {
+        couponDiscount = Math.min(500, Math.round(Number(body.couponDiscount)));
+      }
+
+      const finalPayable = Math.max(0, baseTotal - walletDeducted - couponDiscount);
       const bookingId = `OTB-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       const txnId = `TXN_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`;
+      const tripOtp = `${Math.floor(1000 + Math.random() * 9000)}`;
 
-      // Standardized Payment Status: PENDING | PAID | FAILED | PARTIALLY PAID | REFUNDED
-      const initialPaymentStatus = (paymentMethod === 'Token Advance (₹200)') ? 'PARTIALLY PAID (Awaiting Advance Verification)' : 'PENDING';
+      // Determine advance amount and balance due based on payment method
+      const payMethodStr = String(paymentMethod || 'Cash / UPI to Driver');
+      let advancePaid = 0;
+      let balanceDue = finalPayable;
+      let initialPaymentStatus = 'PENDING';
+
+      if (payMethodStr.includes('Razorpay') || payMethodStr.includes('Advance (₹299)') || payMethodStr.includes('Online Advance')) {
+        advancePaid = body.advancePaid ? Number(body.advancePaid) : Math.min(299, finalPayable);
+        balanceDue = Math.max(0, finalPayable - advancePaid);
+        initialPaymentStatus = body.paymentTxnId ? 'PARTIALLY PAID (Online Advance Verified)' : 'PARTIALLY PAID (Awaiting Advance Verification)';
+      } else if (payMethodStr.includes('₹200') || payMethodStr.includes('Advance (₹200)')) {
+        advancePaid = Math.min(200, finalPayable);
+        balanceDue = Math.max(0, finalPayable - advancePaid);
+        initialPaymentStatus = 'PARTIALLY PAID (Awaiting Advance Verification)';
+      } else if (payMethodStr.includes('Full') || payMethodStr.includes('100% Pre-paid')) {
+        advancePaid = finalPayable;
+        balanceDue = 0;
+        initialPaymentStatus = body.paymentTxnId ? 'PAID' : 'PENDING FULL PAYMENT';
+      } else {
+        // Cash / UPI to Driver (Zero Advance)
+        advancePaid = 0;
+        balanceDue = finalPayable;
+        initialPaymentStatus = 'PAYABLE TO DRIVER';
+      }
 
       const paymentRecord = {
         id: txnId,
@@ -985,13 +1004,16 @@ module.exports = async (req, res) => {
         customerId: user.id,
         passengerPhone: `+91 ${cleanPhone}`,
         amount: finalPayable,
+        advancePaid,
+        balanceDue,
         originalAmount: baseTotal,
         walletDeducted,
-        method: paymentMethod || 'UPI / PhonePe QR Code',
+        couponDiscount,
+        method: payMethodStr,
         status: initialPaymentStatus,
-        upiUtr: '',
+        upiUtr: body.upiUtr || '',
         verifiedBy: null,
-        verifiedAt: null,
+        verifiedAt: body.paymentTxnId ? new Date().toISOString() : null,
         createdAt: new Date().toISOString()
       };
 
@@ -1000,6 +1022,7 @@ module.exports = async (req, res) => {
 
       const newBooking = {
         bookingId,
+        tripOtp,
         customerId: user.id,
         paymentTxnId: txnId,
         passengerName: passengerName.trim(),
@@ -1019,7 +1042,11 @@ module.exports = async (req, res) => {
         totalFare: finalPayable,
         originalFare: baseTotal,
         walletUsed: walletDeducted,
-        paymentMethod: paymentMethod || 'UPI / PhonePe QR Code',
+        couponCode: body.couponCode || '',
+        couponDiscount,
+        advancePaid,
+        balanceDue,
+        paymentMethod: payMethodStr,
         paymentStatus: initialPaymentStatus,
         bookingStatus: 'REQUESTED',
         partnerNotice: 'Our partner/driver or agent will call you in 5 minutes to confirm booking.',
@@ -1032,7 +1059,7 @@ module.exports = async (req, res) => {
             note: 'Booking request placed. Agent call in 5 mins.'
           }
         ],
-        whatsappMessage: `🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* ${bookingId}\n*Passenger:* ${passengerName.trim()} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'} (${distanceKm} KM)\n*Schedule:* ${pickupDate || new Date().toISOString().split('T')[0]} at ${pickupTime || '10:00 AM'}\n*Total Fare:* ₹${finalPayable} (${paymentMethod || 'UPI / PhonePe QR Code'})\n*Status:* REQUESTED / CONFIRMED`,
+        whatsappMessage: `🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* ${bookingId}\n*Passenger:* ${passengerName.trim()} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'} (${distanceKm} KM)\n*Schedule:* ${pickupDate || new Date().toISOString().split('T')[0]} at ${pickupTime || '10:00 AM'}\n*Total Fare:* ₹${finalPayable} (Advance: ₹${advancePaid}, Balance Due: ₹${balanceDue})\n*Status:* REQUESTED / CONFIRMED`,
         whatsappDispatchUrl: `https://wa.me/917281851011?text=${encodeURIComponent(`🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n*Booking ID:* ${bookingId}\n*Passenger:* ${passengerName.trim()} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'}\n*Total Fare:* ₹${finalPayable}`)}`,
         createdAt: new Date().toISOString()
       };
@@ -1047,7 +1074,7 @@ module.exports = async (req, res) => {
         entityId: bookingId,
         action: 'CREATE_REQUEST',
         actor: user.phone,
-        details: `${originCity} → ${destCity} for ₹${finalPayable}`,
+        details: `${originCity} → ${destCity} for ₹${finalPayable} (${payMethodStr})`,
         createdAt: new Date().toISOString()
       });
 
