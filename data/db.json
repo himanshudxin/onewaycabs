@@ -508,22 +508,15 @@
       "adminId": "adm_01",
       "role": "admin",
       "createdAt": "2026-10-01T16:58:44.977Z"
+    },
+    {
+      "token": "adm_sess_3484993b45c06ece6e52868a6005fb95",
+      "adminId": "adm_01",
+      "role": "admin",
+      "createdAt": "2026-10-01T17:18:57.190Z"
     }
   ],
   "bookings": [
-    {
-      "bookingId": "OTB-REAL-1790874195769",
-      "passengerName": "Real World MongoDB Passenger",
-      "passengerPhone": "9876543210",
-      "originCity": "Patna",
-      "destCity": "Gaya",
-      "pickupDate": "2026-10-08",
-      "pickupTime": "10:00 AM",
-      "totalFare": 2198,
-      "fleetClass": "Prime Sedan",
-      "bookingStatus": "REQUESTED",
-      "createdAt": "2026-10-01T17:03:15.769Z"
-    },
     {
       "bookingId": "OTB-2026-5392",
       "assignedDriverId": "drv_101",
@@ -4694,6 +4687,19 @@
       "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-8473\nPassenger: Rajesh Verma\nMobile: +91 9893455774\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
       "assignedDriverId": "drv_101",
       "paymentTxnRef": "UPI998877665544"
+    },
+    {
+      "bookingId": "OTB-REAL-1790874195769",
+      "bookingStatus": "REQUESTED",
+      "createdAt": "2026-10-01T17:03:15.769Z",
+      "destCity": "Gaya",
+      "fleetClass": "Prime Sedan",
+      "originCity": "Patna",
+      "passengerName": "Real World MongoDB Passenger",
+      "passengerPhone": "9876543210",
+      "pickupDate": "2026-10-08",
+      "pickupTime": "10:00 AM",
+      "totalFare": 2198
     }
   ],
   "drivers": [

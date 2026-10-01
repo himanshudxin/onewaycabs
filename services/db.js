@@ -2,9 +2,10 @@
  * OneWayTaxiBihar (onewaytaxibihar.com)
  * Enterprise Unified Database Service
  * Real-World MongoDB Atlas & PostgreSQL Service with Zero-Downtime Hot Local Fallback
+ * Optimized for Vercel Serverless & Production Node.js
  */
 
-require('dotenv').config();
+try { require('dotenv').config(); } catch (e) {}
 const fs = require('fs');
 const path = require('path');
 
@@ -28,27 +29,35 @@ const ALL_COLLECTIONS = [
 ];
 
 function getLocalDbPath() {
+  const candidatePaths = [
+    path.join(process.cwd(), 'data', 'db.json'),
+    path.join(__dirname, '..', 'data', 'db.json'),
+    path.join(__dirname, 'data', 'db.json')
+  ];
+
+  let srcPath = candidatePaths.find(p => fs.existsSync(p));
+
   if (process.env.VERCEL) {
-    if (!fs.existsSync(DB_TMP_PATH) && fs.existsSync(DB_LOCAL_PATH)) {
+    if (!fs.existsSync(DB_TMP_PATH) && srcPath) {
       try {
-        fs.copyFileSync(DB_LOCAL_PATH, DB_TMP_PATH);
+        fs.copyFileSync(srcPath, DB_TMP_PATH);
       } catch (e) {
         console.warn('[DB] Failed to seed /tmp/db.json:', e.message);
       }
     }
-    return DB_TMP_PATH;
+    return fs.existsSync(DB_TMP_PATH) ? DB_TMP_PATH : (srcPath || DB_LOCAL_PATH);
   }
-  return DB_LOCAL_PATH;
+  return srcPath || DB_LOCAL_PATH;
 }
 
-// In-Memory Database Cache
+// In-Memory Database Cache & Serverless Global Connection
 let memoryDb = null;
 let mongoClient = null;
 let mongoDbInstance = null;
 let pgPool = null;
 let activeEngine = 'local'; // 'mongodb' | 'postgres' | 'local'
 let isDbConnected = false;
-let retryInterval = null;
+let isInitializing = false;
 
 // 1. Initial Local DB Loader
 function loadLocalDb() {
@@ -174,9 +183,6 @@ async function initMongo() {
     return true;
   } catch (err) {
     console.warn('[Database Service] MongoDB Atlas notice:', err.message);
-    if (err.message.includes('SSL routines') || err.message.includes('alert') || err.message.includes('whitelist') || err.message.includes('timed out')) {
-      console.warn('[Database Service] 💡 Real-World Setup: In MongoDB Atlas Dashboard ➔ "Network Access" ➔ Add IP Address ➔ Select "Allow Access from Anywhere (0.0.0.0/0)".');
-    }
     mongoClient = null;
     mongoDbInstance = null;
     isDbConnected = false;
@@ -186,36 +192,40 @@ async function initMongo() {
 
 // 4. Primary Initializer
 async function initDatabase() {
-  loadLocalDb();
-
-  // Try MongoDB Atlas first for real-world persistence, or PostgreSQL if configured
-  let ok = await initMongo();
-  if (!ok) {
-    ok = await initPostgres();
+  if (isDbConnected && memoryDb) {
+    return { engine: activeEngine, connected: isDbConnected };
   }
 
-  if (ok && isDbConnected) {
-    await pullFromRemoteCloud();
-    // Also push any local initial seed data to MongoDB if MongoDB is clean
-    await seedRemoteIfEmpty();
-  } else {
-    activeEngine = 'local';
-    console.log('[Database Service] ℹ️ Using persistent local storage (data/db.json). Ready for production database attach.');
-    
-    // Auto-retry in background every 45 seconds without blocking
-    if (!retryInterval) {
-      retryInterval = setInterval(async () => {
-        if (!isDbConnected && process.env.MONGODB_URI) {
-          const reconnected = await initMongo();
-          if (reconnected) {
-            clearInterval(retryInterval);
-            retryInterval = null;
-            await pullFromRemoteCloud();
-            await seedRemoteIfEmpty();
-          }
-        }
-      }, 45000);
+  if (isInitializing) {
+    // Wait for in-flight initialization
+    let attempts = 0;
+    while (isInitializing && attempts < 20) {
+      await new Promise(r => setTimeout(r, 100));
+      attempts++;
     }
+    if (isDbConnected && memoryDb) {
+      return { engine: activeEngine, connected: isDbConnected };
+    }
+  }
+
+  isInitializing = true;
+  loadLocalDb();
+
+  try {
+    let ok = await initMongo();
+    if (!ok) {
+      ok = await initPostgres();
+    }
+
+    if (ok && isDbConnected) {
+      await pullFromRemoteCloud();
+      await seedRemoteIfEmpty();
+    } else {
+      activeEngine = 'local';
+      console.log('[Database Service] ℹ️ Using persistent local storage. Ready for production database attach.');
+    }
+  } finally {
+    isInitializing = false;
   }
 
   return { engine: activeEngine, connected: isDbConnected };
@@ -334,7 +344,13 @@ async function syncToRemoteCloud(db) {
           if (c.code) await mongoDbInstance.collection('coupons').updateOne({ code: c.code }, { $set: c }, { upsert: true });
         }
       }
-      // 11. Settings
+      // 11. Sessions
+      if (Array.isArray(db.sessions)) {
+        for (const s of db.sessions) {
+          if (s.token) await mongoDbInstance.collection('sessions').updateOne({ token: s.token }, { $set: s }, { upsert: true });
+        }
+      }
+      // 12. Settings
       if (db.settings) {
         await mongoDbInstance.collection('settings').updateOne({ id: 'global_settings' }, { $set: { ...db.settings, id: 'global_settings' } }, { upsert: true });
       }
@@ -363,6 +379,13 @@ function getDb() {
   return memoryDb;
 }
 
+async function getDbAsync() {
+  if (!memoryDb || !isDbConnected) {
+    await initDatabase();
+  }
+  return memoryDb || getDb();
+}
+
 function saveDb(data) {
   memoryDb = data;
   try {
@@ -374,13 +397,31 @@ function saveDb(data) {
     console.warn('[DB] Local save failed:', e.message);
   }
 
-  // Push to MongoDB Atlas / PostgreSQL asynchronously
+  // Push to MongoDB Atlas asynchronously
   syncToRemoteCloud(data).catch(() => {});
+}
+
+async function saveDbAsync(data) {
+  memoryDb = data;
+  try {
+    const targetPath = getLocalDbPath();
+    const dir = path.dirname(targetPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(targetPath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) {
+    console.warn('[DB] Local save failed:', e.message);
+  }
+
+  try {
+    await syncToRemoteCloud(data);
+  } catch (e) {
+    console.warn('[DB] syncToRemoteCloud async error:', e.message);
+  }
 }
 
 // Atomic Booking Operations
 async function createBooking(booking) {
-  const db = getDb();
+  const db = await getDbAsync();
   if (!db.bookings) db.bookings = [];
   
   // Deduplication check: 15-second window
@@ -401,27 +442,27 @@ async function createBooking(booking) {
   }
 
   db.bookings.unshift(booking);
-  saveDb(db);
+  await saveDbAsync(db);
   return { booking, deduplicated: false };
 }
 
 async function findBooking(bookingId) {
-  const db = getDb();
+  const db = await getDbAsync();
   return (db.bookings || []).find(b => b.bookingId === bookingId || b.id === bookingId) || null;
 }
 
 async function updateBooking(bookingId, patch) {
-  const db = getDb();
+  const db = await getDbAsync();
   const idx = (db.bookings || []).findIndex(b => b.bookingId === bookingId || b.id === bookingId);
   if (idx === -1) return null;
 
   db.bookings[idx] = { ...db.bookings[idx], ...patch, updatedAt: new Date().toISOString() };
-  saveDb(db);
+  await saveDbAsync(db);
   return db.bookings[idx];
 }
 
 async function recordPayment(payment) {
-  const db = getDb();
+  const db = await getDbAsync();
   if (!db.payments) db.payments = [];
   const idx = db.payments.findIndex(p => p.orderId === payment.orderId || p.paymentId === payment.paymentId);
   if (idx >= 0) {
@@ -429,12 +470,12 @@ async function recordPayment(payment) {
   } else {
     db.payments.unshift({ ...payment, createdAt: new Date().toISOString() });
   }
-  saveDb(db);
+  await saveDbAsync(db);
   return payment;
 }
 
 async function addAuditLog(action, actor, details) {
-  const db = getDb();
+  const db = await getDbAsync();
   if (!db.audit_logs) db.audit_logs = [];
   const logEntry = {
     id: `log_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
@@ -445,7 +486,7 @@ async function addAuditLog(action, actor, details) {
   };
   db.audit_logs.unshift(logEntry);
   if (db.audit_logs.length > 500) db.audit_logs.pop();
-  saveDb(db);
+  await saveDbAsync(db);
   return logEntry;
 }
 
@@ -465,7 +506,9 @@ function getDatabaseStatus() {
 module.exports = {
   initDatabase,
   getDb,
+  getDbAsync,
   saveDb,
+  saveDbAsync,
   createBooking,
   findBooking,
   updateBooking,

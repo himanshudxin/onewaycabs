@@ -27,22 +27,26 @@ function loadDb() {
   return dbService.getDb();
 }
 
-function saveDb(db) {
-  dbService.saveDb(db);
+async function saveDb(db) {
+  await dbService.saveDbAsync(db);
 }
 
 
 let memoryCities = null;
 function loadCities() {
   if (memoryCities) return memoryCities;
-  try {
-    const cPath = path.join(process.cwd(), 'data', 'cities.json');
-    if (fs.existsSync(cPath)) {
-      memoryCities = JSON.parse(fs.readFileSync(cPath, 'utf8').replace(/^\uFEFF/, ''));
-      return memoryCities;
-    }
-  } catch (e) {
-    console.warn('[DB] Failed to load cities.json:', e.message);
+  const candidatePaths = [
+    path.join(process.cwd(), 'data', 'cities.json'),
+    path.join(__dirname, '..', 'data', 'cities.json'),
+    path.join(__dirname, 'data', 'cities.json')
+  ];
+  for (const cPath of candidatePaths) {
+    try {
+      if (fs.existsSync(cPath)) {
+        memoryCities = JSON.parse(fs.readFileSync(cPath, 'utf8').replace(/^\uFEFF/, ''));
+        return memoryCities;
+      }
+    } catch (e) {}
   }
   return [];
 }
@@ -50,14 +54,18 @@ function loadCities() {
 let memoryLocations = null;
 function loadLocations() {
   if (memoryLocations) return memoryLocations;
-  try {
-    const lPath = path.join(process.cwd(), 'data', 'locations.json');
-    if (fs.existsSync(lPath)) {
-      memoryLocations = JSON.parse(fs.readFileSync(lPath, 'utf8').replace(/^\uFEFF/, ''));
-      return memoryLocations;
-    }
-  } catch (e) {
-    console.warn('[DB] Failed to load locations.json:', e.message);
+  const candidatePaths = [
+    path.join(process.cwd(), 'data', 'locations.json'),
+    path.join(__dirname, '..', 'data', 'locations.json'),
+    path.join(__dirname, 'data', 'locations.json')
+  ];
+  for (const lPath of candidatePaths) {
+    try {
+      if (fs.existsSync(lPath)) {
+        memoryLocations = JSON.parse(fs.readFileSync(lPath, 'utf8').replace(/^\uFEFF/, ''));
+        return memoryLocations;
+      }
+    } catch (e) {}
   }
   return [];
 }
@@ -295,8 +303,8 @@ function getSessionDriver(req, db) {
 module.exports = async (req, res) => {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
 
   if (req.method === 'OPTIONS') {
     res.statusCode = 200;
@@ -304,29 +312,33 @@ module.exports = async (req, res) => {
   }
 
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-  const pathname = url.pathname.replace(/^\/api/, '');
+  let pathname = url.pathname.replace(/^\/api/i, '');
+  if (!pathname.startsWith('/')) pathname = '/' + pathname;
+  if (pathname.length > 1 && pathname.endsWith('/')) pathname = pathname.slice(0, -1);
   const method = req.method.toUpperCase();
 
   // Parse JSON Body
   let body = {};
-  if (method === 'POST' || method === 'PUT') {
-    try {
-      if (req.body && typeof req.body === 'object') {
-        body = req.body;
-      } else if (typeof req.body === 'string') {
-        body = JSON.parse(req.body);
-      } else {
+  if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
+    if (req.body && typeof req.body === 'object') {
+      body = req.body;
+    } else if (typeof req.body === 'string' && req.body.trim()) {
+      try { body = JSON.parse(req.body); } catch (e) { body = {}; }
+    } else {
+      try {
         const buffers = [];
         for await (const chunk of req) buffers.push(chunk);
-        const data = Buffer.concat(buffers).toString();
+        const data = Buffer.concat(buffers).toString('utf8');
         body = data ? JSON.parse(data) : {};
+      } catch (e) {
+        body = {};
       }
-    } catch (e) {
-      body = {};
     }
   }
 
-  const db = loadDb();
+  // Await Database Ready State & MongoDB Hydration for Serverless
+  await dbService.initDatabase();
+  const db = await dbService.getDbAsync();
 
   const sendJson = (status, data) => {
     res.statusCode = status;
@@ -496,7 +508,7 @@ module.exports = async (req, res) => {
         role: 'customer',
         createdAt: new Date().toISOString()
       });
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -576,7 +588,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -599,7 +611,7 @@ module.exports = async (req, res) => {
       const token = authHeader.replace(/^Bearer\s+/i, '').trim();
       if (token && db.sessions) {
         db.sessions = db.sessions.filter(s => s.token !== token);
-        saveDb(db);
+        await saveDb(db);
       }
       return sendJson(200, { success: true, message: 'Logged out successfully' });
     }
@@ -1097,7 +1109,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       // Trigger asynchronous real SMS & WhatsApp dispatch
       notificationService.sendBookingConfirmationNotifications(newBooking).catch(err => {
@@ -1147,7 +1159,7 @@ module.exports = async (req, res) => {
         }
       }
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, message: 'Booking cancelled successfully with ₹0 fee' });
     }
 
@@ -1190,7 +1202,7 @@ module.exports = async (req, res) => {
         role: 'admin',
         createdAt: new Date().toISOString()
       });
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -1292,7 +1304,7 @@ module.exports = async (req, res) => {
             actor: 'Payment Gateway',
             note: `Online advance ₹${advanceAmt} received via ${orderId}`
           });
-          saveDb(db);
+          await saveDb(db);
           updatedBooking = b;
 
           // Dispatch confirmation SMS & WhatsApp
@@ -1336,7 +1348,7 @@ module.exports = async (req, res) => {
             b.balanceDue = Math.max(0, (b.totalFare || 0) - b.advancePaid);
             b.paymentStatus = 'PARTIALLY PAID (Webhook Verified)';
             b.bookingStatus = 'CONFIRMED';
-            saveDb(db);
+            await saveDb(db);
           }
         }
       }
@@ -1369,7 +1381,7 @@ module.exports = async (req, res) => {
           enableTokenAdvance: true,
           autoConfirmOnAdvance: true
         };
-        saveDb(db);
+        await saveDb(db);
       }
 
       return sendJson(200, {
@@ -1424,7 +1436,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -1496,7 +1508,7 @@ module.exports = async (req, res) => {
         timestamp: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -1595,7 +1607,7 @@ module.exports = async (req, res) => {
         details: `Admin logged in with Owner WhatsApp verification (+91 ${AUTHORIZED_ADMIN_PHONE})`,
         timestamp: new Date().toISOString()
       });
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -1663,7 +1675,7 @@ module.exports = async (req, res) => {
         db.leads.unshift(lead);
       }
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, message: 'Lead captured successfully', lead });
     }
 
@@ -1679,7 +1691,7 @@ module.exports = async (req, res) => {
         if (body.status) lead.status = body.status;
         if (body.note) lead.notes = body.note;
         lead.updatedAt = new Date().toISOString();
-        saveDb(db);
+        await saveDb(db);
         return sendJson(200, { success: true, lead });
       }
       return sendJson(404, { success: false, message: 'Lead not found' });
@@ -1711,7 +1723,7 @@ module.exports = async (req, res) => {
         note: 'Customer called and booking confirmed manually.'
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, booking });
     }
 
@@ -1744,7 +1756,7 @@ module.exports = async (req, res) => {
         note: `Driver assigned: ${driver.name} (${driver.vehicleNumber})`
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       // Trigger asynchronous driver details SMS & WhatsApp alert to passenger
       notificationService.sendDriverAssignmentNotifications(booking, driver).catch(err => {
@@ -1792,7 +1804,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, booking, payment });
     }
 
@@ -1893,7 +1905,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, booking });
     }
 
@@ -1936,7 +1948,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, balance: user.walletBalance, user });
     }
 
@@ -1972,7 +1984,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, driver: newDrv });
     }
 
@@ -2023,7 +2035,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, booking });
     }
 
@@ -2038,7 +2050,7 @@ module.exports = async (req, res) => {
         details: `${body.message} at ${body.source}:${body.lineno}`,
         createdAt: new Date().toISOString()
       });
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true });
     }
 
@@ -2130,7 +2142,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -2186,7 +2198,7 @@ module.exports = async (req, res) => {
           };
           if (!db.drivers) db.drivers = [];
           db.drivers.push(driver);
-          saveDb(db);
+          await saveDb(db);
         }
       }
 
@@ -2231,7 +2243,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -2290,7 +2302,7 @@ module.exports = async (req, res) => {
       const targetDriver = (db.drivers || []).find(d => d.id === driverAuth.driver.id);
       if (targetDriver) {
         targetDriver.dutyStatus = (dutyStatus === 'OFF_DUTY') ? 'OFF_DUTY' : 'ON_DUTY';
-        saveDb(db);
+        await saveDb(db);
       }
 
       return sendJson(200, { 
@@ -2341,7 +2353,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, booking, message: 'Trip accepted! Please call customer or tap "On The Way".' });
     }
 
@@ -2397,7 +2409,7 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, booking, message: `Trip status updated to ${statusUpper}` });
     }
 
@@ -2434,7 +2446,7 @@ module.exports = async (req, res) => {
         fare: fareData.totalFare,
         createdAt: new Date().toISOString()
       });
-      saveDb(db);
+      await saveDb(db);
 
       return sendJson(200, {
         success: true,
@@ -2710,7 +2722,7 @@ module.exports = async (req, res) => {
       };
       if (!db.coupons) db.coupons = [];
       db.coupons.push(newCpn);
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, coupon: newCpn });
     }
 
@@ -2745,7 +2757,7 @@ module.exports = async (req, res) => {
       };
       if (!db.vehicles) db.vehicles = [];
       db.vehicles.push(newVeh);
-      saveDb(db);
+      await saveDb(db);
       return sendJson(200, { success: true, vehicle: newVeh });
     }
 
