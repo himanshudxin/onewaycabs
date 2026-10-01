@@ -1,7 +1,7 @@
 /**
  * OneWayTaxiBihar (onewaytaxibihar.com)
  * Enterprise Unified Database Service
- * Supports MongoDB Atlas & PostgreSQL (Supabase / Neon / AWS RDS) with Zero-Downtime Local Fallback
+ * Real-World MongoDB Atlas & PostgreSQL Service with Zero-Downtime Hot Local Fallback
  */
 
 require('dotenv').config();
@@ -10,6 +10,22 @@ const path = require('path');
 
 const DB_LOCAL_PATH = path.join(process.cwd(), 'data', 'db.json');
 const DB_TMP_PATH = '/tmp/db.json';
+
+const ALL_COLLECTIONS = [
+  'bookings',
+  'drivers',
+  'driver_applications',
+  'users',
+  'vehicles',
+  'payments',
+  'wallet_ledger',
+  'leads',
+  'notifications',
+  'coupons',
+  'audit_logs',
+  'sessions',
+  'settings'
+];
 
 function getLocalDbPath() {
   if (process.env.VERCEL) {
@@ -28,9 +44,11 @@ function getLocalDbPath() {
 // In-Memory Database Cache
 let memoryDb = null;
 let mongoClient = null;
+let mongoDbInstance = null;
 let pgPool = null;
 let activeEngine = 'local'; // 'mongodb' | 'postgres' | 'local'
 let isDbConnected = false;
+let retryInterval = null;
 
 // 1. Initial Local DB Loader
 function loadLocalDb() {
@@ -51,9 +69,12 @@ function loadLocalDb() {
       sessions: [],
       bookings: [],
       drivers: [],
+      driver_applications: [],
       vehicles: [],
       payments: [],
       wallet_ledger: [],
+      leads: [],
+      notifications: [],
       audit_logs: [],
       admins: [],
       coupons: [],
@@ -78,7 +99,6 @@ async function initPostgres() {
     });
 
     const client = await pgPool.connect();
-    // Auto-create document/relational tables if not present
     await client.query(`
       CREATE TABLE IF NOT EXISTS oneway_documents (
         collection_name VARCHAR(64) PRIMARY KEY,
@@ -89,7 +109,7 @@ async function initPostgres() {
     client.release();
     activeEngine = 'postgres';
     isDbConnected = true;
-    console.log('[Database Service] ✅ Connected to PostgreSQL (Supabase/Neon/RDS)');
+    console.log('[Database Service] ✅ Connected to PostgreSQL Database');
     return true;
   } catch (err) {
     console.warn('[Database Service] PostgreSQL connection notice:', err.message);
@@ -98,28 +118,57 @@ async function initPostgres() {
   }
 }
 
-// 3. MongoDB Atlas Connection Initialization
+// 3. Real-World MongoDB Atlas Connection Initialization
 async function initMongo() {
   const mongoUri = process.env.MONGODB_URI;
   if (!mongoUri) return false;
 
   try {
-    const { MongoClient } = require('mongodb');
-    mongoClient = new MongoClient(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
-      tlsAllowInvalidCertificates: true
-    });
+    const { MongoClient, ServerApiVersion } = require('mongodb');
+    
+    // Connection options for maximum cloud reliability across Node versions & Atlas
+    const clientOptions = {
+      serverSelectionTimeoutMS: 6000,
+      connectTimeoutMS: 8000,
+      maxPoolSize: 20,
+      minPoolSize: 2,
+      retryWrites: true,
+      retryReads: true
+    };
+
+    mongoClient = new MongoClient(mongoUri, clientOptions);
     await mongoClient.connect();
+
+    // Verify ping to ensure cluster is reachable
+    const dbName = process.env.MONGODB_DB_NAME || 'onewaytaxibihar';
+    mongoDbInstance = mongoClient.db(dbName);
+    await mongoDbInstance.command({ ping: 1 });
+
     activeEngine = 'mongodb';
     isDbConnected = true;
-    console.log('[Database Service] ✅ Connected to MongoDB Atlas Cloud');
+    console.log(`[Database Service] 🚀 ✅ Connected to MongoDB Atlas Cloud (${dbName})`);
+
+    // Create essential indexes for real-world high speed
+    try {
+      await mongoDbInstance.collection('bookings').createIndex({ bookingId: 1 }, { unique: true, sparse: true });
+      await mongoDbInstance.collection('bookings').createIndex({ passengerPhone: 1 });
+      await mongoDbInstance.collection('drivers').createIndex({ phone: 1 });
+      await mongoDbInstance.collection('users').createIndex({ phone: 1 });
+      await mongoDbInstance.collection('leads').createIndex({ cleanPhone: 1 });
+      await mongoDbInstance.collection('payments').createIndex({ bookingId: 1 });
+    } catch (idxErr) {
+      // Non-fatal
+    }
+
     return true;
   } catch (err) {
     console.warn('[Database Service] MongoDB Atlas notice:', err.message);
-    if (err.message.includes('SSL routines') || err.message.includes('alert')) {
-      console.warn('[Database Service] 💡 Tip: In MongoDB Atlas dashboard, add 0.0.0.0/0 to "Network Access" to allow cloud & local connections.');
+    if (err.message.includes('SSL routines') || err.message.includes('alert') || err.message.includes('whitelist') || err.message.includes('timed out')) {
+      console.warn('[Database Service] 💡 Real-World Setup: In MongoDB Atlas Dashboard ➔ "Network Access" ➔ Add IP Address ➔ Select "Allow Access from Anywhere (0.0.0.0/0)".');
     }
     mongoClient = null;
+    mongoDbInstance = null;
+    isDbConnected = false;
     return false;
   }
 }
@@ -128,17 +177,34 @@ async function initMongo() {
 async function initDatabase() {
   loadLocalDb();
 
-  // Try PostgreSQL first if configured, else MongoDB Atlas
-  let ok = await initPostgres();
+  // Try MongoDB Atlas first for real-world persistence, or PostgreSQL if configured
+  let ok = await initMongo();
   if (!ok) {
-    ok = await initMongo();
+    ok = await initPostgres();
   }
 
   if (ok && isDbConnected) {
     await pullFromRemoteCloud();
+    // Also push any local initial seed data to MongoDB if MongoDB is clean
+    await seedRemoteIfEmpty();
   } else {
     activeEngine = 'local';
     console.log('[Database Service] ℹ️ Using persistent local storage (data/db.json). Ready for production database attach.');
+    
+    // Auto-retry in background every 45 seconds without blocking
+    if (!retryInterval) {
+      retryInterval = setInterval(async () => {
+        if (!isDbConnected && process.env.MONGODB_URI) {
+          const reconnected = await initMongo();
+          if (reconnected) {
+            clearInterval(retryInterval);
+            retryInterval = null;
+            await pullFromRemoteCloud();
+            await seedRemoteIfEmpty();
+          }
+        }
+      }, 45000);
+    }
   }
 
   return { engine: activeEngine, connected: isDbConnected };
@@ -147,52 +213,122 @@ async function initDatabase() {
 // 5. Remote Sync Operations
 async function pullFromRemoteCloud() {
   try {
-    if (activeEngine === 'mongodb' && mongoClient) {
-      const db = mongoClient.db(process.env.MONGODB_DB_NAME || 'onewaytaxibihar');
-      const collections = ['bookings', 'drivers', 'users', 'vehicles', 'payments', 'coupons', 'audit_logs'];
-      for (const colName of collections) {
-        const docs = await db.collection(colName).find({}).toArray();
-        if (docs && docs.length > 0) {
-          memoryDb[colName] = docs.map(({ _id, ...rest }) => rest);
+    if (activeEngine === 'mongodb' && mongoDbInstance) {
+      for (const colName of ALL_COLLECTIONS) {
+        if (colName === 'settings') {
+          const doc = await mongoDbInstance.collection('settings').findOne({ id: 'global_settings' });
+          if (doc) {
+            const { _id, ...rest } = doc;
+            memoryDb.settings = rest;
+          }
+        } else {
+          const docs = await mongoDbInstance.collection(colName).find({}).toArray();
+          if (docs && docs.length > 0) {
+            memoryDb[colName] = docs.map(({ _id, ...rest }) => rest);
+          }
         }
       }
-      console.log(`[Database Service] Remote MongoDB records loaded into memory.`);
+      console.log(`[Database Service] Remote MongoDB records hydrated into memory.`);
     } else if (activeEngine === 'postgres' && pgPool) {
       const res = await pgPool.query('SELECT collection_name, data FROM oneway_documents');
       for (const row of res.rows) {
         memoryDb[row.collection_name] = row.data;
       }
-      console.log(`[Database Service] Remote PostgreSQL records loaded into memory.`);
+      console.log(`[Database Service] Remote PostgreSQL records hydrated into memory.`);
     }
   } catch (err) {
     console.warn('[Database Service] Pull from cloud warning:', err.message);
   }
 }
 
+async function seedRemoteIfEmpty() {
+  try {
+    if (activeEngine === 'mongodb' && mongoDbInstance && memoryDb) {
+      const count = await mongoDbInstance.collection('bookings').countDocuments();
+      if (count === 0 && Array.isArray(memoryDb.bookings) && memoryDb.bookings.length > 0) {
+        console.log('[Database Service] Seeding initial database records to MongoDB Atlas...');
+        await syncToRemoteCloud(memoryDb);
+        console.log('[Database Service] ✅ MongoDB Atlas seeded successfully!');
+      }
+    }
+  } catch (e) {
+    console.warn('[Database Service] Seeding note:', e.message);
+  }
+}
+
 async function syncToRemoteCloud(db) {
   try {
-    if (activeEngine === 'mongodb' && mongoClient) {
-      const mdb = mongoClient.db(process.env.MONGODB_DB_NAME || 'onewaytaxibihar');
+    if (activeEngine === 'mongodb' && mongoDbInstance) {
+      // 1. Bookings
       if (Array.isArray(db.bookings)) {
         for (const b of db.bookings) {
           const bId = b.bookingId || b.id;
-          if (bId) await mdb.collection('bookings').updateOne({ bookingId: bId }, { $set: { ...b, bookingId: bId } }, { upsert: true });
+          if (bId) await mongoDbInstance.collection('bookings').updateOne({ bookingId: bId }, { $set: { ...b, bookingId: bId } }, { upsert: true });
         }
       }
+      // 2. Drivers
+      if (Array.isArray(db.drivers)) {
+        for (const d of db.drivers) {
+          const dId = d.id || d.phone;
+          if (dId) await mongoDbInstance.collection('drivers').updateOne({ id: dId }, { $set: { ...d, id: dId } }, { upsert: true });
+        }
+      }
+      // 3. Driver Applications
+      if (Array.isArray(db.driver_applications)) {
+        for (const da of db.driver_applications) {
+          const daId = da.id || da.phone;
+          if (daId) await mongoDbInstance.collection('driver_applications').updateOne({ id: daId }, { $set: { ...da, id: daId } }, { upsert: true });
+        }
+      }
+      // 4. Users
       if (Array.isArray(db.users)) {
         for (const u of db.users) {
-          if (u.id) await mdb.collection('users').updateOne({ id: u.id }, { $set: u }, { upsert: true });
+          if (u.id) await mongoDbInstance.collection('users').updateOne({ id: u.id }, { $set: u }, { upsert: true });
         }
       }
+      // 5. Leads
+      if (Array.isArray(db.leads)) {
+        for (const l of db.leads) {
+          if (l.id) await mongoDbInstance.collection('leads').updateOne({ id: l.id }, { $set: l }, { upsert: true });
+        }
+      }
+      // 6. Payments
       if (Array.isArray(db.payments)) {
         for (const p of db.payments) {
           const pId = p.id || p.orderId || p.paymentId;
-          if (pId) await mdb.collection('payments').updateOne({ id: pId }, { $set: p }, { upsert: true });
+          if (pId) await mongoDbInstance.collection('payments').updateOne({ id: pId }, { $set: p }, { upsert: true });
         }
       }
+      // 7. Wallet Ledger
+      if (Array.isArray(db.wallet_ledger)) {
+        for (const w of db.wallet_ledger) {
+          if (w.id) await mongoDbInstance.collection('wallet_ledger').updateOne({ id: w.id }, { $set: w }, { upsert: true });
+        }
+      }
+      // 8. Notifications
+      if (Array.isArray(db.notifications)) {
+        for (const n of db.notifications) {
+          if (n.id) await mongoDbInstance.collection('notifications').updateOne({ id: n.id }, { $set: n }, { upsert: true });
+        }
+      }
+      // 9. Vehicles
+      if (Array.isArray(db.vehicles)) {
+        for (const v of db.vehicles) {
+          if (v.id) await mongoDbInstance.collection('vehicles').updateOne({ id: v.id }, { $set: v }, { upsert: true });
+        }
+      }
+      // 10. Coupons
+      if (Array.isArray(db.coupons)) {
+        for (const c of db.coupons) {
+          if (c.code) await mongoDbInstance.collection('coupons').updateOne({ code: c.code }, { $set: c }, { upsert: true });
+        }
+      }
+      // 11. Settings
+      if (db.settings) {
+        await mongoDbInstance.collection('settings').updateOne({ id: 'global_settings' }, { $set: { ...db.settings, id: 'global_settings' } }, { upsert: true });
+      }
     } else if (activeEngine === 'postgres' && pgPool) {
-      const collections = ['bookings', 'drivers', 'users', 'vehicles', 'payments', 'coupons', 'audit_logs'];
-      for (const col of collections) {
+      for (const col of ALL_COLLECTIONS) {
         if (db[col]) {
           await pgPool.query(`
             INSERT INTO oneway_documents (collection_name, data, updated_at)
@@ -227,7 +363,7 @@ function saveDb(data) {
     console.warn('[DB] Local save failed:', e.message);
   }
 
-  // Push to remote cloud asynchronously without blocking HTTP request
+  // Push to MongoDB Atlas / PostgreSQL asynchronously
   syncToRemoteCloud(data).catch(() => {});
 }
 
@@ -297,7 +433,7 @@ async function addAuditLog(action, actor, details) {
     timestamp: new Date().toISOString()
   };
   db.audit_logs.unshift(logEntry);
-  if (db.audit_logs.length > 500) db.audit_logs.pop(); // keep last 500 entries
+  if (db.audit_logs.length > 500) db.audit_logs.pop();
   saveDb(db);
   return logEntry;
 }
@@ -310,7 +446,8 @@ function getDatabaseStatus() {
     hasPostgresUri: !!(process.env.DATABASE_URL || process.env.POSTGRES_URL),
     totalBookings: (memoryDb?.bookings || []).length,
     totalDrivers: (memoryDb?.drivers || []).length,
-    totalUsers: (memoryDb?.users || []).length
+    totalUsers: (memoryDb?.users || []).length,
+    totalLeads: (memoryDb?.leads || []).length
   };
 }
 
