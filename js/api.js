@@ -615,38 +615,6 @@ class ApiClient {
     return { success: true, bookings: [] };
   }
 
-  // Record Visitor / Fare Check Lead to Admin Desk
-  static async sendLead(leadData) {
-    // 1. Local caching for offline / instant UI update
-    try {
-      const localLeads = JSON.parse(localStorage.getItem("otb_leads") || "[]");
-      const cleanPhone = (leadData.cleanPhone || leadData.phone || "").replace(/\D/g, "").slice(-10);
-      const idx = localLeads.findIndex(l => {
-        const lp = (l.cleanPhone || l.phone || "").replace(/\D/g, "").slice(-10);
-        return lp === cleanPhone && l.originCity === leadData.originCity && l.destCity === leadData.destCity;
-      });
-      const updatedItem = Object.assign({
-        id: "LEAD_" + Date.now(),
-        cleanPhone,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }, leadData);
-
-      if (idx >= 0) {
-        localLeads[idx] = Object.assign(localLeads[idx], updatedItem, { id: localLeads[idx].id });
-      } else {
-        localLeads.unshift(updatedItem);
-      }
-      localStorage.setItem("otb_leads", JSON.stringify(localLeads.slice(0, 50)));
-    } catch (e) {}
-
-    // 2. Dispatch to Server REST API
-    return await this.request("/api/leads", {
-      method: "POST",
-      body: JSON.stringify(leadData)
-    });
-  }
-
   static async adminGetLeads(token) {
     const res = await this.request("/api/admin/leads", {
       headers: { Authorization: `Bearer ${token}` }

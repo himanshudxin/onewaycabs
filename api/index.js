@@ -336,9 +336,8 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Await Database Ready State & MongoDB Hydration for Serverless
-  await dbService.initDatabase();
-  const db = await dbService.getDbAsync();
+  // Await Database Ready State & Fresh MongoDB Hydration for Serverless
+  const db = await dbService.getDbAsync(true);
 
   const sendJson = (status, data) => {
     res.statusCode = status;
@@ -1098,6 +1097,44 @@ module.exports = async (req, res) => {
       if (!db.bookings) db.bookings = [];
       db.bookings.unshift(newBooking);
 
+      // Push Notification Alert for Admin Central Dispatch
+      if (!db.notifications) db.notifications = [];
+      db.notifications.unshift({
+        id: `NOTIF_BOOK_${Date.now()}`,
+        type: 'NEW_BOOKING_REQUEST',
+        title: `🚨 New Cab Booking: ${bookingId}`,
+        message: `${passengerName.trim()} (+91 ${cleanPhone}) requested ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'} (${serverFare.tierName}). Total Fare: ₹${finalPayable}.`,
+        bookingId,
+        createdAt: new Date().toISOString()
+      });
+
+      // Update or create Lead record as CONVERTED
+      if (!db.leads) db.leads = [];
+      const leadIdx = db.leads.findIndex(l => (l.cleanPhone === cleanPhone || (l.phone && l.phone.includes(cleanPhone))) && l.originCity === (originCity || 'Patna') && l.destCity === (destCity || 'Gaya'));
+      if (leadIdx >= 0) {
+        db.leads[leadIdx].status = 'CONVERTED';
+        db.leads[leadIdx].bookingId = bookingId;
+        db.leads[leadIdx].updatedAt = new Date().toISOString();
+      } else {
+        db.leads.unshift({
+          id: `LEAD_${Date.now()}`,
+          phone: `+91 ${cleanPhone}`,
+          cleanPhone,
+          passengerName: passengerName.trim(),
+          originCity: originCity || 'Patna',
+          destCity: destCity || 'Gaya',
+          tripType: 'oneway',
+          pickupDate: pickupDate || new Date().toISOString().split('T')[0],
+          pickupTime: pickupTime || '10:00 AM',
+          distanceKm,
+          estFareSedan: finalPayable,
+          status: 'CONVERTED',
+          bookingId,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+
       // Audit Log
       db.audit_logs.push({
         id: `AUD_${Date.now()}`,
@@ -1672,7 +1709,16 @@ module.exports = async (req, res) => {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
-        db.leads.unshift(lead);
+        // Push Notification Alert for Admin Central Dispatch
+        if (!db.notifications) db.notifications = [];
+        db.notifications.unshift({
+          id: `NOTIF_LEAD_${Date.now()}`,
+          type: 'NEW_ROUTE_INQUIRY',
+          title: `⚡ New Route Inquiry: ${orig} ➔ ${dest}`,
+          message: `Visitor (+91 ${cleanPhone}) checked fare for ${orig} ➔ ${dest} (${body.distanceKm || 100} KM). Sedan Rate: ₹${body.estFareSedan || 2198}.`,
+          leadId: lead.id,
+          createdAt: new Date().toISOString()
+        });
       }
 
       await saveDb(db);

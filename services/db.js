@@ -231,30 +231,44 @@ async function initDatabase() {
   return { engine: activeEngine, connected: isDbConnected };
 }
 
-// 5. Remote Sync Operations
+// 5. Remote Sync Operations (High-Performance Parallel Hydration)
+let lastHydrationTime = 0;
+
 async function pullFromRemoteCloud() {
   try {
     if (activeEngine === 'mongodb' && mongoDbInstance) {
-      for (const colName of ALL_COLLECTIONS) {
-        if (colName === 'settings') {
-          const doc = await mongoDbInstance.collection('settings').findOne({ id: 'global_settings' });
-          if (doc) {
-            const { _id, ...rest } = doc;
-            memoryDb.settings = rest;
+      if (!memoryDb) loadLocalDb();
+      const promises = ALL_COLLECTIONS.map(async (colName) => {
+        try {
+          if (colName === 'settings') {
+            const doc = await mongoDbInstance.collection('settings').findOne({ id: 'global_settings' });
+            if (doc) {
+              const { _id, ...rest } = doc;
+              memoryDb.settings = rest;
+            }
+          } else {
+            const docs = await mongoDbInstance.collection(colName).find({}).toArray();
+            if (docs && docs.length > 0) {
+              const sanitized = docs.map(({ _id, ...rest }) => rest);
+              if (['bookings', 'leads', 'notifications', 'payments', 'audit_logs'].includes(colName)) {
+                sanitized.sort((a, b) => new Date(b.createdAt || b.updatedAt || 0) - new Date(a.createdAt || a.updatedAt || 0));
+              }
+              memoryDb[colName] = sanitized;
+            }
           }
-        } else {
-          const docs = await mongoDbInstance.collection(colName).find({}).toArray();
-          if (docs && docs.length > 0) {
-            memoryDb[colName] = docs.map(({ _id, ...rest }) => rest);
-          }
+        } catch (colErr) {
+          console.warn(`[Database Service] Hydration notice for ${colName}:`, colErr.message);
         }
-      }
-      console.log(`[Database Service] Remote MongoDB records hydrated into memory.`);
+      });
+      await Promise.all(promises);
+      lastHydrationTime = Date.now();
+      console.log(`[Database Service] 🚀 Remote MongoDB records hydrated in parallel into memory.`);
     } else if (activeEngine === 'postgres' && pgPool) {
       const res = await pgPool.query('SELECT collection_name, data FROM oneway_documents');
       for (const row of res.rows) {
         memoryDb[row.collection_name] = row.data;
       }
+      lastHydrationTime = Date.now();
       console.log(`[Database Service] Remote PostgreSQL records hydrated into memory.`);
     }
   } catch (err) {
@@ -280,80 +294,221 @@ async function seedRemoteIfEmpty() {
 async function syncToRemoteCloud(db) {
   try {
     if (activeEngine === 'mongodb' && mongoDbInstance) {
+      const tasks = [];
+
       // 1. Bookings
-      if (Array.isArray(db.bookings)) {
-        for (const b of db.bookings) {
-          const bId = b.bookingId || b.id;
-          if (bId) await mongoDbInstance.collection('bookings').updateOne({ bookingId: bId }, { $set: { ...b, bookingId: bId } }, { upsert: true });
-        }
+      if (Array.isArray(db.bookings) && db.bookings.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.bookings.map(b => {
+            const bId = b.bookingId || b.id;
+            return {
+              updateOne: {
+                filter: { bookingId: bId },
+                update: { $set: { ...b, bookingId: bId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('bookings').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 2. Drivers
-      if (Array.isArray(db.drivers)) {
-        for (const d of db.drivers) {
-          const dId = d.id || d.phone;
-          if (dId) await mongoDbInstance.collection('drivers').updateOne({ id: dId }, { $set: { ...d, id: dId } }, { upsert: true });
-        }
+      if (Array.isArray(db.drivers) && db.drivers.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.drivers.map(d => {
+            const dId = d.id || d.phone;
+            return {
+              updateOne: {
+                filter: { id: dId },
+                update: { $set: { ...d, id: dId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('drivers').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 3. Driver Applications
-      if (Array.isArray(db.driver_applications)) {
-        for (const da of db.driver_applications) {
-          const daId = da.id || da.phone;
-          if (daId) await mongoDbInstance.collection('driver_applications').updateOne({ id: daId }, { $set: { ...da, id: daId } }, { upsert: true });
-        }
+      if (Array.isArray(db.driver_applications) && db.driver_applications.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.driver_applications.map(da => {
+            const daId = da.id || da.phone;
+            return {
+              updateOne: {
+                filter: { id: daId },
+                update: { $set: { ...da, id: daId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('driver_applications').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 4. Users
-      if (Array.isArray(db.users)) {
-        for (const u of db.users) {
-          if (u.id) await mongoDbInstance.collection('users').updateOne({ id: u.id }, { $set: u }, { upsert: true });
-        }
+      if (Array.isArray(db.users) && db.users.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.users.map(u => {
+            const uId = u.id || u.phone;
+            return {
+              updateOne: {
+                filter: { id: uId },
+                update: { $set: { ...u, id: uId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('users').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 5. Leads
-      if (Array.isArray(db.leads)) {
-        for (const l of db.leads) {
-          if (l.id) await mongoDbInstance.collection('leads').updateOne({ id: l.id }, { $set: l }, { upsert: true });
-        }
+      if (Array.isArray(db.leads) && db.leads.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.leads.map(l => {
+            const lId = l.id || l.cleanPhone;
+            return {
+              updateOne: {
+                filter: { id: lId },
+                update: { $set: { ...l, id: lId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('leads').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 6. Payments
-      if (Array.isArray(db.payments)) {
-        for (const p of db.payments) {
-          const pId = p.id || p.orderId || p.paymentId;
-          if (pId) await mongoDbInstance.collection('payments').updateOne({ id: pId }, { $set: p }, { upsert: true });
-        }
+      if (Array.isArray(db.payments) && db.payments.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.payments.map(p => {
+            const pId = p.id || p.orderId || p.paymentId;
+            return {
+              updateOne: {
+                filter: { id: pId },
+                update: { $set: { ...p, id: pId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('payments').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
-      // 7. Wallet Ledger
-      if (Array.isArray(db.wallet_ledger)) {
-        for (const w of db.wallet_ledger) {
-          if (w.id) await mongoDbInstance.collection('wallet_ledger').updateOne({ id: w.id }, { $set: w }, { upsert: true });
-        }
+
+      // 7. Notifications
+      if (Array.isArray(db.notifications) && db.notifications.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.notifications.map(n => {
+            const nId = n.id;
+            return {
+              updateOne: {
+                filter: { id: nId },
+                update: { $set: { ...n, id: nId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('notifications').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
-      // 8. Notifications
-      if (Array.isArray(db.notifications)) {
-        for (const n of db.notifications) {
-          if (n.id) await mongoDbInstance.collection('notifications').updateOne({ id: n.id }, { $set: n }, { upsert: true });
-        }
+
+      // 8. Wallet Ledger
+      if (Array.isArray(db.wallet_ledger) && db.wallet_ledger.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.wallet_ledger.map(w => {
+            const wId = w.id;
+            return {
+              updateOne: {
+                filter: { id: wId },
+                update: { $set: { ...w, id: wId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('wallet_ledger').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 9. Vehicles
-      if (Array.isArray(db.vehicles)) {
-        for (const v of db.vehicles) {
-          if (v.id) await mongoDbInstance.collection('vehicles').updateOne({ id: v.id }, { $set: v }, { upsert: true });
-        }
+      if (Array.isArray(db.vehicles) && db.vehicles.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.vehicles.map(v => {
+            const vId = v.id || v.regNumber;
+            return {
+              updateOne: {
+                filter: { id: vId },
+                update: { $set: { ...v, id: vId } },
+                upsert: true
+              }
+            };
+          });
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('vehicles').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 10. Coupons
-      if (Array.isArray(db.coupons)) {
-        for (const c of db.coupons) {
-          if (c.code) await mongoDbInstance.collection('coupons').updateOne({ code: c.code }, { $set: c }, { upsert: true });
-        }
+      if (Array.isArray(db.coupons) && db.coupons.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.coupons.map(c => ({
+            updateOne: {
+              filter: { code: c.code },
+              update: { $set: c },
+              upsert: true
+            }
+          }));
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('coupons').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 11. Sessions
-      if (Array.isArray(db.sessions)) {
-        for (const s of db.sessions) {
-          if (s.token) await mongoDbInstance.collection('sessions').updateOne({ token: s.token }, { $set: s }, { upsert: true });
-        }
+      if (Array.isArray(db.sessions) && db.sessions.length > 0) {
+        tasks.push((async () => {
+          const bulkOps = db.sessions.map(s => ({
+            updateOne: {
+              filter: { token: s.token },
+              update: { $set: s },
+              upsert: true
+            }
+          }));
+          if (bulkOps.length > 0) {
+            await mongoDbInstance.collection('sessions').bulkWrite(bulkOps, { ordered: false });
+          }
+        })());
       }
+
       // 12. Settings
       if (db.settings) {
-        await mongoDbInstance.collection('settings').updateOne({ id: 'global_settings' }, { $set: { ...db.settings, id: 'global_settings' } }, { upsert: true });
+        tasks.push(mongoDbInstance.collection('settings').updateOne(
+          { id: 'global_settings' },
+          { $set: { ...db.settings, id: 'global_settings' } },
+          { upsert: true }
+        ));
       }
+
+      await Promise.all(tasks);
     } else if (activeEngine === 'postgres' && pgPool) {
       for (const col of ALL_COLLECTIONS) {
         if (db[col]) {
@@ -379,9 +534,14 @@ function getDb() {
   return memoryDb;
 }
 
-async function getDbAsync() {
+async function getDbAsync(forceRefresh = false) {
+  const now = Date.now();
   if (!memoryDb || !isDbConnected) {
     await initDatabase();
+  } else if (forceRefresh || (now - lastHydrationTime > 1000)) {
+    if (activeEngine === 'mongodb' || activeEngine === 'postgres') {
+      await pullFromRemoteCloud();
+    }
   }
   return memoryDb || getDb();
 }
