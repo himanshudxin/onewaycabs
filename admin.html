@@ -1646,7 +1646,7 @@
         // 2. Poll Cab Bookings
         const resBookings = await ApiClient.adminGetBookings(_adminToken);
         if (resBookings && resBookings.success && Array.isArray(resBookings.bookings)) {
-          const freshBookings = resBookings.bookings;
+          const freshBookings = resBookings.bookings.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
           if (_isFirstLoad) {
             freshBookings.forEach(b => _knownBookingIds.add(b.bookingId));
           } else {
@@ -2201,7 +2201,7 @@
     async function loadBookings() {
       const res = await ApiClient.adminGetBookings(_adminToken);
       if (res && res.success) {
-        _allBookings = res.bookings || [];
+        _allBookings = (res.bookings || []).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
         renderMetrics();
         applyFilters();
       } else if (res && res.status === 401) {
@@ -2266,6 +2266,7 @@
         return true;
       });
 
+      filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
       renderTable(filtered);
     }
 

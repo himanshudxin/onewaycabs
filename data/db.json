@@ -1,559 +1,4 @@
 {
-  "users": [
-    {
-      "id": "usr_9864976819",
-      "createdAt": "2026-09-04T11:15:44.9051212+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9864976819",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_6206494214",
-      "createdAt": "2026-09-04T11:19:01.4792083+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "aman kumar",
-      "phone": "+91 6206494214",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9871002476",
-      "createdAt": "2026-09-04T11:25:03.0040740+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9871002476",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9876543210",
-      "createdAt": "2026-09-04T11:41:43.7278767+05:30",
-      "email": "",
-      "name": "Rohan Kumar",
-      "phone": "+91 9876543210",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9846836321",
-      "createdAt": "2026-09-04T11:45:36.7635113+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9846836321",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9887762399",
-      "createdAt": "2026-09-04T12:41:13.8926077+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9887762399",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9834602902",
-      "createdAt": "2026-09-04T12:59:47.9935623+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9834602902",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9854033720",
-      "createdAt": "2026-09-04T13:17:11.2083055+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9854033720",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_8521341873",
-      "createdAt": "2026-09-04T14:59:35.8555985+05:30",
-      "email": "",
-      "name": "Sudhanshu1457",
-      "phone": "+91 8521341873",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_6299375016",
-      "createdAt": "2026-09-04T15:06:42.6345458+05:30",
-      "email": "",
-      "name": "Passenger",
-      "phone": "+91 6299375016",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9812345678",
-      "createdAt": "2026-09-05T00:37:01.1970239+05:30",
-      "email": "",
-      "name": "Harendra Prasad",
-      "phone": "+91 9812345678",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9822806201",
-      "createdAt": "2026-09-05T00:37:13.5687030+05:30",
-      "email": "",
-      "name": "Harendra Prasad",
-      "phone": "+91 9822806201",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9873085963",
-      "createdAt": "2026-09-05T00:37:28.3973832+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9873085963",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9876543219",
-      "createdAt": "2026-09-05T01:44:07.3690270+05:30",
-      "email": "",
-      "isPhoneVerified": true,
-      "memberSince": "2026",
-      "name": "Test User",
-      "phone": "+91 9876543219",
-      "rewardClaimed": true,
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9753960796",
-      "createdAt": "2026-09-05T01:44:31.9201505+05:30",
-      "email": "",
-      "isPhoneVerified": true,
-      "memberSince": "2026",
-      "name": "Rameshwar Nath",
-      "phone": "+91 9753960796",
-      "rewardClaimed": true,
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9799771875",
-      "createdAt": "2026-09-05T01:48:09.6184887+05:30",
-      "email": "",
-      "isPhoneVerified": true,
-      "memberSince": "2026",
-      "name": "Rameshwar Nath",
-      "phone": "+91 9799771875",
-      "rewardClaimed": true,
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9755159643",
-      "createdAt": "2026-09-05T01:49:22.8569914+05:30",
-      "email": "",
-      "isPhoneVerified": true,
-      "memberSince": "2026",
-      "name": "Rameshwar Nath",
-      "phone": "+91 9755159643",
-      "rewardClaimed": true,
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9896442027",
-      "createdAt": "2026-09-05T01:49:32.3906979+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9896442027",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9838365765",
-      "createdAt": "2026-09-05T01:49:46.1505278+05:30",
-      "email": "",
-      "name": "Passenger",
-      "phone": "+91 9838365765",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9895009849",
-      "createdAt": "2026-09-05T01:59:14.9831453+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9895009849",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9855834485",
-      "createdAt": "2026-09-05T02:08:16.5930145+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9855834485",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9874976896",
-      "createdAt": "2026-09-05T02:21:28.2498852+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9874976896",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9831398698",
-      "createdAt": "2026-09-05T03:01:48.1492147+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9831398698",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9846221218",
-      "createdAt": "2026-09-05T03:03:50.5670376+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9846221218",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9831259410",
-      "createdAt": "2026-09-05T03:06:48.1544702+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9831259410",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9829908539",
-      "createdAt": "2026-09-05T03:07:19.1746392+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9829908539",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9824037891",
-      "createdAt": "2026-09-05T03:11:05.5207223+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9824037891",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9820486232",
-      "createdAt": "2026-09-05T03:12:36.3462086+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9820486232",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9882385433",
-      "createdAt": "2026-09-05T03:45:10.9153177+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9882385433",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9842622029",
-      "createdAt": "2026-09-05T03:48:37.7133918+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9842622029",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9890936946",
-      "createdAt": "2026-09-05T03:51:06.1426616+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9890936946",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9905057552",
-      "createdAt": "2026-09-05T09:38:44.2395245+05:30",
-      "email": "",
-      "isPhoneVerified": true,
-      "memberSince": "2026",
-      "name": "ISHANT KUMAR SHARMA",
-      "phone": "+91 9905057552",
-      "rewardClaimed": true,
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9828481061",
-      "createdAt": "2026-09-05T10:55:43.7390549+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9828481061",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9882971592",
-      "createdAt": "2026-09-05T11:06:13.8399936+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9882971592",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9867642414",
-      "createdAt": "2026-09-05T11:18:04.9694405+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9867642414",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9815799854",
-      "createdAt": "2026-09-05T12:02:05.4853588+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9815799854",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9896247647",
-      "createdAt": "2026-09-05T12:09:03.2775627+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9896247647",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9889205007",
-      "createdAt": "2026-09-05T12:16:45.9559111+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9889205007",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9862013393",
-      "createdAt": "2026-09-05T12:21:40.0352754+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9862013393",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9861520770",
-      "createdAt": "2026-09-05T12:23:45.4012576+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9861520770",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9819938519",
-      "createdAt": "2026-09-05T12:29:49.0597036+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9819938519",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9856765410",
-      "createdAt": "2026-09-05T12:48:18.1782195+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9856765410",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9810803851",
-      "createdAt": "2026-09-05T13:27:32.4781226+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9810803851",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9878409888",
-      "createdAt": "2026-09-05T13:49:56.9209469+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9878409888",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9821482871",
-      "createdAt": "2026-09-05T13:59:12.0411824+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9821482871",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9821453137",
-      "createdAt": "2026-09-05T14:03:23.1707031+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9821453137",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9893536346",
-      "createdAt": "2026-09-05T14:13:29.1372030+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9893536346",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9814329419",
-      "createdAt": "2026-09-05T14:28:25.9092752+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9814329419",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9893455774",
-      "createdAt": "2026-09-05T14:32:54.7928463+05:30",
-      "email": "",
-      "memberSince": "2026",
-      "name": "Rajesh Verma",
-      "phone": "+91 9893455774",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9835377824",
-      "createdAt": "2026-10-01T17:31:31.464Z",
-      "email": "",
-      "name": "Real Passenger 8493",
-      "phone": "+91 9835377824",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9835630421",
-      "createdAt": "2026-10-01T17:36:26.100Z",
-      "email": "",
-      "name": "Web Passenger",
-      "phone": "+91 9835630421",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9835112233",
-      "name": "Atlas Test Passenger",
-      "phone": "+91 9835112233",
-      "email": "",
-      "walletBalance": 100,
-      "memberSince": "2026",
-      "createdAt": "2026-10-01T18:21:19.875Z"
-    }
-  ],
-  "sessions": [
-    {
-      "token": "otb_sess_819bb4e7cb2155d9c54890a53a276b50",
-      "createdAt": "2026-09-29T14:09:07.644Z",
-      "phone": "+91 6206494214",
-      "role": "customer",
-      "userId": "usr_6206494214"
-    },
-    {
-      "token": "adm_sess_8f2f9f2571821bedb5ffa4b9da728ec7",
-      "adminId": "adm_01",
-      "createdAt": "2026-09-29T15:26:01.751Z",
-      "role": "admin"
-    },
-    {
-      "token": "otb_sess_8a1732eed95bf49fa8d7ec8246131e0a",
-      "createdAt": "2026-09-29T15:30:36.759Z",
-      "phone": "+91 6206494214",
-      "role": "customer",
-      "userId": "usr_6206494214"
-    },
-    {
-      "token": "drv_sess_fd64acb0ecba3e9ef7ac59fadac6136a",
-      "createdAt": "2026-09-29T16:38:08.054Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "drv_sess_7c58dddbe8df8931257fdf16c75b73e1",
-      "createdAt": "2026-09-29T16:38:08.077Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "drv_sess_f74a28a1c96df4eea628958aa87cfb42",
-      "createdAt": "2026-09-29T16:40:32.796Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "drv_sess_9a6c2a6840bba70dfbfee845ad7b6dad",
-      "createdAt": "2026-09-29T16:40:32.814Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "adm_sess_e035cfc2fb60733555c9e4cd9c8f6c2c",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T16:42:42.951Z",
-      "role": "admin"
-    },
-    {
-      "token": "drv_sess_11f2cd898e491a089af7cd796628d072",
-      "createdAt": "2026-10-01T16:42:42.978Z",
-      "driverId": "drv_9876543299",
-      "role": "driver"
-    },
-    {
-      "token": "adm_sess_06897703e0170388cf9366a46bf472e9",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T16:58:44.977Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_3484993b45c06ece6e52868a6005fb95",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T17:18:57.190Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_676c2463426529b3aec4bbfd57285d37",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T17:31:32.521Z",
-      "role": "admin"
-    },
-    {
-      "token": "otb_sess_67982503bd8573b464790d181b698e9a",
-      "userId": "usr_9835112233",
-      "phone": "+91 9835112233",
-      "role": "customer",
-      "createdAt": "2026-10-01T18:21:19.875Z"
-    }
-  ],
   "bookings": [
     {
       "bookingId": "OTB-2026-8413",
@@ -687,1570 +132,6 @@
       "totalFare": 2198
     },
     {
-      "bookingId": "OTB-2026-8473",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T14:32:55.0910133+05:30",
-      "customerId": "usr_9893455774",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9893455774",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788598975086_1799",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T14:32:55.0910133+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T14:32:57.1921582+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T14:32:57.4153002+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T14:32:57.6678144+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T14:32:58.3016108+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-8473%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209893455774)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-8473\nPassenger: Rajesh Verma\nMobile: +91 9893455774\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "assignedDriverId": "drv_101",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-2942",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T14:28:26.3762405+05:30",
-      "customerId": "usr_9814329419",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9814329419",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788598706371_2064",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T14:28:26.3762405+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T14:28:28.7896382+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T14:28:29.1172608+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T14:28:29.2934116+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T14:28:29.5899817+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-2942%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209814329419)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-2942\nPassenger: Rajesh Verma\nMobile: +91 9814329419\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-1041",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T14:13:29.7170253+05:30",
-      "customerId": "usr_9893536346",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9893536346",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788597809657_8195",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T14:13:29.7040056+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T14:13:32.0840992+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T14:13:32.3502532+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T14:13:32.6681418+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T14:13:32.9587242+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-1041%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209893536346)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-1041\nPassenger: Rajesh Verma\nMobile: +91 9893536346\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "assignedDriverId": "drv_101",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-9818",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T14:03:23.4577116+05:30",
-      "customerId": "usr_9821453137",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9821453137",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788597203453_2509",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T14:03:23.4567110+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T14:03:25.5167807+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T14:03:25.8120131+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T14:03:26.1440131+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T14:03:26.5350853+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-9818%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209821453137)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-9818\nPassenger: Rajesh Verma\nMobile: +91 9821453137\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "assignedDriverId": "drv_101",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-7272",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T13:59:13.1288447+05:30",
-      "customerId": "usr_9821482871",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9821482871",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788596953040_3633",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T13:59:13.1190522+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T13:59:18.0256372+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T13:59:18.3329454+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T13:59:18.7068153+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T13:59:19.1954090+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-7272%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209821482871)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-7272\nPassenger: Rajesh Verma\nMobile: +91 9821482871\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "assignedDriverId": "drv_101",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-8903",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T13:49:57.2339272+05:30",
-      "customerId": "usr_9878409888",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9878409888",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788596397230_3872",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T13:49:57.2339272+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T13:50:00.1895016+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T13:50:00.7222376+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T13:50:02.0880685+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T13:50:02.5029097+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-8903%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209878409888)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-8903\nPassenger: Rajesh Verma\nMobile: +91 9878409888\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "assignedDriverId": "drv_101",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-3172",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T13:27:33.5882979+05:30",
-      "customerId": "usr_9810803851",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9810803851",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788595053370_5199",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T13:27:33.5777110+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T13:27:35.9256574+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T13:27:36.3157039+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T13:27:36.9960571+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T13:27:37.8647242+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-3172%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209810803851)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-3172\nPassenger: Rajesh Verma\nMobile: +91 9810803851\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED",
-      "assignedDriverId": "drv_101",
-      "paymentTxnRef": "UPI998877665544"
-    },
-    {
-      "bookingId": "OTB-2026-5392",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:48:18.3290236+05:30",
-      "customerId": "usr_9856765410",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9856765410",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788592698329_1192",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:48:18.3290236+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:48:19.1771822+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:48:19.2990079+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:48:19.3958410+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:48:19.5104558+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-5392%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209856765410)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-5392\nPassenger: Rajesh Verma\nMobile: +91 9856765410\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-2895",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:29:49.2628916+05:30",
-      "customerId": "usr_9819938519",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9819938519",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788591589262_3106",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:29:49.2628916+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:29:50.2396642+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:29:50.3789538+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:29:50.4929396+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:29:50.5888720+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-2895%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209819938519)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-2895\nPassenger: Rajesh Verma\nMobile: +91 9819938519\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-8891",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:23:45.5675806+05:30",
-      "customerId": "usr_9861520770",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9861520770",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788591225566_8037",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:23:45.5675806+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:23:46.4006562+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:23:46.4858652+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:23:46.5856893+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:23:46.6815422+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-8891%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209861520770)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-8891\nPassenger: Rajesh Verma\nMobile: +91 9861520770\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-5342",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:21:40.4017302+05:30",
-      "customerId": "usr_9862013393",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9862013393",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788591100351_4546",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:21:40.4017302+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:21:41.2270833+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:21:41.3035617+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:21:41.4202321+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:21:41.5038233+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-5342%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209862013393)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-5342\nPassenger: Rajesh Verma\nMobile: +91 9862013393\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-1578",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:16:46.1044260+05:30",
-      "customerId": "usr_9889205007",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9889205007",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788590806102_7309",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:16:46.1044260+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:16:46.8406600+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:16:46.9395317+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:16:47.0070748+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:16:47.1099283+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-1578%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209889205007)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-1578\nPassenger: Rajesh Verma\nMobile: +91 9889205007\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-7001",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:09:03.9390484+05:30",
-      "customerId": "usr_9896247647",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9896247647",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788590343865_9502",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:09:03.9342887+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:09:04.9301191+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:09:05.0410039+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:09:05.1137722+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:09:05.1803279+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-7001%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209896247647)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-7001\nPassenger: Rajesh Verma\nMobile: +91 9896247647\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-4735",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T12:02:05.6358759+05:30",
-      "customerId": "usr_9815799854",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9815799854",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788589925635_2792",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T12:02:05.6358759+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T12:02:06.5522694+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T12:02:06.6358105+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T12:02:06.7183042+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T12:02:06.7848320+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-4735%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209815799854)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-4735\nPassenger: Rajesh Verma\nMobile: +91 9815799854\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-2645",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T11:18:05.1296487+05:30",
-      "customerId": "usr_9867642414",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9867642414",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788587285116_3666",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T11:18:05.1296487+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T11:18:05.9057204+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T11:18:05.9816578+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T11:18:06.0998328+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T11:18:06.1679399+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-2645%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209867642414)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-2645\nPassenger: Rajesh Verma\nMobile: +91 9867642414\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-2690",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T11:06:14.2245414+05:30",
-      "customerId": "usr_9882971592",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9882971592",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788586574189_1302",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T11:06:14.2245414+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T11:06:15.0638443+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T11:06:15.1448928+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T11:06:15.2036057+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T11:06:15.3015827+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-2690%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209882971592)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-2690\nPassenger: Rajesh Verma\nMobile: +91 9882971592\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-3769",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T10:55:43.9057161+05:30",
-      "customerId": "usr_9828481061",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9828481061",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788585943902_4607",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T10:55:43.9047781+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T10:55:44.8038316+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T10:55:44.9283535+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T10:55:45.0371968+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T10:55:45.1433050+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-3769%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209828481061)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-3769\nPassenger: Rajesh Verma\nMobile: +91 9828481061\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
       "bookingId": "OTB-2026-7855",
       "bookingStatus": "REQUESTED",
       "couponCode": "",
@@ -2310,1100 +191,6 @@
       "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-7855\nPassenger: ISHANT KUMAR SHARMA\nMobile: +91 8521341873\nRoute: Patna to Muzaffarpur (75 KM)\nSchedule: 2026-09-05 at 10:00 AM\nFare: Rs 2739 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
     },
     {
-      "bookingId": "OTB-2026-1056",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:51:06.2865896+05:30",
-      "customerId": "usr_9890936946",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9890936946",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788560466284_4519",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:51:06.2855928+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:51:06.9191076+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:51:07.0037874+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:51:07.1173873+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:51:07.1946981+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-1056%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209890936946)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-1056\nPassenger: Rajesh Verma\nMobile: +91 9890936946\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-5232",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:48:37.8508584+05:30",
-      "customerId": "usr_9842622029",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9842622029",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788560317848_8215",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:48:37.8508584+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:48:38.5045857+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:48:38.5909457+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:48:38.6881844+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:48:38.7582215+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-5232%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209842622029)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-5232\nPassenger: Rajesh Verma\nMobile: +91 9842622029\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-6401",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:45:11.0551859+05:30",
-      "customerId": "usr_9882385433",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9882385433",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788560111049_4952",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:45:11.0551859+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:45:11.6747859+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:45:11.7577866+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:45:11.8254385+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:45:11.9383321+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-6401%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209882385433)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-6401\nPassenger: Rajesh Verma\nMobile: +91 9882385433\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-4980",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:12:36.4742916+05:30",
-      "customerId": "usr_9820486232",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9820486232",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788558156473_6861",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:12:36.4742916+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:12:37.0916856+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:12:37.1508561+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:12:37.2043845+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:12:37.3072250+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-4980%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209820486232)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-4980\nPassenger: Rajesh Verma\nMobile: +91 9820486232\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-9452",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:11:05.6476980+05:30",
-      "customerId": "usr_9824037891",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9824037891",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788558065647_2046",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:11:05.6476980+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:11:06.2135679+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:11:06.2638151+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:11:06.3512786+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:11:06.4274859+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-9452%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209824037891)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-9452\nPassenger: Rajesh Verma\nMobile: +91 9824037891\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-8083",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:07:19.2969120+05:30",
-      "customerId": "usr_9829908539",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9829908539",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788557839293_1850",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:07:19.2959204+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:07:19.9073837+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:07:19.9668047+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:07:20.0168941+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:07:20.0708311+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-8083%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209829908539)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-8083\nPassenger: Rajesh Verma\nMobile: +91 9829908539\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-2786",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:06:48.3500996+05:30",
-      "customerId": "usr_9831259410",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9831259410",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788557808323_5731",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:06:48.3481018+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:06:49.0557906+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:06:49.1084008+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:06:49.1773295+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:06:49.2201291+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-2786%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209831259410)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-2786\nPassenger: Rajesh Verma\nMobile: +91 9831259410\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-3766",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:03:50.8820537+05:30",
-      "customerId": "usr_9846221218",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9846221218",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788557630849_3738",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:03:50.8668222+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:03:51.5072279+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:03:51.6010655+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:03:51.6706315+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:03:51.7315551+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-3766%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209846221218)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-3766\nPassenger: Rajesh Verma\nMobile: +91 9846221218\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-3626",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T03:01:48.3215933+05:30",
-      "customerId": "usr_9831398698",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9831398698",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788557508317_1117",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T03:01:48.3205924+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T03:01:48.9317292+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T03:01:48.9986414+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T03:01:49.0319263+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T03:01:49.0902120+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-3626%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209831398698)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-3626\nPassenger: Rajesh Verma\nMobile: +91 9831398698\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-9948",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "couponCode": "",
-      "couponDiscount": 0,
-      "createdAt": "2026-09-05T02:21:28.5122600+05:30",
-      "customerId": "usr_9874976896",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9874976896",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788555088456_6224",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "riskLevel": "LOW RISK",
-      "riskReasons": [],
-      "riskScore": 8,
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T02:21:28.5092590+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T02:21:29.1138106+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T02:21:29.1755246+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T02:21:29.2449935+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T02:21:29.2940526+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-9948%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209874976896)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-9948\nPassenger: Rajesh Verma\nMobile: +91 9874976896\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-7222",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-05T02:08:16.6997545+05:30",
-      "customerId": "usr_9855834485",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9855834485",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788554296699_4677",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T02:08:16.6997545+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T02:08:17.1513743+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T02:08:17.2140478+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T02:08:17.2627345+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T02:08:17.3152746+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-7222%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209855834485)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-7222\nPassenger: Rajesh Verma\nMobile: +91 9855834485\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-2314",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-05T01:59:15.0838678+05:30",
-      "customerId": "usr_9895009849",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9895009849",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788553755083_1626",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T01:59:15.0838678+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T01:59:15.5354401+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T01:59:15.6019627+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T01:59:15.6664153+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T01:59:15.7005214+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-2314%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209895009849)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-2314\nPassenger: Rajesh Verma\nMobile: +91 9895009849\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
       "bookingId": "OTB-2026-7340",
       "bookingStatus": "REQUESTED",
       "createdAt": "2026-09-05T01:49:46.1505278+05:30",
@@ -3458,93 +245,6 @@
       "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-7340\nPassenger: Passenger\nMobile: +91 9838365765\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 10:00 AM\nFare: Rs 3525 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
     },
     {
-      "bookingId": "OTB-2026-9938",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-05T01:49:32.6260467+05:30",
-      "customerId": "usr_9896442027",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9896442027",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788553172603_2158",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T01:49:32.6230497+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T01:49:33.1687912+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T01:49:33.2053666+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T01:49:33.2552343+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T01:49:33.3026339+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-9938%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209896442027)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-9938\nPassenger: Rajesh Verma\nMobile: +91 9896442027\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
       "bookingId": "OTB-2026-8297",
       "bookingStatus": "CONFIRMED",
       "createdAt": "2026-09-05T00:45:40.2718769+05:30",
@@ -3597,93 +297,6 @@
       "walletUsed": 0,
       "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-8297%0APassenger%3A%20Passenger%20(%2B91%206206494214)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2010%3A00%20AM%0ATotal%20Fare%3A%20Rs%203525",
       "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-8297\nPassenger: Passenger\nMobile: +91 6206494214\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 10:00 AM\nFare: Rs 3525 (Cash/UPI to Driver)\nStatus: REQUESTED / CONFIRMED"
-    },
-    {
-      "bookingId": "OTB-2026-3966",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-05T00:37:28.5639323+05:30",
-      "customerId": "usr_9873085963",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9873085963",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788548848563_3549",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-05",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-05T00:37:28.5639323+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-05T00:37:29.0633250+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-05T00:37:29.0982715+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-05T00:37:29.1533895+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-05T00:37:29.1818364+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100,
-      "whatsappDispatchUrl": "https://wa.me/917281851011?text=NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar%0ABooking%20ID%3A%20OTB-2026-3966%0APassenger%3A%20Rajesh%20Verma%20(%2B91%209873085963)%0ARoute%3A%20Patna%20to%20Gaya%0ASchedule%3A%202026-09-05%20at%2011%3A00%20AM%0ATotal%20Fare%3A%20Rs%203425",
-      "whatsappMessage": "*NEW BOOKING CONFIRMED - OneWayTaxiBihar*\nBooking ID: OTB-2026-3966\nPassenger: Rajesh Verma\nMobile: +91 9873085963\nRoute: Patna to Gaya (104 KM)\nSchedule: 2026-09-05 at 11:00 AM\nFare: Rs 3425 (UPI / PhonePe QR Code)\nStatus: REQUESTED / CONFIRMED"
     },
     {
       "bookingId": "OTB-2026-3552",
@@ -4035,91 +648,6 @@
       "walletUsed": 100
     },
     {
-      "bookingId": "OTB-2026-6683",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-04T13:17:11.2686562+05:30",
-      "customerId": "usr_9854033720",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9854033720",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788508031268_3749",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-04",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-04T13:17:11.2686562+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-04T13:17:11.4963158+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-04T13:17:11.5182489+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-04T13:17:11.5323981+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-04T13:17:11.5460723+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100
-    },
-    {
       "bookingId": "OTB-2026-3545",
       "bookingStatus": "REQUESTED",
       "createdAt": "2026-09-04T13:16:47.8955037+05:30",
@@ -4224,176 +752,6 @@
       "walletUsed": 0
     },
     {
-      "bookingId": "OTB-2026-7275",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-04T12:59:48.0794862+05:30",
-      "customerId": "usr_9834602902",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9834602902",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788506988079_2836",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-04",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-04T12:59:48.0794862+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-04T12:59:48.3135546+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-04T12:59:48.3366410+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-04T12:59:48.3481543+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-04T12:59:48.3596234+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100
-    },
-    {
-      "bookingId": "OTB-2026-1604",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-04T12:41:13.9409572+05:30",
-      "customerId": "usr_9887762399",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9887762399",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788505873940_3782",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-04",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-04T12:41:13.9409572+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-04T12:41:14.1572247+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-04T12:41:14.1656303+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-04T12:41:14.1828694+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-04T12:41:14.1945303+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100
-    },
-    {
       "bookingId": "OTB-2026-5455",
       "bookingStatus": "REQUESTED",
       "createdAt": "2026-09-04T12:40:46.3280235+05:30",
@@ -4444,91 +802,6 @@
       ],
       "totalFare": 3525,
       "walletUsed": 0
-    },
-    {
-      "bookingId": "OTB-2026-7515",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-04T11:45:36.7980532+05:30",
-      "customerId": "usr_9846836321",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9846836321",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788502536797_1764",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-04",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-04T11:45:36.7980532+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-04T11:45:36.9667040+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-04T11:45:36.9785097+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-04T11:45:36.9913559+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-04T11:45:37.0023883+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100
     },
     {
       "bookingId": "OTB-2026-7292",
@@ -4686,176 +959,6 @@
       ],
       "totalFare": 3425,
       "walletUsed": 100
-    },
-    {
-      "bookingId": "OTB-2026-5745",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-04T11:25:03.0417523+05:30",
-      "customerId": "usr_9871002476",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9871002476",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788501303039_7543",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-04",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-04T11:25:03.0417523+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-04T11:25:03.1744969+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-04T11:25:03.1817342+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-04T11:25:03.1898751+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-04T11:25:03.1998223+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100
-    },
-    {
-      "bookingId": "OTB-2026-9120",
-      "assignedDriverId": "drv_101",
-      "bookingStatus": "COMPLETED",
-      "createdAt": "2026-09-04T11:15:45.0079310+05:30",
-      "customerId": "usr_9864976819",
-      "destCity": "Gaya",
-      "distanceKm": 104,
-      "driverDetails": {
-        "id": "drv_101",
-        "name": "Ramesh Kumar Sharma",
-        "phone": "+91 94310 12345",
-        "rating": 4.9,
-        "vehicleModel": "Swift Dzire (White)",
-        "vehicleNumber": "BR 01 PA 4921"
-      },
-      "dropAddress": "Civil Lines, Gaya",
-      "duration": "2h 18m",
-      "fareBreakdown": {
-        "roundTripDiscount": 0,
-        "distanceKm": 104,
-        "totalFare": 3525,
-        "tierName": "Prime Sedan",
-        "driverAllowance": 0,
-        "parking": 0,
-        "tierModel": "Dzire, Etios, Amaze",
-        "tierId": "sedan",
-        "distanceCharge": 2225,
-        "duration": "2h 18m",
-        "tollFastag": 82,
-        "baseFare": 1050,
-        "extraKm": 89,
-        "gst": 168,
-        "perKmRate": 25
-      },
-      "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
-      "originCity": "Patna",
-      "originalFare": 3525,
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "passengerEmail": "rajesh.verma@example.com",
-      "passengerName": "Rajesh Verma",
-      "passengerPhone": "+91 9864976819",
-      "paymentMethod": "UPI / PhonePe QR Code",
-      "paymentStatus": "PAID",
-      "paymentTxnId": "TXN_1788500745007_3489",
-      "paymentTxnRef": "UPI998877665544",
-      "pickupAddress": "Boring Road Crossing, Patna",
-      "pickupDate": "2026-09-04",
-      "pickupTime": "11:00 AM",
-      "statusHistory": [
-        {
-          "actor": "Customer",
-          "status": "REQUESTED",
-          "timestamp": "2026-09-04T11:15:45.0079310+05:30",
-          "note": "Booking request placed. Agent call in 5 mins."
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "DRIVER ON THE WAY",
-          "timestamp": "2026-09-04T11:15:45.1920553+05:30",
-          "note": "Progressing to DRIVER ON THE WAY"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "ARRIVED",
-          "timestamp": "2026-09-04T11:15:45.2008850+05:30",
-          "note": "Progressing to ARRIVED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "TRIP STARTED",
-          "timestamp": "2026-09-04T11:15:45.2109947+05:30",
-          "note": "Progressing to TRIP STARTED"
-        },
-        {
-          "actor": "Driver (Ramesh Kumar Sharma)",
-          "status": "COMPLETED",
-          "timestamp": "2026-09-04T11:15:45.2175108+05:30",
-          "note": "Progressing to COMPLETED"
-        }
-      ],
-      "totalFare": 3425,
-      "walletUsed": 100
     }
   ],
   "drivers": [
@@ -4942,6 +1045,255 @@
       "totalTrips": 0,
       "vehicleModel": "Maruti Suzuki Ertiga",
       "vehicleNumber": "BR 02 PB 9876"
+    }
+  ],
+  "driver_applications": [
+    {
+      "id": "drv_9876543299",
+      "applicationId": "DRV-APP-8965",
+      "city": "Muzaffarpur",
+      "createdAt": "2026-10-01T16:42:42.977Z",
+      "dutyStatus": "ON_DUTY",
+      "earningsToday": 0,
+      "experienceYears": "3+",
+      "helpline": "6206494214",
+      "isVerified": false,
+      "kmToday": 0,
+      "licenseNumber": "DL PENDING",
+      "name": "Brijesh Pandey",
+      "phone": "+91 9876543299",
+      "pin": "1234",
+      "rating": 5,
+      "status": "PENDING_VERIFICATION",
+      "totalTrips": 0,
+      "vehicleModel": "Swift Dzire (Prime Sedan)",
+      "vehicleNumber": "BR 01 PB PENDING"
+    },
+    {
+      "id": "drv_9876543210",
+      "applicationId": "DRV-APP-2356",
+      "city": "Patna",
+      "createdAt": "2026-09-29T16:36:35.620Z",
+      "dutyStatus": "ON_DUTY",
+      "earningsToday": 0,
+      "experienceYears": "3+",
+      "helpline": "6206494214",
+      "isVerified": false,
+      "kmToday": 0,
+      "licenseNumber": "Pending",
+      "name": "Ramesh Kumar",
+      "phone": "+91 9876543210",
+      "pin": "4321",
+      "rating": 5,
+      "status": "PENDING_VERIFICATION",
+      "totalTrips": 0,
+      "vehicleModel": "Commercial Taxi",
+      "vehicleNumber": "Pending"
+    }
+  ],
+  "users": [
+    {
+      "id": "usr_6206494214",
+      "createdAt": "2026-09-04T11:19:01.4792083+05:30",
+      "email": "",
+      "memberSince": "2026",
+      "name": "aman kumar",
+      "phone": "+91 6206494214",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_9876543210",
+      "createdAt": "2026-09-04T11:41:43.7278767+05:30",
+      "email": "",
+      "name": "Rohan Kumar",
+      "phone": "+91 9876543210",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_8521341873",
+      "createdAt": "2026-09-04T14:59:35.8555985+05:30",
+      "email": "",
+      "name": "Sudhanshu1457",
+      "phone": "+91 8521341873",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_6299375016",
+      "createdAt": "2026-09-04T15:06:42.6345458+05:30",
+      "email": "",
+      "name": "Passenger",
+      "phone": "+91 6299375016",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_9812345678",
+      "createdAt": "2026-09-05T00:37:01.1970239+05:30",
+      "email": "",
+      "name": "Harendra Prasad",
+      "phone": "+91 9812345678",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_9822806201",
+      "createdAt": "2026-09-05T00:37:13.5687030+05:30",
+      "email": "",
+      "name": "Harendra Prasad",
+      "phone": "+91 9822806201",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_9876543219",
+      "createdAt": "2026-09-05T01:44:07.3690270+05:30",
+      "email": "",
+      "isPhoneVerified": true,
+      "memberSince": "2026",
+      "name": "Test User",
+      "phone": "+91 9876543219",
+      "rewardClaimed": true,
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9753960796",
+      "createdAt": "2026-09-05T01:44:31.9201505+05:30",
+      "email": "",
+      "isPhoneVerified": true,
+      "memberSince": "2026",
+      "name": "Rameshwar Nath",
+      "phone": "+91 9753960796",
+      "rewardClaimed": true,
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9799771875",
+      "createdAt": "2026-09-05T01:48:09.6184887+05:30",
+      "email": "",
+      "isPhoneVerified": true,
+      "memberSince": "2026",
+      "name": "Rameshwar Nath",
+      "phone": "+91 9799771875",
+      "rewardClaimed": true,
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9755159643",
+      "createdAt": "2026-09-05T01:49:22.8569914+05:30",
+      "email": "",
+      "isPhoneVerified": true,
+      "memberSince": "2026",
+      "name": "Rameshwar Nath",
+      "phone": "+91 9755159643",
+      "rewardClaimed": true,
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9838365765",
+      "createdAt": "2026-09-05T01:49:46.1505278+05:30",
+      "email": "",
+      "name": "Passenger",
+      "phone": "+91 9838365765",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9905057552",
+      "createdAt": "2026-09-05T09:38:44.2395245+05:30",
+      "email": "",
+      "isPhoneVerified": true,
+      "memberSince": "2026",
+      "name": "ISHANT KUMAR SHARMA",
+      "phone": "+91 9905057552",
+      "rewardClaimed": true,
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835377824",
+      "createdAt": "2026-10-01T17:31:31.464Z",
+      "email": "",
+      "name": "Real Passenger 8493",
+      "phone": "+91 9835377824",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835630421",
+      "createdAt": "2026-10-01T17:36:26.100Z",
+      "email": "",
+      "name": "Web Passenger",
+      "phone": "+91 9835630421",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835112233",
+      "createdAt": "2026-10-01T18:21:19.875Z",
+      "email": "",
+      "memberSince": "2026",
+      "name": "Atlas Test Passenger",
+      "phone": "+91 9835112233",
+      "walletBalance": 100
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "veh_01",
+      "assignedDriverId": "drv_101",
+      "category": "sedan",
+      "currentOdometer": 48520,
+      "fitnessExpiry": "2026-12-20",
+      "fuelType": "CNG / Petrol",
+      "hasAC": true,
+      "insuranceExpiry": "2026-11-15",
+      "luggageCapacity": "2-3 Large Bags",
+      "model": "Swift Dzire (White)",
+      "permitExpiry": "2027-03-31",
+      "regNumber": "BR 01 PA 4921",
+      "seatingCapacity": 4,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "veh_02",
+      "assignedDriverId": "drv_102",
+      "category": "suv",
+      "currentOdometer": 61200,
+      "fitnessExpiry": "2027-01-15",
+      "fuelType": "Diesel",
+      "hasAC": true,
+      "insuranceExpiry": "2026-10-10",
+      "luggageCapacity": "3-4 Large Bags",
+      "model": "Maruti Ertiga (Silver)",
+      "permitExpiry": "2027-05-18",
+      "regNumber": "BR 01 PB 7712",
+      "seatingCapacity": 7,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "veh_03",
+      "assignedDriverId": null,
+      "category": "sedan_prime",
+      "currentOdometer": 31450,
+      "fitnessExpiry": "2027-02-10",
+      "fuelType": "Petrol",
+      "hasAC": true,
+      "insuranceExpiry": "2026-09-30",
+      "luggageCapacity": "3 Large Bags",
+      "model": "Honda City (Pearl White)",
+      "permitExpiry": "2027-04-12",
+      "regNumber": "BR 01 PC 3190",
+      "seatingCapacity": 4,
+      "status": "STANDBY"
+    },
+    {
+      "id": "veh_04",
+      "assignedDriverId": null,
+      "category": "hatchback",
+      "currentOdometer": 24100,
+      "fitnessExpiry": "2027-03-25",
+      "fuelType": "CNG",
+      "hasAC": true,
+      "insuranceExpiry": "2027-04-05",
+      "luggageCapacity": "1-2 Medium Bags",
+      "model": "WagonR ZXI (Grey)",
+      "permitExpiry": "2027-06-30",
+      "regNumber": "BR 01 PE 8042",
+      "seatingCapacity": 4,
+      "status": "ACTIVE"
     }
   ],
   "payments": [
@@ -5170,46 +1522,35 @@
     },
     {
       "id": "WLT_1790878879875_980",
-      "userId": "usr_9835112233",
-      "phone": "+91 9835112233",
-      "type": "CREDIT",
       "amount": 100,
       "balanceAfter": 100,
+      "createdAt": "2026-10-01T18:21:19.875Z",
       "description": "Welcome Bonus Credit",
-      "createdAt": "2026-10-01T18:21:19.875Z"
+      "phone": "+91 9835112233",
+      "type": "CREDIT",
+      "userId": "usr_9835112233"
     }
   ],
-  "audit_logs": [],
-  "admins": [
-    {
-      "id": "adm_01",
-      "username": "admin",
-      "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
-      "name": "Patna Central Dispatch",
-      "role": "SUPER_ADMIN"
-    }
-  ],
-  "reviews": [],
   "leads": [
     {
       "id": "LEAD_1790878879875_580",
-      "phone": "+91 9835112233",
       "cleanPhone": "9835112233",
-      "passengerName": "Atlas Test Passenger",
-      "originCity": "Patna",
+      "createdAt": "2026-10-01T18:21:19.875Z",
       "destCity": "Bihar Outstation",
-      "tripType": "oneway",
-      "pickupDate": "2026-10-01",
-      "pickupTime": "Immediate",
       "distanceKm": 100,
       "duration": "2h 00m",
       "estFareHatch": 1698,
       "estFareSedan": 2198,
       "estFareSuv": 3398,
+      "notes": "Customer signed in with mobile",
+      "originCity": "Patna",
+      "passengerName": "Atlas Test Passenger",
+      "phone": "+91 9835112233",
+      "pickupDate": "2026-10-01",
+      "pickupTime": "Immediate",
       "source": "Passenger Login / Sign In",
       "status": "NEW",
-      "notes": "Customer signed in with mobile",
-      "createdAt": "2026-10-01T18:21:19.875Z",
+      "tripType": "oneway",
       "updatedAt": "2026-10-01T18:21:19.875Z"
     },
     {
@@ -5362,19 +1703,13 @@
       "updatedAt": "2026-09-29T14:09:12.957Z"
     }
   ],
-  "payment_transactions": [],
-  "wallet": [],
-  "wallet_transactions": [],
-  "routes": [],
-  "fare_rules": [],
-  "invoices": [],
   "notifications": [
     {
       "id": "NOTIF_USER_1790878879875",
-      "type": "PASSENGER_LOGIN",
-      "title": "👤 Passenger Signed In: Atlas Test Passenger",
+      "createdAt": "2026-10-01T18:21:19.875Z",
       "message": "Atlas Test Passenger (+91 9835112233) active on portal.",
-      "createdAt": "2026-10-01T18:21:19.875Z"
+      "title": "👤 Passenger Signed In: Atlas Test Passenger",
+      "type": "PASSENGER_LOGIN"
     },
     {
       "id": "NOTIF_BOOK_1790875891464",
@@ -5438,72 +1773,6 @@
       "type": "NEW_DRIVER_REGISTERED"
     }
   ],
-  "vehicles": [
-    {
-      "id": "veh_01",
-      "assignedDriverId": "drv_101",
-      "category": "sedan",
-      "currentOdometer": 48520,
-      "fitnessExpiry": "2026-12-20",
-      "fuelType": "CNG / Petrol",
-      "hasAC": true,
-      "insuranceExpiry": "2026-11-15",
-      "luggageCapacity": "2-3 Large Bags",
-      "model": "Swift Dzire (White)",
-      "permitExpiry": "2027-03-31",
-      "regNumber": "BR 01 PA 4921",
-      "seatingCapacity": 4,
-      "status": "ACTIVE"
-    },
-    {
-      "id": "veh_02",
-      "assignedDriverId": "drv_102",
-      "category": "suv",
-      "currentOdometer": 61200,
-      "fitnessExpiry": "2027-01-15",
-      "fuelType": "Diesel",
-      "hasAC": true,
-      "insuranceExpiry": "2026-10-10",
-      "luggageCapacity": "3-4 Large Bags",
-      "model": "Maruti Ertiga (Silver)",
-      "permitExpiry": "2027-05-18",
-      "regNumber": "BR 01 PB 7712",
-      "seatingCapacity": 7,
-      "status": "ACTIVE"
-    },
-    {
-      "id": "veh_03",
-      "assignedDriverId": null,
-      "category": "sedan_prime",
-      "currentOdometer": 31450,
-      "fitnessExpiry": "2027-02-10",
-      "fuelType": "Petrol",
-      "hasAC": true,
-      "insuranceExpiry": "2026-09-30",
-      "luggageCapacity": "3 Large Bags",
-      "model": "Honda City (Pearl White)",
-      "permitExpiry": "2027-04-12",
-      "regNumber": "BR 01 PC 3190",
-      "seatingCapacity": 4,
-      "status": "STANDBY"
-    },
-    {
-      "id": "veh_04",
-      "assignedDriverId": null,
-      "category": "hatchback",
-      "currentOdometer": 24100,
-      "fitnessExpiry": "2027-03-25",
-      "fuelType": "CNG",
-      "hasAC": true,
-      "insuranceExpiry": "2027-04-05",
-      "luggageCapacity": "1-2 Medium Bags",
-      "model": "WagonR ZXI (Grey)",
-      "permitExpiry": "2027-06-30",
-      "regNumber": "BR 01 PE 8042",
-      "seatingCapacity": 4,
-      "status": "ACTIVE"
-    }
-  ],
   "coupons": [
     {
       "code": "FIRST100",
@@ -5554,50 +1823,88 @@
       "usageCount": 6
     }
   ],
-  "support_tickets": [],
-  "ai_events": [],
-  "driver_applications": [
+  "audit_logs": [],
+  "sessions": [
     {
-      "id": "drv_9876543299",
-      "applicationId": "DRV-APP-8965",
-      "city": "Muzaffarpur",
-      "createdAt": "2026-10-01T16:42:42.977Z",
-      "dutyStatus": "ON_DUTY",
-      "earningsToday": 0,
-      "experienceYears": "3+",
-      "helpline": "6206494214",
-      "isVerified": false,
-      "kmToday": 0,
-      "licenseNumber": "DL PENDING",
-      "name": "Brijesh Pandey",
-      "phone": "+91 9876543299",
-      "pin": "1234",
-      "rating": 5,
-      "status": "PENDING_VERIFICATION",
-      "totalTrips": 0,
-      "vehicleModel": "Swift Dzire (Prime Sedan)",
-      "vehicleNumber": "BR 01 PB PENDING"
+      "token": "otb_sess_819bb4e7cb2155d9c54890a53a276b50",
+      "createdAt": "2026-09-29T14:09:07.644Z",
+      "phone": "+91 6206494214",
+      "role": "customer",
+      "userId": "usr_6206494214"
     },
     {
-      "id": "drv_9876543210",
-      "applicationId": "DRV-APP-2356",
-      "city": "Patna",
-      "createdAt": "2026-09-29T16:36:35.620Z",
-      "dutyStatus": "ON_DUTY",
-      "earningsToday": 0,
-      "experienceYears": "3+",
-      "helpline": "6206494214",
-      "isVerified": false,
-      "kmToday": 0,
-      "licenseNumber": "Pending",
-      "name": "Ramesh Kumar",
-      "phone": "+91 9876543210",
-      "pin": "4321",
-      "rating": 5,
-      "status": "PENDING_VERIFICATION",
-      "totalTrips": 0,
-      "vehicleModel": "Commercial Taxi",
-      "vehicleNumber": "Pending"
+      "token": "adm_sess_8f2f9f2571821bedb5ffa4b9da728ec7",
+      "adminId": "adm_01",
+      "createdAt": "2026-09-29T15:26:01.751Z",
+      "role": "admin"
+    },
+    {
+      "token": "otb_sess_8a1732eed95bf49fa8d7ec8246131e0a",
+      "createdAt": "2026-09-29T15:30:36.759Z",
+      "phone": "+91 6206494214",
+      "role": "customer",
+      "userId": "usr_6206494214"
+    },
+    {
+      "token": "drv_sess_fd64acb0ecba3e9ef7ac59fadac6136a",
+      "createdAt": "2026-09-29T16:38:08.054Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "drv_sess_7c58dddbe8df8931257fdf16c75b73e1",
+      "createdAt": "2026-09-29T16:38:08.077Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "drv_sess_f74a28a1c96df4eea628958aa87cfb42",
+      "createdAt": "2026-09-29T16:40:32.796Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "drv_sess_9a6c2a6840bba70dfbfee845ad7b6dad",
+      "createdAt": "2026-09-29T16:40:32.814Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "adm_sess_e035cfc2fb60733555c9e4cd9c8f6c2c",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T16:42:42.951Z",
+      "role": "admin"
+    },
+    {
+      "token": "drv_sess_11f2cd898e491a089af7cd796628d072",
+      "createdAt": "2026-10-01T16:42:42.978Z",
+      "driverId": "drv_9876543299",
+      "role": "driver"
+    },
+    {
+      "token": "adm_sess_06897703e0170388cf9366a46bf472e9",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T16:58:44.977Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_3484993b45c06ece6e52868a6005fb95",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T17:18:57.190Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_676c2463426529b3aec4bbfd57285d37",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T17:31:32.521Z",
+      "role": "admin"
+    },
+    {
+      "token": "otb_sess_67982503bd8573b464790d181b698e9a",
+      "createdAt": "2026-10-01T18:21:19.875Z",
+      "phone": "+91 9835112233",
+      "role": "customer",
+      "userId": "usr_9835112233"
     }
   ],
   "settings": {
