@@ -118,20 +118,29 @@ async function initPostgres() {
   }
 }
 
-// 3. Real-World MongoDB Atlas Connection Initialization
+// 3. Real-World MongoDB Atlas Connection Initialization (Optimized for Vercel Serverless)
 async function initMongo() {
-  const mongoUri = process.env.MONGODB_URI;
+  const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://himanshudu255_db_user:Himanshu%40123@cluster0.7pf5pvc.mongodb.net/onewaytaxibihar?retryWrites=true&w=majority&appName=Cluster0';
   if (!mongoUri) return false;
 
+  // Reuse cached serverless connection across Vercel Lambda warm invocations
+  if (global._mongoClient && global._mongoDbInstance) {
+    mongoClient = global._mongoClient;
+    mongoDbInstance = global._mongoDbInstance;
+    activeEngine = 'mongodb';
+    isDbConnected = true;
+    return true;
+  }
+
   try {
-    const { MongoClient, ServerApiVersion } = require('mongodb');
+    const { MongoClient } = require('mongodb');
     
     // Connection options for maximum cloud reliability across Node versions & Atlas
     const clientOptions = {
-      serverSelectionTimeoutMS: 6000,
-      connectTimeoutMS: 8000,
-      maxPoolSize: 20,
-      minPoolSize: 2,
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 6000,
+      maxPoolSize: 10,
+      minPoolSize: 1,
       retryWrites: true,
       retryReads: true
     };
@@ -144,6 +153,8 @@ async function initMongo() {
     mongoDbInstance = mongoClient.db(dbName);
     await mongoDbInstance.command({ ping: 1 });
 
+    global._mongoClient = mongoClient;
+    global._mongoDbInstance = mongoDbInstance;
     activeEngine = 'mongodb';
     isDbConnected = true;
     console.log(`[Database Service] 🚀 ✅ Connected to MongoDB Atlas Cloud (${dbName})`);
