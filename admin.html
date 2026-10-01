@@ -1991,9 +1991,13 @@
       try {
         const res = await ApiClient.adminGetLeads(_adminToken);
         if (res && res.success && Array.isArray(res.leads)) {
-          _allLeads = res.leads;
+          _allLeads = res.leads.sort((a, b) => new Date(b.createdAt || b.updatedAt || 0) - new Date(a.createdAt || a.updatedAt || 0));
           renderLeadsMetrics();
           applyLeadsFilters();
+        } else if (res && res.status === 401) {
+          _adminToken = null;
+          localStorage.removeItem("otb_admin_token");
+          initAdmin();
         }
       } catch (err) {
         console.warn("Error loading leads:", err);
@@ -2049,6 +2053,7 @@
         return true;
       });
 
+      filtered.sort((a, b) => new Date(b.createdAt || b.updatedAt || 0) - new Date(a.createdAt || a.updatedAt || 0));
       renderLeadsTable(filtered);
     }
 

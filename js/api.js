@@ -7,11 +7,22 @@
 class ApiClient {
   static baseUrl = (() => {
     if (typeof window !== "undefined") {
-      // If running directly on port 8080 or relative path
-      if (window.location.port === "8080") return "";
-      // If opened via file:// or another local dev server (port 5500, 3000, etc.)
-      if (window.location.protocol === "file:" || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      // 1. If opened via file:// protocol
+      if (window.location.protocol === "file:") {
         return "http://localhost:8080";
+      }
+      // 2. If running on standard port 8080 or live web domain (Vercel, custom domain)
+      if (window.location.port === "8080" || !window.location.port || window.location.port === "80" || window.location.port === "443") {
+        return "";
+      }
+      // 3. If running on a local dev server (port 5500, 3000, 5173, etc.), route API calls to port 8080
+      const isLocalHost = window.location.hostname === "localhost" ||
+                          window.location.hostname === "127.0.0.1" ||
+                          window.location.hostname.startsWith("192.168.") ||
+                          window.location.hostname.startsWith("10.") ||
+                          window.location.hostname.startsWith("172.");
+      if (isLocalHost) {
+        return `http://${window.location.hostname}:8080`;
       }
     }
     return "";
@@ -40,14 +51,14 @@ class ApiClient {
       if (!response.ok) {
         const errorMsg = data?.message || `HTTP ${response.status}: ${response.statusText}`;
         console.warn(`[ApiClient] ${endpoint} returned error:`, errorMsg);
-        return { success: false, status: response.status, message: errorMsg };
+        return { success: false, status: response.status, message: errorMsg, data };
       }
 
       return data;
     } catch (err) {
       console.warn(`[ApiClient] Network request failed for ${endpoint}:`, err);
 
-      // If baseUrl was custom/http://localhost:8080 and failed, try relative path as last resort
+      // If baseUrl was custom and failed, try relative path as fallback
       if (this.baseUrl && !endpoint.startsWith("http")) {
         try {
           const fallbackRes = await fetch(endpoint, {
@@ -604,21 +615,29 @@ class ApiClient {
       return res;
     }
 
+    if (res && res.status === 401) {
+      return res;
+    }
+
     // Offline / Local Fallback
     try {
       const cached = localStorage.getItem("otb_admin_bookings_cache");
       if (cached) {
-        return { success: true, bookings: JSON.parse(cached) };
+        return { success: true, bookings: JSON.parse(cached), isCached: true };
       }
     } catch (e) {}
 
-    return { success: true, bookings: [] };
+    return res || { success: false, bookings: [] };
   }
 
   static async adminGetLeads(token) {
     const res = await this.request("/api/admin/leads", {
       headers: { Authorization: `Bearer ${token}` }
     });
+
+    if (res && res.status === 401) {
+      return res;
+    }
 
     let leads = [];
     if (res && res.success && Array.isArray(res.leads)) {
@@ -637,7 +656,7 @@ class ApiClient {
     } catch (e) {}
 
     // Sort newest first
-    leads.sort((a, b) => new Date(b.createdAt || b.updatedAt) - new Date(a.createdAt || a.updatedAt));
+    leads.sort((a, b) => new Date(b.createdAt || b.updatedAt || 0) - new Date(a.createdAt || a.updatedAt || 0));
     return { success: true, leads, count: leads.length };
   }
 
