@@ -132,13 +132,20 @@ async function initMongo() {
   const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://himanshudu255_db_user:Himanshu%40123@cluster0.7pf5pvc.mongodb.net/onewaytaxibihar?retryWrites=true&w=majority&appName=Cluster0';
   if (!mongoUri) return false;
 
-  // Reuse cached serverless connection across Vercel Lambda warm invocations
+  // Reuse and healthcheck cached serverless connection across Vercel Lambda warm invocations
   if (global._mongoClient && global._mongoDbInstance) {
-    mongoClient = global._mongoClient;
-    mongoDbInstance = global._mongoDbInstance;
-    activeEngine = 'mongodb';
-    isDbConnected = true;
-    return true;
+    try {
+      await global._mongoDbInstance.command({ ping: 1 });
+      mongoClient = global._mongoClient;
+      mongoDbInstance = global._mongoDbInstance;
+      activeEngine = 'mongodb';
+      isDbConnected = true;
+      return true;
+    } catch (pingErr) {
+      console.warn('[Database Service] Cached MongoDB connection stale, reconnecting...');
+      global._mongoClient = null;
+      global._mongoDbInstance = null;
+    }
   }
 
   try {
@@ -192,7 +199,7 @@ async function initMongo() {
 
 // 4. Primary Initializer
 async function initDatabase() {
-  if (isDbConnected && memoryDb) {
+  if (isDbConnected && memoryDb && (Date.now() - lastHydrationTime < 10000)) {
     return { engine: activeEngine, connected: isDbConnected };
   }
 
@@ -248,7 +255,7 @@ async function pullFromRemoteCloud() {
             }
           } else {
             const docs = await mongoDbInstance.collection(colName).find({}).toArray();
-            if (docs && docs.length > 0) {
+            if (Array.isArray(docs)) {
               const sanitized = docs.map(({ _id, ...rest }) => rest);
               if (['bookings', 'leads', 'notifications', 'payments', 'audit_logs'].includes(colName)) {
                 sanitized.sort((a, b) => new Date(b.createdAt || b.updatedAt || 0) - new Date(a.createdAt || a.updatedAt || 0));

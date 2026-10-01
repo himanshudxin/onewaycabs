@@ -336,9 +336,6 @@ module.exports = async (req, res) => {
     }
   }
 
-  // Await Database Ready State & Fresh MongoDB Hydration for Serverless
-  const db = await dbService.getDbAsync(true);
-
   const sendJson = (status, data) => {
     res.statusCode = status;
     res.setHeader('Content-Type', 'application/json');
@@ -346,6 +343,14 @@ module.exports = async (req, res) => {
   };
 
   try {
+    // Await Database Ready State & Fresh MongoDB Hydration for Serverless
+    let db;
+    try {
+      db = await dbService.getDbAsync(true);
+    } catch (dbErr) {
+      console.warn('[API Layer] getDbAsync fallback notice:', dbErr.message);
+      db = dbService.getDb();
+    }
     // -------------------------------------------------------------
     // 1. HEALTHCHECK
     // -------------------------------------------------------------
