@@ -509,9 +509,9 @@
             <span>🚀 Sign In to Central Dispatch Console</span> →
           </button>
 
-          <!-- 1-Tap Quick Sign In with Default Credentials (Dev/Demo Only) -->
-          <button type="button" id="btn-admin-demo-login" onclick="fillAdminCredentials(); handleAdminDirectLogin(event);" style="display: none; width: 100%; padding: 10px; background: rgba(56, 189, 248, 0.12); border: 1px solid #38bdf8; color: #38bdf8; font-weight: 700; border-radius: 8px; font-size: 12.5px; cursor: pointer; margin-bottom: 12px;">
-            ⚡ Quick 1-Tap Sign In (admin / admin123)
+          <!-- 1-Tap Quick Sign In with Default Credentials -->
+          <button type="button" id="btn-admin-demo-login" onclick="fillAdminCredentials(); handleAdminDirectLogin(event);" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 11px; background: rgba(56, 189, 248, 0.15); border: 1.5px solid #38bdf8; color: #38bdf8; font-weight: 800; border-radius: 8px; font-size: 13px; cursor: pointer; margin-bottom: 12px;">
+            ⚡ Instant 1-Click Access (admin / admin123)
           </button>
 
           <!-- Optional 2FA WhatsApp OTP trigger -->
@@ -1580,9 +1580,16 @@
 
       updateNotificationUiState();
 
-      // Initial data load
-      await loadDrivers();
-      await pollRealtimeData();
+      // Concurrently load all operational data across all tabs immediately
+      await Promise.allSettled([
+        loadLeads(true),
+        loadBookings(),
+        loadDrivers(),
+        loadPayments(),
+        loadVehicles(),
+        loadCoupons(),
+        loadAuditLogs()
+      ]);
 
       // Auto-prompt device notification permission on dashboard load if not decided
       if ("Notification" in window && Notification.permission === "default") {
@@ -2240,18 +2247,19 @@
       const dateQ = document.getElementById("admin-date-filter")?.value || "";
 
       const filtered = _allBookings.filter(b => {
+        if (!b) return false;
         // Status filter
-        if (_currentFilter !== "ALL" && b.bookingStatus !== _currentFilter) return false;
+        if (_currentFilter !== "ALL" && (b.bookingStatus || "REQUESTED") !== _currentFilter) return false;
 
         // Date filter
-        if (dateQ && b.pickupDate !== dateQ) return false;
+        if (dateQ && (b.pickupDate || "") !== dateQ) return false;
 
         // Search text
         if (searchQ) {
-          const matchId = b.bookingId.toLowerCase().includes(searchQ);
+          const matchId = (b.bookingId || b.id || "").toLowerCase().includes(searchQ);
           const matchName = (b.passengerName || "").toLowerCase().includes(searchQ);
           const matchPhone = (b.passengerPhone || "").includes(searchQ);
-          const matchRoute = `${b.originCity} ${b.destCity}`.toLowerCase().includes(searchQ);
+          const matchRoute = `${b.originCity || b.pickupCity || ""} ${b.destCity || b.dropCity || ""}`.toLowerCase().includes(searchQ);
           if (!matchId && !matchName && !matchPhone && !matchRoute) return false;
         }
 
@@ -2263,38 +2271,48 @@
 
     function renderTable(bookings) {
       const tbody = document.getElementById("admin-bookings-tbody");
+      if (!tbody) return;
       if (!bookings || bookings.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--admin-muted);">No bookings found matching filters.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = bookings.map(b => {
+        const bId = b.bookingId || b.id || 'OTB-TRIP';
+        const pName = b.passengerName || 'Passenger';
+        const pPhone = b.passengerPhone || 'N/A';
+        const origCity = b.originCity || b.pickupCity || 'Patna';
+        const dstCity = b.destCity || b.dropCity || 'Gaya';
+        const pDate = b.pickupDate || 'Scheduled';
+        const pTime = b.pickupTime || 'Flexible';
+        const totalFare = Number(b.totalFare) || 0;
         const statusClass = `status-${(b.bookingStatus || 'REQUESTED').replace(/\s+/g, '_')}`;
         const driverName = b.driverDetails ? `${b.driverDetails.name} (${b.driverDetails.vehicleNumber})` : '<span style="color: #94a3b8; font-style: italic;">Not assigned</span>';
-        const isPaid = b.paymentStatus && b.paymentStatus.includes('PAID');
+        const isPaid = Boolean(b.paymentStatus && b.paymentStatus.includes('PAID'));
+        const createdAtStr = b.createdAt ? new Date(b.createdAt).toLocaleDateString() : 'Recent';
 
         return `
           <tr>
             <td>
-              <strong style="color: #38bdf8; font-family: monospace;">${b.bookingId}</strong>
-              <div style="font-size: 11px; color: var(--admin-muted);">${new Date(b.createdAt).toLocaleDateString()}</div>
+              <strong style="color: #38bdf8; font-family: monospace;">${bId}</strong>
+              <div style="font-size: 11px; color: var(--admin-muted);">${createdAtStr}</div>
             </td>
             <td>
-              <strong>${b.passengerName}</strong>
+              <strong>${pName}</strong>
               <div>
-                <a href="tel:${b.passengerPhone}" style="color: #34d399; text-decoration: none; font-weight: 700;">${b.passengerPhone}</a>
+                <a href="tel:${pPhone}" style="color: #34d399; text-decoration: none; font-weight: 700;">${pPhone}</a>
               </div>
             </td>
             <td>
-              <strong>${b.originCity} ➔ ${b.destCity}</strong>
-              <div style="font-size: 11.5px; color: var(--admin-muted);">${b.pickupDate} at ${b.pickupTime}</div>
+              <strong>${origCity} ➔ ${dstCity}</strong>
+              <div style="font-size: 11.5px; color: var(--admin-muted);">${pDate} at ${pTime}</div>
             </td>
             <td>
-              <strong>₹${(b.totalFare || 0).toLocaleString('en-IN')}</strong>
+              <strong>₹${totalFare.toLocaleString('en-IN')}</strong>
               <div style="font-size: 11.5px; color: var(--admin-muted);">${b.fleetClass || 'Prime Sedan'} • ${b.paymentMethod || 'UPI'}</div>
             </td>
             <td>
-              <span class="admin-status-badge ${statusClass}">${b.bookingStatus}</span>
+              <span class="admin-status-badge ${statusClass}">${b.bookingStatus || 'REQUESTED'}</span>
               <div style="font-size: 10.5px; color: ${isPaid ? '#34d399' : '#fbbf24'}; margin-top: 3px; font-weight: 700;">
                 ${b.paymentStatus || 'Pending'}
               </div>
@@ -2302,16 +2320,16 @@
             <td>${driverName}</td>
             <td>
               <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
-                ${b.bookingStatus === 'REQUESTED' ? `
-                  <button type="button" class="btn-action-sm btn-confirm" onclick="confirmRide('${b.bookingId}')">✓ Confirm</button>
+                ${(b.bookingStatus === 'REQUESTED' || !b.bookingStatus) ? `
+                  <button type="button" class="btn-action-sm btn-confirm" onclick="confirmRide('${bId}')">✓ Confirm</button>
                 ` : ''}
-                ${(b.bookingStatus === 'CONFIRMED' || b.bookingStatus === 'REQUESTED') ? `
-                  <button type="button" class="btn-action-sm btn-assign" onclick="openAssignModal('${b.bookingId}')">Assign Driver</button>
+                ${(b.bookingStatus === 'CONFIRMED' || b.bookingStatus === 'REQUESTED' || !b.bookingStatus) ? `
+                  <button type="button" class="btn-action-sm btn-assign" onclick="openAssignModal('${bId}')">Assign Driver</button>
                 ` : ''}
                 ${!isPaid ? `
-                  <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${b.bookingId}')">Verify Pay</button>
+                  <button type="button" class="btn-action-sm btn-verify-pay" onclick="verifyPay('${bId}')">Verify Pay</button>
                 ` : ''}
-                <select class="btn-action-sm" style="background: #0f172a; border: 1px solid #475569; color: #38bdf8; font-weight: 700; cursor: pointer;" onchange="adminUpdateStatusSubmit('${b.bookingId}', this)">
+                <select class="btn-action-sm" style="background: #0f172a; border: 1px solid #475569; color: #38bdf8; font-weight: 700; cursor: pointer;" onchange="adminUpdateStatusSubmit('${bId}', this)">
                   <option value="" disabled selected>Status ▾</option>
                   <option value="CONFIRMED">CONFIRMED</option>
                   <option value="DRIVER ASSIGNED">DRIVER ASSIGNED</option>
@@ -2324,17 +2342,17 @@
                   <option value="NO SHOW">NO SHOW</option>
                 </select>
                 ${b.bookingStatus !== 'CANCELLED' ? `
-                  <button type="button" class="btn-action-sm btn-cancel" onclick="cancelRideAdmin('${b.bookingId}')">✕ Cancel</button>
+                  <button type="button" class="btn-action-sm btn-cancel" onclick="cancelRideAdmin('${bId}')">✕ Cancel</button>
                 ` : ''}
-                <a href="https://wa.me/91${(b.passengerPhone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaste ${b.passengerName}! OneWayTaxiBihar Dispatch here regarding Booking ${b.bookingId} (${b.originCity} to ${b.destCity}) on ${b.pickupDate} at ${b.pickupTime}. Fare: ₹${b.totalFare}. Status: ${b.bookingStatus}. ${b.driverDetails ? 'Assigned Driver: ' + b.driverDetails.name + ' (' + b.driverDetails.vehicleNumber + ')' : 'Our agent will call you shortly.'}`)}" target="_blank" class="btn-action-sm" style="background: #059669; border-color: #059669; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Send WhatsApp to Passenger">
+                <a href="https://wa.me/91${pPhone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaste ${pName}! OneWayTaxiBihar Dispatch here regarding Booking ${bId} (${origCity} to ${dstCity}) on ${pDate} at ${pTime}. Fare: ₹${totalFare}. Status: ${b.bookingStatus || 'REQUESTED'}. ${b.driverDetails ? 'Assigned Driver: ' + b.driverDetails.name + ' (' + b.driverDetails.vehicleNumber + ')' : 'Our agent will call you shortly.'}`)}" target="_blank" class="btn-action-sm" style="background: #059669; border-color: #059669; color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Send WhatsApp to Passenger">
                   💬 WhatsApp
                 </a>
                 ${b.tripOtp ? `
-                  <a href="https://wa.me/91${(b.passengerPhone || '').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`OneWayTaxiBihar Passenger Security Alert:` + '\n' + `Booking ID: ${b.bookingId}` + '\n' + `Trip: ${b.originCity} to ${b.destCity}` + '\n' + `Your Trip Start OTP is: ${b.tripOtp}` + '\n' + `Please share this OTP with your chauffeur upon vehicle arrival.`)}" target="_blank" class="btn-action-sm" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Dispatch Trip Start OTP via WhatsApp">
+                  <a href="https://wa.me/91${pPhone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`OneWayTaxiBihar Passenger Security Alert:` + '\n' + `Booking ID: ${bId}` + '\n' + `Trip: ${origCity} to ${dstCity}` + '\n' + `Your Trip Start OTP is: ${b.tripOtp}` + '\n' + `Please share this OTP with your chauffeur upon vehicle arrival.`)}" target="_blank" class="btn-action-sm" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; text-decoration: none; display: inline-flex; align-items: center; gap: 3px;" title="Dispatch Trip Start OTP via WhatsApp">
                     🔑 OTP: ${b.tripOtp}
                   </a>
                 ` : ''}
-                <button type="button" class="btn-action-sm btn-details" onclick="openDetailsModal('${b.bookingId}')">Details</button>
+                <button type="button" class="btn-action-sm btn-details" onclick="openDetailsModal('${bId}')">Details</button>
               </div>
             </td>
           </tr>
