@@ -6,10 +6,10 @@
   Permissions-Policy: geolocation=(self), camera=()
 
 /css/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: no-cache, must-revalidate
 
 /js/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: no-cache, must-revalidate
 
 /*.svg
   Cache-Control: public, max-age=2592000

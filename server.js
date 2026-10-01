@@ -79,7 +79,7 @@ const server = http.createServer(async (req, res) => {
 
     // Static asset caching
     if (ext === '.css' || ext === '.js') {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
     } else if (['.svg', '.png', '.jpg', '.webp', '.ico'].includes(ext)) {
       res.setHeader('Cache-Control', 'public, max-age=2592000');
     } else {

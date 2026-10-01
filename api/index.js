@@ -587,6 +587,46 @@ module.exports = async (req, res) => {
         createdAt: new Date().toISOString()
       });
 
+      // Record / Update Lead for Admin Desk
+      if (!db.leads) db.leads = [];
+      let lead = db.leads.find(l => l.cleanPhone === cleanPhone);
+      if (lead) {
+        lead.passengerName = user.name;
+        lead.updatedAt = new Date().toISOString();
+      } else {
+        db.leads.unshift({
+          id: `LEAD_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+          phone: `+91 ${cleanPhone}`,
+          cleanPhone,
+          passengerName: user.name,
+          originCity: 'Patna',
+          destCity: 'Bihar Outstation',
+          tripType: 'oneway',
+          pickupDate: new Date().toISOString().split('T')[0],
+          pickupTime: 'Immediate',
+          distanceKm: 100,
+          duration: '2h 00m',
+          estFareHatch: 1698,
+          estFareSedan: 2198,
+          estFareSuv: 3398,
+          source: 'Passenger Login / Sign In',
+          status: 'NEW',
+          notes: 'Customer signed in with mobile',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+      }
+
+      // Real-time admin notification
+      if (!db.notifications) db.notifications = [];
+      db.notifications.unshift({
+        id: `NOTIF_USER_${Date.now()}`,
+        type: 'PASSENGER_LOGIN',
+        title: `👤 Passenger Signed In: ${user.name}`,
+        message: `${user.name} (+91 ${cleanPhone}) active on portal.`,
+        createdAt: new Date().toISOString()
+      });
+
       await saveDb(db);
 
       return sendJson(200, {
