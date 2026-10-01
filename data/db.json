@@ -1,6 +1,124 @@
 {
   "bookings": [
     {
+      "bookingId": "OTB-2026-1164",
+      "advancePaid": 0,
+      "balanceDue": 2420,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-01T18:53:17.574Z",
+      "customerId": "usr_9835336755",
+      "destCity": "Bodhgaya",
+      "distanceKm": 116,
+      "driverDetails": null,
+      "dropAddress": "Mahabodhi Temple Road, Bodhgaya",
+      "duration": "2h 34m",
+      "fareBreakdown": {
+        "distanceKm": 116,
+        "duration": "2h 34m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 2900,
+        "extraKm": 101,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 91,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2900
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 2420,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Real Test Customer",
+      "passengerPhone": "+91 9835336755",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1790880797574_9036",
+      "pickupAddress": "Patna Airport Terminal Gate 2",
+      "pickupDate": "2026-10-18",
+      "pickupTime": "07:30 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-01T18:53:17.574Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2420,
+      "tripOtp": "8469",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-1164%0A*Passenger%3A*%20Real%20Test%20Customer%20(%2B91%209835336755)%0A*Route%3A*%20Patna%20%E2%9E%94%20Bodhgaya%0A*Total%20Fare%3A*%20%E2%82%B92420",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-1164\n*Passenger:* Real Test Customer (+91 9835336755)\n*Route:* Patna ➔ Bodhgaya (116 KM)\n*Schedule:* 2026-10-18 at 07:30 AM\n*Total Fare:* ₹2420 (Advance: ₹0, Balance Due: ₹2420)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
+      "bookingId": "OTB-2026-8032",
+      "advancePaid": 0,
+      "balanceDue": 2150,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-01T18:45:48.959Z",
+      "customerId": "usr_9835649667",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "driverDetails": null,
+      "dropAddress": "Bhagwanpur Chowk, Muzaffarpur",
+      "duration": "1h 39m",
+      "fareBreakdown": {
+        "distanceKm": 75,
+        "duration": "1h 39m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 1875,
+        "extraKm": 60,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 59,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 2150,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Mobile Phone Customer",
+      "passengerPhone": "+91 9835649667",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1790880348959_1187",
+      "pickupAddress": "Boring Road Crossing, Patna",
+      "pickupDate": "2026-10-15",
+      "pickupTime": "11:30 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-01T18:45:48.959Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2150,
+      "tripOtp": "1081",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-8032%0A*Passenger%3A*%20Mobile%20Phone%20Customer%20(%2B91%209835649667)%0A*Route%3A*%20Patna%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B92150",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-8032\n*Passenger:* Mobile Phone Customer (+91 9835649667)\n*Route:* Patna ➔ Muzaffarpur (75 KM)\n*Schedule:* 2026-10-15 at 11:30 AM\n*Total Fare:* ₹2150 (Advance: ₹0, Balance Due: ₹2150)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
       "bookingId": "OTB-2026-8413",
       "advancePaid": 0,
       "balanceDue": 1875,
@@ -1228,6 +1346,22 @@
       "name": "Atlas Test Passenger",
       "phone": "+91 9835112233",
       "walletBalance": 100
+    },
+    {
+      "id": "usr_9835649667",
+      "createdAt": "2026-10-01T18:45:48.959Z",
+      "email": "",
+      "name": "Mobile Phone Customer",
+      "phone": "+91 9835649667",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835336755",
+      "createdAt": "2026-10-01T18:53:17.574Z",
+      "email": "",
+      "name": "Real Test Customer",
+      "phone": "+91 9835336755",
+      "walletBalance": 100
     }
   ],
   "vehicles": [
@@ -1297,6 +1431,42 @@
     }
   ],
   "payments": [
+    {
+      "id": "TXN_1790880797574_9036",
+      "advancePaid": 0,
+      "amount": 2420,
+      "balanceDue": 2420,
+      "bookingId": "OTB-2026-1164",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-01T18:53:17.574Z",
+      "customerId": "usr_9835336755",
+      "method": "Cash to Driver",
+      "originalAmount": 2420,
+      "passengerPhone": "+91 9835336755",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
+    {
+      "id": "TXN_1790880348959_1187",
+      "advancePaid": 0,
+      "amount": 2150,
+      "balanceDue": 2150,
+      "bookingId": "OTB-2026-8032",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-01T18:45:48.959Z",
+      "customerId": "usr_9835649667",
+      "method": "Cash to Driver",
+      "originalAmount": 2150,
+      "passengerPhone": "+91 9835649667",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
     {
       "id": "TXN_1790876186100_4146",
       "advancePaid": 0,
@@ -1533,6 +1703,40 @@
   ],
   "leads": [
     {
+      "id": "LEAD_1790880797574",
+      "bookingId": "OTB-2026-1164",
+      "cleanPhone": "9835336755",
+      "createdAt": "2026-10-01T18:53:17.574Z",
+      "destCity": "Bodhgaya",
+      "distanceKm": 116,
+      "estFareSedan": 2420,
+      "originCity": "Patna",
+      "passengerName": "Real Test Customer",
+      "phone": "+91 9835336755",
+      "pickupDate": "2026-10-18",
+      "pickupTime": "07:30 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-01T18:53:17.574Z"
+    },
+    {
+      "id": "LEAD_1790880348959",
+      "bookingId": "OTB-2026-8032",
+      "cleanPhone": "9835649667",
+      "createdAt": "2026-10-01T18:45:48.959Z",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "estFareSedan": 2150,
+      "originCity": "Patna",
+      "passengerName": "Mobile Phone Customer",
+      "phone": "+91 9835649667",
+      "pickupDate": "2026-10-15",
+      "pickupTime": "11:30 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-01T18:45:48.959Z"
+    },
+    {
       "id": "LEAD_1790878879875_580",
       "cleanPhone": "9835112233",
       "createdAt": "2026-10-01T18:21:19.875Z",
@@ -1704,6 +1908,30 @@
     }
   ],
   "notifications": [
+    {
+      "id": "NOTIF_BOOK_1790880797574",
+      "bookingId": "OTB-2026-1164",
+      "createdAt": "2026-10-01T18:53:17.574Z",
+      "message": "Real Test Customer (+91 9835336755) requested Patna ➔ Bodhgaya (Prime Sedan). Total Fare: ₹2420.",
+      "title": "🚨 New Cab Booking: OTB-2026-1164",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1790880796180",
+      "createdAt": "2026-10-01T18:53:16.180Z",
+      "leadId": "LEAD_1790880796171_281",
+      "message": "Visitor (+91 9835336755) checked fare for Patna ➔ Bodhgaya (110 KM). Sedan Rate: ₹2420.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Bodhgaya",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
+      "id": "NOTIF_BOOK_1790880348959",
+      "bookingId": "OTB-2026-8032",
+      "createdAt": "2026-10-01T18:45:48.959Z",
+      "message": "Mobile Phone Customer (+91 9835649667) requested Patna ➔ Muzaffarpur (Prime Sedan). Total Fare: ₹2150.",
+      "title": "🚨 New Cab Booking: OTB-2026-8032",
+      "type": "NEW_BOOKING_REQUEST"
+    },
     {
       "id": "NOTIF_USER_1790878879875",
       "createdAt": "2026-10-01T18:21:19.875Z",
@@ -1905,6 +2133,18 @@
       "phone": "+91 9835112233",
       "role": "customer",
       "userId": "usr_9835112233"
+    },
+    {
+      "token": "adm_sess_d59c12fef340bdbdde821bb4a63005d1",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T18:45:50.223Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_a7352ee4bc4738e50d0ea8a11f6c3262",
+      "adminId": "adm_01",
+      "role": "admin",
+      "createdAt": "2026-10-01T18:53:18.459Z"
     }
   ],
   "settings": {
