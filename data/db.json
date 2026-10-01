@@ -32,6 +32,14 @@
       "email": "",
       "walletBalance": 100,
       "createdAt": "2026-09-29T16:40:32.841Z"
+    },
+    {
+      "id": "usr_9876599999",
+      "name": "Kunal Singhania",
+      "phone": "+91 9876599999",
+      "email": "",
+      "walletBalance": 100,
+      "createdAt": "2026-10-01T16:42:42.986Z"
     }
   ],
   "sessions": [
@@ -78,9 +86,80 @@
       "driverId": "drv_9876543210",
       "role": "driver",
       "createdAt": "2026-09-29T16:40:32.814Z"
+    },
+    {
+      "token": "adm_sess_e035cfc2fb60733555c9e4cd9c8f6c2c",
+      "adminId": "adm_01",
+      "role": "admin",
+      "createdAt": "2026-10-01T16:42:42.951Z"
+    },
+    {
+      "token": "drv_sess_11f2cd898e491a089af7cd796628d072",
+      "driverId": "drv_9876543299",
+      "role": "driver",
+      "createdAt": "2026-10-01T16:42:42.978Z"
     }
   ],
   "bookings": [
+    {
+      "bookingId": "OTB-2026-4755",
+      "tripOtp": "1168",
+      "customerId": "usr_9876599999",
+      "paymentTxnId": "TXN_1790872962986_2718",
+      "passengerName": "Kunal Singhania",
+      "passengerPhone": "+91 9876599999",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "pickupAddress": "Kankarbagh, Patna",
+      "dropAddress": "Tower Chowk, Darbhanga",
+      "pickupDate": "2026-10-05",
+      "pickupTime": "06:00 AM",
+      "distanceKm": 35,
+      "duration": "0h 46m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 35,
+        "duration": "0h 46m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 875,
+        "extraKm": 20,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 28,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "totalFare": 2198,
+      "originalFare": 2198,
+      "walletUsed": 0,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "paymentMethod": "Cash / UPI to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-01T16:42:42.986Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-4755\n*Passenger:* Kunal Singhania (+91 9876599999)\n*Route:* Patna ➔ Gaya (35 KM)\n*Schedule:* 2026-10-05 at 06:00 AM\n*Total Fare:* ₹2198 (Advance: ₹0, Balance Due: ₹2198)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-4755%0A*Passenger%3A*%20Kunal%20Singhania%20(%2B91%209876599999)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92198",
+      "createdAt": "2026-10-01T16:42:42.986Z"
+    },
     {
       "bookingId": "OTB-2026-3980",
       "tripOtp": "3561",
@@ -469,6 +548,27 @@
   ],
   "drivers": [
     {
+      "id": "drv_9876543299",
+      "applicationId": "DRV-APP-8965",
+      "name": "Brijesh Pandey",
+      "phone": "+91 9876543299",
+      "pin": "1234",
+      "city": "Muzaffarpur",
+      "vehicleModel": "Swift Dzire (Prime Sedan)",
+      "vehicleNumber": "BR 01 PB PENDING",
+      "licenseNumber": "DL PENDING",
+      "experienceYears": "3+",
+      "isVerified": false,
+      "dutyStatus": "ON_DUTY",
+      "status": "PENDING_VERIFICATION",
+      "rating": 5,
+      "totalTrips": 0,
+      "earningsToday": 0,
+      "kmToday": 0,
+      "helpline": "6206494214",
+      "createdAt": "2026-10-01T16:42:42.977Z"
+    },
+    {
       "id": "drv_9876543210",
       "name": "Santosh Chauffeur",
       "phone": "+91 9876543210",
@@ -491,6 +591,24 @@
     }
   ],
   "payments": [
+    {
+      "id": "TXN_1790872962986_2718",
+      "bookingId": "OTB-2026-4755",
+      "customerId": "usr_9876599999",
+      "passengerPhone": "+91 9876599999",
+      "amount": 2198,
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "originalAmount": 2198,
+      "walletDeducted": 0,
+      "couponDiscount": 0,
+      "method": "Cash / UPI to Driver",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-10-01T16:42:42.986Z"
+    },
     {
       "id": "TXN_1790700032841_4081",
       "bookingId": "OTB-2026-3980",
@@ -766,6 +884,15 @@
       "actor": "driver_drv_9876543210",
       "details": "Status set to COMPLETED",
       "createdAt": "2026-09-29T16:40:32.916Z"
+    },
+    {
+      "id": "AUD_1790872962986",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-4755",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 9876599999",
+      "details": "undefined → undefined for ₹2198 (Cash / UPI to Driver)",
+      "createdAt": "2026-10-01T16:42:42.986Z"
     }
   ],
   "admins": [
@@ -779,6 +906,43 @@
   ],
   "reviews": [],
   "leads": [
+    {
+      "id": "LEAD_1790872963000_317",
+      "phone": "+91 9876588888",
+      "cleanPhone": "9876588888",
+      "passengerName": "Priya Raj",
+      "originCity": "Patna",
+      "destCity": "Bhagalpur",
+      "tripType": "oneway",
+      "pickupDate": "2026-10-01",
+      "pickupTime": "Immediate",
+      "distanceKm": 220,
+      "duration": "2h 00m",
+      "estFareHatch": 1698,
+      "estFareSedan": 3800,
+      "estFareSuv": 3398,
+      "source": "Fare Check Inquiry",
+      "status": "NEW",
+      "notes": "",
+      "createdAt": "2026-10-01T16:42:43.000Z",
+      "updatedAt": "2026-10-01T16:42:43.000Z"
+    },
+    {
+      "id": "LEAD_DRV_1790872962978",
+      "customerPhone": "+91 9876543299",
+      "phone": "+91 9876543299",
+      "passengerName": "[Chauffeur Partner] Brijesh Pandey",
+      "name": "Brijesh Pandey",
+      "source": "Driver Partner App Onboarding",
+      "status": "NEW_DRIVER_REGISTRATION",
+      "city": "Muzaffarpur",
+      "cabCategory": "Commercial Cab",
+      "vehicleNumber": "Pending Verification",
+      "licenseNumber": "Pending Verification",
+      "helpline": "6206494214",
+      "notes": "New chauffeur Brijesh Pandey (+91 9876543299) signed up with vehicle undefined. Online verification hotline: 6206494214.",
+      "createdAt": "2026-10-01T16:42:42.978Z"
+    },
     {
       "id": "LEAD_DRV_1790700032795",
       "customerPhone": "+91 9876543210",
@@ -861,6 +1025,14 @@
   "fare_rules": [],
   "invoices": [],
   "notifications": [
+    {
+      "id": "NOTIF_DRV_1790872962978",
+      "type": "NEW_DRIVER_REGISTERED",
+      "title": "🚖 New Driver Registered: Brijesh Pandey",
+      "message": "Chauffeur Brijesh Pandey (+91 9876543299) from Muzaffarpur joined fleet with undefined. Document verification helpline: 6206494214.",
+      "driverPhone": "+91 9876543299",
+      "createdAt": "2026-10-01T16:42:42.978Z"
+    },
     {
       "id": "NOTIF_ACCEPT_1790700032863",
       "type": "TRIP_ACCEPTED_BY_DRIVER",
@@ -1018,6 +1190,27 @@
   "support_tickets": [],
   "ai_events": [],
   "driver_applications": [
+    {
+      "id": "drv_9876543299",
+      "applicationId": "DRV-APP-8965",
+      "name": "Brijesh Pandey",
+      "phone": "+91 9876543299",
+      "pin": "1234",
+      "city": "Muzaffarpur",
+      "vehicleModel": "Swift Dzire (Prime Sedan)",
+      "vehicleNumber": "BR 01 PB PENDING",
+      "licenseNumber": "DL PENDING",
+      "experienceYears": "3+",
+      "isVerified": false,
+      "dutyStatus": "ON_DUTY",
+      "status": "PENDING_VERIFICATION",
+      "rating": 5,
+      "totalTrips": 0,
+      "earningsToday": 0,
+      "kmToday": 0,
+      "helpline": "6206494214",
+      "createdAt": "2026-10-01T16:42:42.977Z"
+    },
     {
       "id": "drv_9876543210",
       "applicationId": "DRV-APP-3719",

@@ -33,3 +33,5 @@ data/backups/
 # Vercel
 .vercel/
 
+
+.vercel
