@@ -393,11 +393,12 @@ async function createLead(lead) {
 
   // Write through to MongoDB Atlas instantly
   if (activeEngine === 'mongodb' && mongoDbInstance) {
+    const { _id, ...cleanLead } = lead;
     mongoDbInstance.collection('leads').updateOne(
       { id: lead.id || lead.cleanPhone },
-      { $set: lead },
+      { $set: cleanLead },
       { upsert: true }
-    ).catch(() => {});
+    ).catch(err => console.warn('[MongoDB Atlas Lead Write Error]:', err.message));
   }
 
   saveDb(db);
@@ -429,11 +430,12 @@ async function createBooking(booking) {
 
   // Write through to MongoDB Atlas instantly
   if (activeEngine === 'mongodb' && mongoDbInstance) {
+    const { _id, ...cleanBooking } = booking;
     mongoDbInstance.collection('bookings').updateOne(
       { bookingId: booking.bookingId },
-      { $set: booking },
+      { $set: cleanBooking },
       { upsert: true }
-    ).catch(() => {});
+    ).catch(err => console.warn('[MongoDB Atlas Booking Write Error]:', err.message));
   }
 
   saveDb(db);
@@ -453,10 +455,11 @@ async function updateBooking(bookingId, patch) {
   db.bookings[idx] = { ...db.bookings[idx], ...patch, updatedAt: new Date().toISOString() };
   
   if (activeEngine === 'mongodb' && mongoDbInstance) {
+    const { _id, ...cleanPatch } = patch;
     mongoDbInstance.collection('bookings').updateOne(
       { bookingId },
-      { $set: patch }
-    ).catch(() => {});
+      { $set: cleanPatch }
+    ).catch(err => console.warn('[MongoDB Atlas Booking Patch Error]:', err.message));
   }
 
   saveDb(db);
@@ -474,11 +477,12 @@ async function recordPayment(payment) {
   }
 
   if (activeEngine === 'mongodb' && mongoDbInstance) {
+    const { _id, ...cleanPayment } = payment;
     mongoDbInstance.collection('payments').updateOne(
       { id: payment.id || payment.orderId },
-      { $set: payment },
+      { $set: cleanPayment },
       { upsert: true }
-    ).catch(() => {});
+    ).catch(err => console.warn('[MongoDB Atlas Payment Write Error]:', err.message));
   }
 
   saveDb(db);

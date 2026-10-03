@@ -1,23 +1,30 @@
 {
   "bookings": [
     {
-      "bookingId": "OTB-2026-5910",
-      "tripOtp": "5789",
-      "customerId": "usr_9835517622",
-      "paymentTxnId": "TXN_1791040061406_7245",
-      "passengerName": "Live Mobile Customer 549",
-      "passengerPhone": "+91 9835517622",
-      "passengerEmail": "",
+      "bookingId": "OTB-CROSS-1791040672062",
+      "passengerName": "Cross Device Passenger",
+      "passengerPhone": "+91 9835123456",
       "originCity": "Patna",
       "destCity": "Gaya",
-      "pickupAddress": "Boring Road, Patna",
-      "dropAddress": "Bodhtree, Gaya",
-      "pickupDate": "2026-10-20",
-      "pickupTime": "10:00 AM",
-      "distanceKm": 104,
-      "duration": "2h 18m",
+      "totalFare": 2198,
       "fleetClass": "Prime Sedan",
-      "fleetModel": "Dzire, Etios, Amaze",
+      "bookingStatus": "REQUESTED",
+      "createdAt": "2026-10-03T15:17:52.062Z"
+    },
+    {
+      "bookingId": "OTB-2026-5910",
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T15:07:41.406Z",
+      "customerId": "usr_9835517622",
+      "destCity": "Gaya",
+      "distanceKm": 104,
+      "driverDetails": null,
+      "dropAddress": "Bodhtree, Gaya",
+      "duration": "2h 18m",
       "fareBreakdown": {
         "distanceKm": 104,
         "duration": "2h 18m",
@@ -35,18 +42,20 @@
         "gst": 0,
         "totalFare": 2600
       },
-      "totalFare": 2198,
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
       "originalFare": 2198,
-      "walletUsed": 0,
-      "couponCode": "",
-      "couponDiscount": 0,
-      "advancePaid": 0,
-      "balanceDue": 2198,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Live Mobile Customer 549",
+      "passengerPhone": "+91 9835517622",
       "paymentMethod": "Cash to Driver",
       "paymentStatus": "PAYABLE TO DRIVER",
-      "bookingStatus": "REQUESTED",
-      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
-      "driverDetails": null,
+      "paymentTxnId": "TXN_1791040061406_7245",
+      "pickupAddress": "Boring Road, Patna",
+      "pickupDate": "2026-10-20",
+      "pickupTime": "10:00 AM",
       "statusHistory": [
         {
           "status": "REQUESTED",
@@ -55,9 +64,11 @@
           "note": "Booking request placed. Agent call in 5 mins."
         }
       ],
-      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-5910\n*Passenger:* Live Mobile Customer 549 (+91 9835517622)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-10-20 at 10:00 AM\n*Total Fare:* ₹2198 (Advance: ₹0, Balance Due: ₹2198)\n*Status:* REQUESTED / CONFIRMED",
+      "totalFare": 2198,
+      "tripOtp": "5789",
+      "walletUsed": 0,
       "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-5910%0A*Passenger%3A*%20Live%20Mobile%20Customer%20549%20(%2B91%209835517622)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92198",
-      "createdAt": "2026-10-03T15:07:41.406Z"
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-5910\n*Passenger:* Live Mobile Customer 549 (+91 9835517622)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-10-20 at 10:00 AM\n*Total Fare:* ₹2198 (Advance: ₹0, Balance Due: ₹2198)\n*Status:* REQUESTED / CONFIRMED"
     },
     {
       "bookingId": "OTB-2026-2413",
@@ -1860,6 +1871,14 @@
   ],
   "users": [
     {
+      "id": "usr_9835517622",
+      "createdAt": "2026-10-03T15:07:41.406Z",
+      "email": "",
+      "name": "Live Mobile Customer 549",
+      "phone": "+91 9835517622",
+      "walletBalance": 100
+    },
+    {
       "id": "usr_9835472851",
       "createdAt": "2026-10-03T15:06:26.691Z",
       "email": "",
@@ -2091,14 +2110,6 @@
       "name": "aman kumar",
       "phone": "+91 6206494214",
       "walletBalance": 0
-    },
-    {
-      "id": "usr_9835517622",
-      "name": "Live Mobile Customer 549",
-      "phone": "+91 9835517622",
-      "email": "",
-      "walletBalance": 100,
-      "createdAt": "2026-10-03T15:07:41.406Z"
     }
   ],
   "vehicles": [
@@ -2170,21 +2181,21 @@
   "payments": [
     {
       "id": "TXN_1791040061406_7245",
-      "bookingId": "OTB-2026-5910",
-      "customerId": "usr_9835517622",
-      "passengerPhone": "+91 9835517622",
-      "amount": 2198,
       "advancePaid": 0,
+      "amount": 2198,
       "balanceDue": 2198,
-      "originalAmount": 2198,
-      "walletDeducted": 0,
+      "bookingId": "OTB-2026-5910",
       "couponDiscount": 0,
+      "createdAt": "2026-10-03T15:07:41.406Z",
+      "customerId": "usr_9835517622",
       "method": "Cash to Driver",
+      "originalAmount": 2198,
+      "passengerPhone": "+91 9835517622",
       "status": "PAYABLE TO DRIVER",
       "upiUtr": "",
-      "verifiedBy": null,
       "verifiedAt": null,
-      "createdAt": "2026-10-03T15:07:41.406Z"
+      "verifiedBy": null,
+      "walletDeducted": 0
     },
     {
       "id": "TXN_1791039986691_7045",
@@ -2639,19 +2650,19 @@
   "leads": [
     {
       "id": "LEAD_1791040061406",
-      "phone": "+91 9835517622",
+      "bookingId": "OTB-2026-5910",
       "cleanPhone": "9835517622",
-      "passengerName": "Live Mobile Customer 549",
-      "originCity": "Patna",
+      "createdAt": "2026-10-03T15:07:41.406Z",
       "destCity": "Gaya",
-      "tripType": "oneway",
-      "pickupDate": "2026-10-20",
-      "pickupTime": "10:00 AM",
       "distanceKm": 104,
       "estFareSedan": 2198,
+      "originCity": "Patna",
+      "passengerName": "Live Mobile Customer 549",
+      "phone": "+91 9835517622",
+      "pickupDate": "2026-10-20",
+      "pickupTime": "10:00 AM",
       "status": "CONVERTED",
-      "bookingId": "OTB-2026-5910",
-      "createdAt": "2026-10-03T15:07:41.406Z",
+      "tripType": "oneway",
       "updatedAt": "2026-10-03T15:07:41.406Z"
     },
     {
@@ -3032,11 +3043,11 @@
   "notifications": [
     {
       "id": "NOTIF_BOOK_1791040061406",
-      "type": "NEW_BOOKING_REQUEST",
-      "title": "🚨 New Cab Booking: OTB-2026-5910",
-      "message": "Live Mobile Customer 549 (+91 9835517622) requested Patna ➔ Gaya (Prime Sedan). Total Fare: ₹2198.",
       "bookingId": "OTB-2026-5910",
-      "createdAt": "2026-10-03T15:07:41.406Z"
+      "createdAt": "2026-10-03T15:07:41.406Z",
+      "message": "Live Mobile Customer 549 (+91 9835517622) requested Patna ➔ Gaya (Prime Sedan). Total Fare: ₹2198.",
+      "title": "🚨 New Cab Booking: OTB-2026-5910",
+      "type": "NEW_BOOKING_REQUEST"
     },
     {
       "id": "NOTIF_BOOK_1791039986691",
@@ -3333,17 +3344,7 @@
       "usageCount": 6
     }
   ],
-  "audit_logs": [
-    {
-      "id": "AUD_1791040061406",
-      "entity": "BOOKING",
-      "entityId": "OTB-2026-5910",
-      "action": "CREATE_REQUEST",
-      "actor": "+91 9835517622",
-      "details": "Patna → Gaya for ₹2198 (Cash to Driver)",
-      "createdAt": "2026-10-03T15:07:41.406Z"
-    }
-  ],
+  "audit_logs": [],
   "sessions": [
     {
       "token": "adm_sess_d46a78755c555e971d90df9af1f4f801",
