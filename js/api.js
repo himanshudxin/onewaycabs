@@ -773,6 +773,38 @@ class ApiClient {
     });
   }
 
+  static async adminDeleteBooking(bookingId, password = "deleteit", token) {
+    const res = await this.request(`/api/bookings?bookingId=${encodeURIComponent(bookingId)}&password=${encodeURIComponent(password)}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ bookingId, password })
+    });
+
+    try {
+      const cached = JSON.parse(localStorage.getItem("otb_admin_bookings_cache") || "[]");
+      const filtered = cached.filter(x => x.bookingId !== bookingId && x.id !== bookingId);
+      localStorage.setItem("otb_admin_bookings_cache", JSON.stringify(filtered));
+    } catch (e) {}
+
+    return res || { success: false, message: "Deletion request failed" };
+  }
+
+  static async adminDeleteLead(leadId, password = "deleteit", token) {
+    const res = await this.request(`/api/leads?id=${encodeURIComponent(leadId)}&password=${encodeURIComponent(password)}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ leadId, id: leadId, password })
+    });
+
+    try {
+      const cached = JSON.parse(localStorage.getItem("otb_leads") || "[]");
+      const filtered = cached.filter(x => x.id !== leadId && x.cleanPhone !== leadId);
+      localStorage.setItem("otb_leads", JSON.stringify(filtered));
+    } catch (e) {}
+
+    return res || { success: false, message: "Deletion request failed" };
+  }
+
   static async adminGetPayments(token) {
     return await this.request("/api/admin/payments", {
       headers: { Authorization: `Bearer ${token}` }

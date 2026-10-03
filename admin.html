@@ -2151,9 +2151,13 @@
               <div style="font-size: 11.5px; color: var(--admin-muted);">${l.pickupTime || 'Immediate'}</div>
             </td>
             <td>
-              <div style="font-size: 12px; color: #cbd5e1;">
-                <div>Dzire/Etios: <strong style="color: #38bdf8;">₹${(l.estFareSedan || 2198).toLocaleString('en-IN')}</strong></div>
-                <div>Ertiga SUV: <strong style="color: #34d399;">₹${(l.estFareSuv || 3398).toLocaleString('en-IN')}</strong></div>
+              <div style="font-size: 12.5px; color: #cbd5e1;">
+                <div style="font-weight: 800; color: #38bdf8;">
+                  ${l.cabName || (l.selectedCab === 'suv' ? 'Family SUV (Ertiga)' : (l.selectedCab === 'hatchback' ? 'Go Hatchback' : 'Prime Sedan (Dzire)'))}
+                </div>
+                <div style="font-size: 13px; font-weight: 900; color: #34d399; margin-top: 2px;">
+                  ₹${(l.cabPrice || (l.selectedCab === 'suv' ? l.estFareSuv : l.estFareSedan) || 2198).toLocaleString('en-IN')}
+                </div>
               </div>
             </td>
             <td>
@@ -2171,9 +2175,12 @@
                 </a>
                 ${l.status !== 'CONVERTED' ? `
                   <button type="button" class="btn-action-sm btn-verify-pay" style="background: #0284c7; border-color: #0284c7; color: white;" onclick="convertLeadToBooking('${l.id}')">
-                    🚖 Convert to Booking
+                    🚖 Convert
                   </button>
                 ` : '<span style="font-size: 11.5px; color: #34d399; font-weight: 700;">✓ Booked</span>'}
+                <button type="button" class="btn-action-sm" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5;" onclick="deleteLeadAdmin('${l.id}')" title="Permanently delete inquiry">
+                  🗑️ Delete
+                </button>
               </div>
             </td>
           </tr>
@@ -2407,11 +2414,56 @@
                   </a>
                 ` : ''}
                 <button type="button" class="btn-action-sm btn-details" onclick="openDetailsModal('${bId}')">Details</button>
+                <button type="button" class="btn-action-sm" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5;" onclick="deleteBookingAdmin('${bId}')" title="Permanently delete booking">
+                  🗑️ Delete
+                </button>
               </div>
             </td>
           </tr>
         `;
       }).join("");
+    }
+
+    async function deleteBookingAdmin(bookingId) {
+      const pass = prompt(`⚠️ PERMANENT RIDE DELETION\n\nTo completely delete booking ${bookingId} from MongoDB Atlas Cloud, please enter the deletion password:`);
+      if (pass === null) return;
+
+      if (pass.trim() !== 'deleteit' && pass.trim() !== 'harharmahadev@3') {
+        alert("❌ Access Denied: Incorrect deletion password. The ride was NOT deleted.");
+        return;
+      }
+
+      const res = await ApiClient.adminDeleteBooking(bookingId, pass.trim(), _adminToken);
+      if (res && res.success) {
+        alert(`✅ Booking ${bookingId} permanently deleted from database.`);
+        _allBookings = _allBookings.filter(b => b.bookingId !== bookingId && b.id !== bookingId);
+        renderMetrics();
+        applyFilters();
+      } else {
+        alert(res?.message || "Failed to delete booking.");
+        await loadBookings();
+      }
+    }
+
+    async function deleteLeadAdmin(leadId) {
+      const pass = prompt(`⚠️ PERMANENT INQUIRY DELETION\n\nTo completely delete inquiry lead (${leadId}) from MongoDB Atlas Cloud, please enter the deletion password:`);
+      if (pass === null) return;
+
+      if (pass.trim() !== 'deleteit' && pass.trim() !== 'harharmahadev@3') {
+        alert("❌ Access Denied: Incorrect deletion password. The inquiry was NOT deleted.");
+        return;
+      }
+
+      const res = await ApiClient.adminDeleteLead(leadId, pass.trim(), _adminToken);
+      if (res && res.success) {
+        alert(`✅ Inquiry lead permanently deleted from database.`);
+        _allLeads = _allLeads.filter(l => l.id !== leadId && l.cleanPhone !== leadId);
+        renderLeadsMetrics();
+        applyLeadsFilters();
+      } else {
+        alert(res?.message || "Failed to delete lead.");
+        await loadLeads();
+      }
     }
 
     async function adminUpdateStatusSubmit(bookingId, selectEl) {

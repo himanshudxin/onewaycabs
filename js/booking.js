@@ -2999,7 +2999,19 @@ class BookingManager {
     const chkWallet = document.getElementById("chk-use-wallet");
     const isUsingWallet = chkWallet && chkWallet.checked;
     const utrInput = document.getElementById("chk-upi-utr");
-    const utrVal = utrInput?.value.trim() || "";
+    let utrVal = utrInput?.value.trim() || "";
+
+    // Payment Mode Verification Step
+    if (method.includes("UPI") || method.includes("PhonePe")) {
+      if (!utrVal) {
+        const enterUtr = prompt("📱 UPI Payment Verification:\nPlease enter the 12-digit UPI / UTR Reference Number from your PhonePe/GPay/Paytm app (or type 'CONFIRMED'):", "");
+        if (enterUtr === null) {
+          return;
+        }
+        utrVal = enterUtr.trim() || `UPI_CONFIRMED_${Date.now()}`;
+        if (utrInput) utrInput.value = utrVal;
+      }
+    }
 
     const btnConfirm = document.getElementById("chk-confirm-cta-btn") || document.querySelector("#modal-checkout .check-fare-primary-btn");
     if (btnConfirm) {

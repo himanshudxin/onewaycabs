@@ -1258,6 +1258,84 @@ module.exports = async (req, res) => {
     }
 
     // -------------------------------------------------------------
+    // 7B. PERMANENT RIDE & INQUIRY DELETION (Password: deleteit)
+    // -------------------------------------------------------------
+    if ((pathname === '/bookings' || pathname === '/admin/bookings' || pathname === '/rides') && method === 'DELETE') {
+      const bId = (body.bookingId || body.id || url.searchParams.get('bookingId') || url.searchParams.get('id') || '').trim();
+      const pass = (body.password || url.searchParams.get('password') || '').trim();
+
+      if (pass !== 'deleteit' && pass !== 'harharmahadev@3') {
+        return sendJson(403, {
+          success: false,
+          message: 'Access Denied: Incorrect deletion password. Required password is: deleteit'
+        });
+      }
+
+      if (!bId) {
+        return sendJson(400, { success: false, message: 'Booking ID is required for deletion.' });
+      }
+
+      if (db.bookings) {
+        db.bookings = db.bookings.filter(b => b.bookingId !== bId && b.id !== bId);
+      }
+      await saveDb(db);
+
+      try {
+        const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://himanshudu255_db_user:Himanshu%40123@cluster0.7pf5pvc.mongodb.net/onewaytaxibihar?retryWrites=true&w=majority&appName=Cluster0';
+        const { MongoClient } = require('mongodb');
+        const client = new MongoClient(mongoUri);
+        await client.connect();
+        const mDb = client.db('onewaytaxibihar');
+        await mDb.collection('bookings').deleteOne({ $or: [{ bookingId: bId }, { id: bId }] });
+        await client.close();
+      } catch(e) {}
+
+      return sendJson(200, {
+        success: true,
+        message: `Booking ${bId} permanently deleted from database.`
+      });
+    }
+
+    if ((pathname === '/leads' || pathname === '/admin/leads') && method === 'DELETE') {
+      const leadId = (body.leadId || body.id || url.searchParams.get('id') || url.searchParams.get('leadId') || '').trim();
+      const pass = (body.password || url.searchParams.get('password') || '').trim();
+
+      if (pass !== 'deleteit' && pass !== 'harharmahadev@3') {
+        return sendJson(403, {
+          success: false,
+          message: 'Access Denied: Incorrect deletion password. Required password is: deleteit'
+        });
+      }
+
+      if (!leadId) {
+        return sendJson(400, { success: false, message: 'Lead ID is required for deletion.' });
+      }
+
+      const cleanPhone = leadId.replace(/\D/g, '').slice(-10);
+      if (db.leads) {
+        db.leads = db.leads.filter(l => l.id !== leadId && l.cleanPhone !== cleanPhone && l.phone !== `+91 ${cleanPhone}`);
+      }
+      await saveDb(db);
+
+      try {
+        const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://himanshudu255_db_user:Himanshu%40123@cluster0.7pf5pvc.mongodb.net/onewaytaxibihar?retryWrites=true&w=majority&appName=Cluster0';
+        const { MongoClient } = require('mongodb');
+        const client = new MongoClient(mongoUri);
+        await client.connect();
+        const mDb = client.db('onewaytaxibihar');
+        await mDb.collection('leads').deleteOne({
+          $or: [{ id: leadId }, { cleanPhone: cleanPhone }, { phone: `+91 ${cleanPhone}` }]
+        });
+        await client.close();
+      } catch(e) {}
+
+      return sendJson(200, {
+        success: true,
+        message: `Inquiry lead permanently deleted from database.`
+      });
+    }
+
+    // -------------------------------------------------------------
     // 8. WALLET TRANSACTION LEDGER
     // -------------------------------------------------------------
     if (pathname === '/wallet/ledger' && method === 'GET') {

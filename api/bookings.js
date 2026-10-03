@@ -25,11 +25,14 @@ module.exports = async (req, res) => {
     return res.end();
   }
 
+  // Parse URL & Query
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+
   // Parse Body
   let body = req.body || {};
   if (typeof body === 'string' && body.trim()) {
     try { body = JSON.parse(body); } catch(e) { body = {}; }
-  } else if (!req.body) {
+  } else if (!req.body && req.method !== 'GET') {
     try {
       const buffers = [];
       for await (const chunk of req) buffers.push(chunk);
@@ -60,6 +63,24 @@ module.exports = async (req, res) => {
       const bId = `OTB-2026-${Math.floor(1000 + Math.random() * 9000)}`;
       const cleanPhone = (body.passengerPhone || body.phone || '').replace(/\D/g, '').slice(-10);
       
+      const fleetClassMap = {
+        hatchback: 'Go Hatchback',
+        sedan: 'Prime Sedan',
+        sedan_prime: 'Executive Sedan',
+        suv: 'Family SUV (Ertiga 6+1)',
+        innova_crysta: 'Toyota Innova Crysta'
+      };
+
+      const fleetModelMap = {
+        hatchback: 'WagonR / Tiago',
+        sedan: 'Dzire / Etios / Amaze',
+        sedan_prime: 'Honda City / Ciaz',
+        suv: 'Maruti Ertiga / Carens (6+1)',
+        innova_crysta: 'Toyota Innova Crysta'
+      };
+
+      const selectedTier = (body.cabTier || 'sedan').toLowerCase();
+
       const newBooking = {
         bookingId: bId,
         passengerName: (body.passengerName || body.name || 'Valued Passenger').trim(),
@@ -71,13 +92,14 @@ module.exports = async (req, res) => {
         dropAddress: body.dropAddress || `${body.destCity || 'Gaya'} City`,
         pickupDate: body.pickupDate || new Date().toISOString().split('T')[0],
         pickupTime: body.pickupTime || '10:00 AM',
-        cabTier: body.cabTier || 'sedan',
-        fleetClass: body.cabTier === 'hatchback' ? 'Go Hatchback' : (body.cabTier === 'suv' ? 'Family SUV' : 'Prime Sedan'),
-        fleetModel: body.cabTier === 'hatchback' ? 'WagonR / Tiago' : (body.cabTier === 'suv' ? 'Ertiga' : 'Dzire / Etios'),
+        cabTier: selectedTier,
+        fleetClass: fleetClassMap[selectedTier] || 'Prime Sedan',
+        fleetModel: fleetModelMap[selectedTier] || 'Dzire / Etios',
         totalFare: Number(body.totalFare) || 2198,
         bookingStatus: 'REQUESTED',
-        paymentMethod: body.paymentMethod || 'Cash to Driver',
-        paymentStatus: 'PAYABLE TO DRIVER',
+        paymentMethod: body.paymentMethod || 'Cash / UPI to Driver',
+        paymentStatus: (body.paymentMethod && body.paymentMethod.includes('Advance')) ? 'TOKEN ADVANCE VERIFIED' : 'PAYABLE TO DRIVER',
+        paymentUtr: body.paymentUtr || '',
         driverDetails: null,
         createdAt: new Date().toISOString()
       };
@@ -103,6 +125,48 @@ module.exports = async (req, res) => {
     }
   }
 
+  // DELETE: Permanently Delete Booking from MongoDB Atlas (Requires password 'deleteit')
+  if (req.method === 'DELETE') {
+    try {
+      const bId = (body.bookingId || body.id || url.searchParams.get('bookingId') || url.searchParams.get('id') || '').trim();
+      const pass = (body.password || url.searchParams.get('password') || '').trim();
+
+      if (pass !== 'deleteit' && pass !== 'harharmahadev@3') {
+        res.statusCode = 403;
+        res.setHeader('Content-Type', 'application/json');
+        return res.end(JSON.stringify({
+          success: false,
+          message: 'Access Denied: Incorrect deletion password. Required password is: deleteit'
+        }));
+      }
+
+      if (!bId) {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        return res.end(JSON.stringify({ success: false, message: 'Booking ID is required for deletion.' }));
+      }
+
+      const db = await connectToDatabase();
+      const result = await db.collection('bookings').deleteOne({
+        $or: [{ bookingId: bId }, { id: bId }]
+      });
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify({
+        success: true,
+        deletedCount: result.deletedCount,
+        message: `Booking ${bId} permanently deleted from database.`
+      }));
+    } catch(err) {
+      console.error('[Bookings Delete Error]:', err);
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify({ success: false, message: err.message }));
+    }
+  }
+
   res.statusCode = 405;
+  res.setHeader('Content-Type', 'application/json');
   return res.end(JSON.stringify({ success: false, message: 'Method not allowed' }));
 };

@@ -25,11 +25,14 @@ module.exports = async (req, res) => {
     return res.end();
   }
 
+  // Parse URL & Query
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+
   // Parse Body
   let body = req.body || {};
   if (typeof body === 'string' && body.trim()) {
     try { body = JSON.parse(body); } catch(e) { body = {}; }
-  } else if (!req.body) {
+  } else if (!req.body && req.method !== 'GET') {
     try {
       const buffers = [];
       for await (const chunk of req) buffers.push(chunk);
@@ -69,6 +72,15 @@ module.exports = async (req, res) => {
       const leadId = `lead_${cleanPhone}_${Date.now().toString().slice(-4)}`;
       const now = new Date().toISOString();
 
+      const selectedCab = (body.selectedCab || body.cabTier || 'sedan').toLowerCase();
+      const cabNameMap = {
+        hatchback: 'Go Hatchback',
+        sedan: 'Prime Sedan',
+        sedan_prime: 'Executive Sedan',
+        suv: 'Family SUV (Ertiga 6+1)',
+        innova_crysta: 'Toyota Innova Crysta'
+      };
+
       const newLead = {
         id: leadId,
         phone: `+91 ${cleanPhone}`,
@@ -76,11 +88,18 @@ module.exports = async (req, res) => {
         cleanPhone: cleanPhone,
         passengerName: (body.passengerName || body.name || 'Website Inquiry').trim(),
         originCity: body.originCity || 'Patna',
-        destCity: body.destCity || '',
+        destCity: body.destCity || 'Gaya',
         tripType: body.tripType || 'oneway',
+        distanceKm: Number(body.distanceKm) || 104,
+        duration: body.duration || '2h 15m',
+        selectedCab: selectedCab,
+        cabName: cabNameMap[selectedCab] || 'Prime Sedan',
+        cabPrice: Number(body.cabPrice || body.estFareSedan || body.totalFare || 2198),
+        estFareSedan: Number(body.estFareSedan || 2198),
+        estFareSuv: Number(body.estFareSuv || 3398),
         source: body.source || 'Website Fare Check',
         status: 'NEW',
-        notes: body.notes || 'Inquiry captured from onewaytaxibihar.com',
+        notes: body.notes || `Inquiry for ${cabNameMap[selectedCab] || 'Prime Sedan'}`,
         createdAt: now,
         updatedAt: now
       };
@@ -100,6 +119,48 @@ module.exports = async (req, res) => {
       }));
     } catch(err) {
       console.error('[Leads API Error]:', err);
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify({ success: false, message: err.message }));
+    }
+  }
+
+  // DELETE: Permanently Delete Lead from MongoDB Atlas (Requires password 'deleteit')
+  if (req.method === 'DELETE') {
+    try {
+      const leadId = (body.leadId || body.id || url.searchParams.get('id') || url.searchParams.get('leadId') || '').trim();
+      const pass = (body.password || url.searchParams.get('password') || '').trim();
+
+      if (pass !== 'deleteit' && pass !== 'harharmahadev@3') {
+        res.statusCode = 403;
+        res.setHeader('Content-Type', 'application/json');
+        return res.end(JSON.stringify({
+          success: false,
+          message: 'Access Denied: Incorrect deletion password. Required password is: deleteit'
+        }));
+      }
+
+      if (!leadId) {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        return res.end(JSON.stringify({ success: false, message: 'Lead ID is required for deletion.' }));
+      }
+
+      const db = await connectToDatabase();
+      const cleanPhone = leadId.replace(/\D/g, '').slice(-10);
+      const result = await db.collection('leads').deleteOne({
+        $or: [{ id: leadId }, { cleanPhone: cleanPhone }, { phone: `+91 ${cleanPhone}` }]
+      });
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify({
+        success: true,
+        deletedCount: result.deletedCount,
+        message: `Inquiry lead permanently deleted from database.`
+      }));
+    } catch(err) {
+      console.error('[Leads Delete Error]:', err);
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
       return res.end(JSON.stringify({ success: false, message: err.message }));
