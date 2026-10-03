@@ -1,6 +1,360 @@
 {
   "bookings": [
     {
+      "bookingId": "OTB-2026-1430",
+      "tripOtp": "9019",
+      "customerId": "usr_9835787623",
+      "paymentTxnId": "TXN_1791037954751_7587",
+      "passengerName": "Tester from Local Wi-Fi Subnet",
+      "passengerPhone": "+91 9835787623",
+      "passengerEmail": "",
+      "originCity": "Darbhanga",
+      "destCity": "Muzaffarpur",
+      "pickupAddress": "Darbhanga Main Junction",
+      "dropAddress": "Muzaffarpur Central Tower",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 68,
+      "duration": "1h 30m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 68,
+        "duration": "1h 30m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 1700,
+        "extraKm": 53,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 53,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "totalFare": 2640,
+      "originalFare": 2640,
+      "walletUsed": 0,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 0,
+      "balanceDue": 2640,
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T14:32:34.751Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-1430\n*Passenger:* Tester from Local Wi-Fi Subnet (+91 9835787623)\n*Route:* Darbhanga ➔ Muzaffarpur (68 KM)\n*Schedule:* 2026-10-25 at 10:00 AM\n*Total Fare:* ₹2640 (Advance: ₹0, Balance Due: ₹2640)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-1430%0A*Passenger%3A*%20Tester%20from%20Local%20Wi-Fi%20Subnet%20(%2B91%209835787623)%0A*Route%3A*%20Darbhanga%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B92640",
+      "createdAt": "2026-10-03T14:32:34.751Z"
+    },
+    {
+      "bookingId": "OTB-2026-8443",
+      "advancePaid": 0,
+      "balanceDue": 2640,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:32.877Z",
+      "customerId": "usr_9835101867",
+      "destCity": "Patna",
+      "distanceKm": 235,
+      "driverDetails": null,
+      "dropAddress": "Patna Central Tower",
+      "duration": "5h 13m",
+      "fareBreakdown": {
+        "distanceKm": 235,
+        "duration": "5h 13m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 5875,
+        "extraKm": 220,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 185,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 5875
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Bhagalpur",
+      "originalFare": 2640,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Tester from External Network (Delhi Gateway)",
+      "passengerPhone": "+91 9835101867",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791037952877_7948",
+      "pickupAddress": "Bhagalpur Main Junction",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T14:32:32.877Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2640,
+      "tripOtp": "6543",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-8443%0A*Passenger%3A*%20Tester%20from%20External%20Network%20(Delhi%20Gateway)%20(%2B91%209835101867)%0A*Route%3A*%20Bhagalpur%20%E2%9E%94%20Patna%0A*Total%20Fare%3A*%20%E2%82%B92640",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-8443\n*Passenger:* Tester from External Network (Delhi Gateway) (+91 9835101867)\n*Route:* Bhagalpur ➔ Patna (235 KM)\n*Schedule:* 2026-10-25 at 10:00 AM\n*Total Fare:* ₹2640 (Advance: ₹0, Balance Due: ₹2640)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
+      "bookingId": "OTB-2026-8221",
+      "advancePaid": 0,
+      "balanceDue": 2640,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:30.935Z",
+      "customerId": "usr_9835981335",
+      "destCity": "Gaya",
+      "distanceKm": 195,
+      "driverDetails": null,
+      "dropAddress": "Gaya Central Tower",
+      "duration": "4h 20m",
+      "fareBreakdown": {
+        "distanceKm": 195,
+        "duration": "4h 20m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 4875,
+        "extraKm": 180,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 153,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 4875
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Muzaffarpur",
+      "originalFare": 2640,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Tester from BSNL Broadband (Muzaffarpur)",
+      "passengerPhone": "+91 9835981335",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791037950935_9771",
+      "pickupAddress": "Muzaffarpur Main Junction",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T14:32:30.935Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2640,
+      "tripOtp": "3381",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-8221%0A*Passenger%3A*%20Tester%20from%20BSNL%20Broadband%20(Muzaffarpur)%20(%2B91%209835981335)%0A*Route%3A*%20Muzaffarpur%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92640",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-8221\n*Passenger:* Tester from BSNL Broadband (Muzaffarpur) (+91 9835981335)\n*Route:* Muzaffarpur ➔ Gaya (195 KM)\n*Schedule:* 2026-10-25 at 10:00 AM\n*Total Fare:* ₹2640 (Advance: ₹0, Balance Due: ₹2640)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
+      "bookingId": "OTB-2026-7409",
+      "advancePaid": 0,
+      "balanceDue": 2640,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:28.748Z",
+      "customerId": "usr_9835234743",
+      "destCity": "Patna",
+      "distanceKm": 104,
+      "driverDetails": null,
+      "dropAddress": "Patna Central Tower",
+      "duration": "2h 18m",
+      "fareBreakdown": {
+        "distanceKm": 104,
+        "duration": "2h 18m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 2600,
+        "extraKm": 89,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 82,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2600
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Gaya",
+      "originalFare": 2640,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Tester from Airtel 5G (Gaya)",
+      "passengerPhone": "+91 9835234743",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791037948748_9706",
+      "pickupAddress": "Gaya Main Junction",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T14:32:28.748Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2640,
+      "tripOtp": "4244",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-7409%0A*Passenger%3A*%20Tester%20from%20Airtel%205G%20(Gaya)%20(%2B91%209835234743)%0A*Route%3A*%20Gaya%20%E2%9E%94%20Patna%0A*Total%20Fare%3A*%20%E2%82%B92640",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-7409\n*Passenger:* Tester from Airtel 5G (Gaya) (+91 9835234743)\n*Route:* Gaya ➔ Patna (104 KM)\n*Schedule:* 2026-10-25 at 10:00 AM\n*Total Fare:* ₹2640 (Advance: ₹0, Balance Due: ₹2640)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
+      "bookingId": "OTB-2026-7944",
+      "advancePaid": 0,
+      "balanceDue": 2640,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:26.748Z",
+      "customerId": "usr_9835726432",
+      "destCity": "Darbhanga",
+      "distanceKm": 142,
+      "driverDetails": null,
+      "dropAddress": "Darbhanga Central Tower",
+      "duration": "3h 9m",
+      "fareBreakdown": {
+        "distanceKm": 142,
+        "duration": "3h 9m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 3550,
+        "extraKm": 127,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 112,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 3550
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 2640,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Tester from Jio 4G Cellular (Patna)",
+      "passengerPhone": "+91 9835726432",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791037946748_4472",
+      "pickupAddress": "Patna Main Junction",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T14:32:26.748Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2640,
+      "tripOtp": "1125",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-7944%0A*Passenger%3A*%20Tester%20from%20Jio%204G%20Cellular%20(Patna)%20(%2B91%209835726432)%0A*Route%3A*%20Patna%20%E2%9E%94%20Darbhanga%0A*Total%20Fare%3A*%20%E2%82%B92640",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-7944\n*Passenger:* Tester from Jio 4G Cellular (Patna) (+91 9835726432)\n*Route:* Patna ➔ Darbhanga (142 KM)\n*Schedule:* 2026-10-25 at 10:00 AM\n*Total Fare:* ₹2640 (Advance: ₹0, Balance Due: ₹2640)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
+      "bookingId": "OTB-2026-1555",
+      "advancePaid": 0,
+      "balanceDue": 1875,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:23:05.251Z",
+      "customerId": "usr_9835568738",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "driverDetails": null,
+      "dropAddress": "Muzaffarpur Collectorate Chowk",
+      "duration": "1h 39m",
+      "fareBreakdown": {
+        "distanceKm": 75,
+        "duration": "1h 39m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 1875,
+        "extraKm": 60,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 59,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 1875,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Real Customer 8738",
+      "passengerPhone": "+91 9835568738",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791037385250_8950",
+      "pickupAddress": "Patna Junction Railway Station",
+      "pickupDate": "2026-10-15",
+      "pickupTime": "09:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T14:23:05.251Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 1875,
+      "tripOtp": "5359",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-1555%0A*Passenger%3A*%20Real%20Customer%208738%20(%2B91%209835568738)%0A*Route%3A*%20Patna%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B91875",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-1555\n*Passenger:* Real Customer 8738 (+91 9835568738)\n*Route:* Patna ➔ Muzaffarpur (75 KM)\n*Schedule:* 2026-10-15 at 09:00 AM\n*Total Fare:* ₹1875 (Advance: ₹0, Balance Due: ₹1875)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
       "bookingId": "OTB-2026-3022",
       "advancePaid": 0,
       "balanceDue": 2198,
@@ -1388,73 +1742,137 @@
   ],
   "users": [
     {
-      "id": "usr_6206494214",
-      "createdAt": "2026-09-04T11:19:01.4792083+05:30",
+      "id": "usr_9835101867",
+      "createdAt": "2026-10-03T14:32:32.877Z",
+      "email": "",
+      "name": "Tester from External Network (Delhi Gateway)",
+      "phone": "+91 9835101867",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835981335",
+      "createdAt": "2026-10-03T14:32:30.935Z",
+      "email": "",
+      "name": "Tester from BSNL Broadband (Muzaffarpur)",
+      "phone": "+91 9835981335",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835234743",
+      "createdAt": "2026-10-03T14:32:28.748Z",
+      "email": "",
+      "name": "Tester from Airtel 5G (Gaya)",
+      "phone": "+91 9835234743",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835726432",
+      "createdAt": "2026-10-03T14:32:26.748Z",
+      "email": "",
+      "name": "Tester from Jio 4G Cellular (Patna)",
+      "phone": "+91 9835726432",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835568738",
+      "createdAt": "2026-10-03T14:23:05.250Z",
+      "email": "",
+      "name": "Real Customer 8738",
+      "phone": "+91 9835568738",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835167017",
+      "createdAt": "2026-10-03T13:57:51.540Z",
+      "email": "",
+      "name": "Himanshu Mobile Test",
+      "phone": "+91 9835167017",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835670250",
+      "createdAt": "2026-10-03T13:51:42.900Z",
+      "email": "",
+      "name": "Real Customer 0250",
+      "phone": "+91 9835670250",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835378881",
+      "createdAt": "2026-10-03T13:02:57.084Z",
+      "email": "",
+      "name": "Real Customer 8881",
+      "phone": "+91 9835378881",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835336755",
+      "createdAt": "2026-10-01T18:53:17.574Z",
+      "email": "",
+      "name": "Real Test Customer",
+      "phone": "+91 9835336755",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835649667",
+      "createdAt": "2026-10-01T18:45:48.959Z",
+      "email": "",
+      "name": "Mobile Phone Customer",
+      "phone": "+91 9835649667",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835112233",
+      "createdAt": "2026-10-01T18:21:19.875Z",
       "email": "",
       "memberSince": "2026",
-      "name": "aman kumar",
-      "phone": "+91 6206494214",
-      "walletBalance": 0
+      "name": "Atlas Test Passenger",
+      "phone": "+91 9835112233",
+      "walletBalance": 100
     },
     {
-      "id": "usr_9876543210",
-      "createdAt": "2026-09-04T11:41:43.7278767+05:30",
+      "id": "usr_9835630421",
+      "createdAt": "2026-10-01T17:36:26.100Z",
       "email": "",
-      "name": "Rohan Kumar",
-      "phone": "+91 9876543210",
-      "walletBalance": 0
+      "name": "Web Passenger",
+      "phone": "+91 9835630421",
+      "walletBalance": 100
     },
     {
-      "id": "usr_8521341873",
-      "createdAt": "2026-09-04T14:59:35.8555985+05:30",
+      "id": "usr_9835377824",
+      "createdAt": "2026-10-01T17:31:31.464Z",
       "email": "",
-      "name": "Sudhanshu1457",
-      "phone": "+91 8521341873",
-      "walletBalance": 0
+      "name": "Real Passenger 8493",
+      "phone": "+91 9835377824",
+      "walletBalance": 100
     },
     {
-      "id": "usr_6299375016",
-      "createdAt": "2026-09-04T15:06:42.6345458+05:30",
-      "email": "",
-      "name": "Passenger",
-      "phone": "+91 6299375016",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9812345678",
-      "createdAt": "2026-09-05T00:37:01.1970239+05:30",
-      "email": "",
-      "name": "Harendra Prasad",
-      "phone": "+91 9812345678",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9822806201",
-      "createdAt": "2026-09-05T00:37:13.5687030+05:30",
-      "email": "",
-      "name": "Harendra Prasad",
-      "phone": "+91 9822806201",
-      "walletBalance": 0
-    },
-    {
-      "id": "usr_9876543219",
-      "createdAt": "2026-09-05T01:44:07.3690270+05:30",
+      "id": "usr_9905057552",
+      "createdAt": "2026-09-05T09:38:44.2395245+05:30",
       "email": "",
       "isPhoneVerified": true,
       "memberSince": "2026",
-      "name": "Test User",
-      "phone": "+91 9876543219",
+      "name": "ISHANT KUMAR SHARMA",
+      "phone": "+91 9905057552",
       "rewardClaimed": true,
       "walletBalance": 100
     },
     {
-      "id": "usr_9753960796",
-      "createdAt": "2026-09-05T01:44:31.9201505+05:30",
+      "id": "usr_9838365765",
+      "createdAt": "2026-09-05T01:49:46.1505278+05:30",
+      "email": "",
+      "name": "Passenger",
+      "phone": "+91 9838365765",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9755159643",
+      "createdAt": "2026-09-05T01:49:22.8569914+05:30",
       "email": "",
       "isPhoneVerified": true,
       "memberSince": "2026",
       "name": "Rameshwar Nath",
-      "phone": "+91 9753960796",
+      "phone": "+91 9755159643",
       "rewardClaimed": true,
       "walletBalance": 100
     },
@@ -1470,99 +1888,83 @@
       "walletBalance": 100
     },
     {
-      "id": "usr_9755159643",
-      "createdAt": "2026-09-05T01:49:22.8569914+05:30",
+      "id": "usr_9753960796",
+      "createdAt": "2026-09-05T01:44:31.9201505+05:30",
       "email": "",
       "isPhoneVerified": true,
       "memberSince": "2026",
       "name": "Rameshwar Nath",
-      "phone": "+91 9755159643",
+      "phone": "+91 9753960796",
       "rewardClaimed": true,
       "walletBalance": 100
     },
     {
-      "id": "usr_9838365765",
-      "createdAt": "2026-09-05T01:49:46.1505278+05:30",
-      "email": "",
-      "name": "Passenger",
-      "phone": "+91 9838365765",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9905057552",
-      "createdAt": "2026-09-05T09:38:44.2395245+05:30",
+      "id": "usr_9876543219",
+      "createdAt": "2026-09-05T01:44:07.3690270+05:30",
       "email": "",
       "isPhoneVerified": true,
       "memberSince": "2026",
-      "name": "ISHANT KUMAR SHARMA",
-      "phone": "+91 9905057552",
+      "name": "Test User",
+      "phone": "+91 9876543219",
       "rewardClaimed": true,
       "walletBalance": 100
     },
     {
-      "id": "usr_9835377824",
-      "createdAt": "2026-10-01T17:31:31.464Z",
+      "id": "usr_9822806201",
+      "createdAt": "2026-09-05T00:37:13.5687030+05:30",
       "email": "",
-      "name": "Real Passenger 8493",
-      "phone": "+91 9835377824",
-      "walletBalance": 100
+      "name": "Harendra Prasad",
+      "phone": "+91 9822806201",
+      "walletBalance": 0
     },
     {
-      "id": "usr_9835630421",
-      "createdAt": "2026-10-01T17:36:26.100Z",
+      "id": "usr_9812345678",
+      "createdAt": "2026-09-05T00:37:01.1970239+05:30",
       "email": "",
-      "name": "Web Passenger",
-      "phone": "+91 9835630421",
-      "walletBalance": 100
+      "name": "Harendra Prasad",
+      "phone": "+91 9812345678",
+      "walletBalance": 0
     },
     {
-      "id": "usr_9835112233",
-      "createdAt": "2026-10-01T18:21:19.875Z",
+      "id": "usr_6299375016",
+      "createdAt": "2026-09-04T15:06:42.6345458+05:30",
+      "email": "",
+      "name": "Passenger",
+      "phone": "+91 6299375016",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_8521341873",
+      "createdAt": "2026-09-04T14:59:35.8555985+05:30",
+      "email": "",
+      "name": "Sudhanshu1457",
+      "phone": "+91 8521341873",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_9876543210",
+      "createdAt": "2026-09-04T11:41:43.7278767+05:30",
+      "email": "",
+      "name": "Rohan Kumar",
+      "phone": "+91 9876543210",
+      "walletBalance": 0
+    },
+    {
+      "id": "usr_6206494214",
+      "createdAt": "2026-09-04T11:19:01.4792083+05:30",
       "email": "",
       "memberSince": "2026",
-      "name": "Atlas Test Passenger",
-      "phone": "+91 9835112233",
-      "walletBalance": 100
+      "name": "aman kumar",
+      "phone": "+91 6206494214",
+      "walletBalance": 0
     },
     {
-      "id": "usr_9835649667",
-      "createdAt": "2026-10-01T18:45:48.959Z",
+      "id": "usr_9835787623",
+      "name": "Tester from Local Wi-Fi Subnet",
+      "phone": "+91 9835787623",
       "email": "",
-      "name": "Mobile Phone Customer",
-      "phone": "+91 9835649667",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9835336755",
-      "createdAt": "2026-10-01T18:53:17.574Z",
-      "email": "",
-      "name": "Real Test Customer",
-      "phone": "+91 9835336755",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9835378881",
-      "createdAt": "2026-10-03T13:02:57.084Z",
-      "email": "",
-      "name": "Real Customer 8881",
-      "phone": "+91 9835378881",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9835670250",
-      "createdAt": "2026-10-03T13:51:42.900Z",
-      "email": "",
-      "name": "Real Customer 0250",
-      "phone": "+91 9835670250",
-      "walletBalance": 100
-    },
-    {
-      "id": "usr_9835167017",
-      "createdAt": "2026-10-03T13:57:51.540Z",
-      "email": "",
-      "name": "Himanshu Mobile Test",
-      "phone": "+91 9835167017",
-      "walletBalance": 100
+      "walletBalance": 100,
+      "createdAt": "2026-10-03T14:32:34.751Z"
     }
   ],
   "vehicles": [
@@ -1632,6 +2034,114 @@
     }
   ],
   "payments": [
+    {
+      "id": "TXN_1791037954751_7587",
+      "bookingId": "OTB-2026-1430",
+      "customerId": "usr_9835787623",
+      "passengerPhone": "+91 9835787623",
+      "amount": 2640,
+      "advancePaid": 0,
+      "balanceDue": 2640,
+      "originalAmount": 2640,
+      "walletDeducted": 0,
+      "couponDiscount": 0,
+      "method": "Cash to Driver",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-10-03T14:32:34.751Z"
+    },
+    {
+      "id": "TXN_1791037952877_7948",
+      "advancePaid": 0,
+      "amount": 2640,
+      "balanceDue": 2640,
+      "bookingId": "OTB-2026-8443",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:32.877Z",
+      "customerId": "usr_9835101867",
+      "method": "Cash to Driver",
+      "originalAmount": 2640,
+      "passengerPhone": "+91 9835101867",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
+    {
+      "id": "TXN_1791037950935_9771",
+      "advancePaid": 0,
+      "amount": 2640,
+      "balanceDue": 2640,
+      "bookingId": "OTB-2026-8221",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:30.935Z",
+      "customerId": "usr_9835981335",
+      "method": "Cash to Driver",
+      "originalAmount": 2640,
+      "passengerPhone": "+91 9835981335",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
+    {
+      "id": "TXN_1791037948748_9706",
+      "advancePaid": 0,
+      "amount": 2640,
+      "balanceDue": 2640,
+      "bookingId": "OTB-2026-7409",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:28.748Z",
+      "customerId": "usr_9835234743",
+      "method": "Cash to Driver",
+      "originalAmount": 2640,
+      "passengerPhone": "+91 9835234743",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
+    {
+      "id": "TXN_1791037946748_4472",
+      "advancePaid": 0,
+      "amount": 2640,
+      "balanceDue": 2640,
+      "bookingId": "OTB-2026-7944",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:32:26.748Z",
+      "customerId": "usr_9835726432",
+      "method": "Cash to Driver",
+      "originalAmount": 2640,
+      "passengerPhone": "+91 9835726432",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
+    {
+      "id": "TXN_1791037385250_8950",
+      "advancePaid": 0,
+      "amount": 1875,
+      "balanceDue": 1875,
+      "bookingId": "OTB-2026-1555",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T14:23:05.251Z",
+      "customerId": "usr_9835568738",
+      "method": "Cash to Driver",
+      "originalAmount": 1875,
+      "passengerPhone": "+91 9835568738",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
     {
       "id": "TXN_1791035871540_2212",
       "advancePaid": 0,
@@ -1906,34 +2416,14 @@
   ],
   "wallet_ledger": [
     {
-      "id": "WLT_1790690947643_207",
+      "id": "WLT_1790878879875_980",
       "amount": 100,
       "balanceAfter": 100,
-      "createdAt": "2026-09-29T14:09:07.643Z",
+      "createdAt": "2026-10-01T18:21:19.875Z",
       "description": "Welcome Bonus Credit",
-      "phone": "+91 6206494214",
+      "phone": "+91 9835112233",
       "type": "CREDIT",
-      "userId": "usr_6206494214"
-    },
-    {
-      "id": "WLT_1790690964524",
-      "amount": 100,
-      "balanceAfter": 0,
-      "createdAt": "2026-09-29T14:09:24.524Z",
-      "description": "Applied to Booking Patna to Muzaffarpur",
-      "phone": "+91 6206494214",
-      "type": "DEBIT",
-      "userId": "usr_6206494214"
-    },
-    {
-      "id": "WLT_1790697974427",
-      "amount": 100,
-      "balanceAfter": 0,
-      "createdAt": "2026-09-29T16:06:14.427Z",
-      "description": "Applied to Booking Patna to Gaya",
-      "phone": "+91 9876591713",
-      "type": "DEBIT",
-      "userId": "usr_9876591713"
+      "userId": "usr_9835112233"
     },
     {
       "id": "WLT_1790697974441",
@@ -1946,17 +2436,139 @@
       "userId": "usr_9876585360"
     },
     {
-      "id": "WLT_1790878879875_980",
+      "id": "WLT_1790697974427",
+      "amount": 100,
+      "balanceAfter": 0,
+      "createdAt": "2026-09-29T16:06:14.427Z",
+      "description": "Applied to Booking Patna to Gaya",
+      "phone": "+91 9876591713",
+      "type": "DEBIT",
+      "userId": "usr_9876591713"
+    },
+    {
+      "id": "WLT_1790690964524",
+      "amount": 100,
+      "balanceAfter": 0,
+      "createdAt": "2026-09-29T14:09:24.524Z",
+      "description": "Applied to Booking Patna to Muzaffarpur",
+      "phone": "+91 6206494214",
+      "type": "DEBIT",
+      "userId": "usr_6206494214"
+    },
+    {
+      "id": "WLT_1790690947643_207",
       "amount": 100,
       "balanceAfter": 100,
-      "createdAt": "2026-10-01T18:21:19.875Z",
+      "createdAt": "2026-09-29T14:09:07.643Z",
       "description": "Welcome Bonus Credit",
-      "phone": "+91 9835112233",
+      "phone": "+91 6206494214",
       "type": "CREDIT",
-      "userId": "usr_9835112233"
+      "userId": "usr_6206494214"
     }
   ],
   "leads": [
+    {
+      "id": "LEAD_1791037954751",
+      "phone": "+91 9835787623",
+      "cleanPhone": "9835787623",
+      "passengerName": "Tester from Local Wi-Fi Subnet",
+      "originCity": "Darbhanga",
+      "destCity": "Muzaffarpur",
+      "tripType": "oneway",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 68,
+      "estFareSedan": 2640,
+      "status": "CONVERTED",
+      "bookingId": "OTB-2026-1430",
+      "createdAt": "2026-10-03T14:32:34.751Z",
+      "updatedAt": "2026-10-03T14:32:34.751Z"
+    },
+    {
+      "id": "LEAD_1791037952878",
+      "bookingId": "OTB-2026-8443",
+      "cleanPhone": "9835101867",
+      "createdAt": "2026-10-03T14:32:32.878Z",
+      "destCity": "Patna",
+      "distanceKm": 235,
+      "estFareSedan": 2640,
+      "originCity": "Bhagalpur",
+      "passengerName": "Tester from External Network (Delhi Gateway)",
+      "phone": "+91 9835101867",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T14:32:32.878Z"
+    },
+    {
+      "id": "LEAD_1791037950935",
+      "bookingId": "OTB-2026-8221",
+      "cleanPhone": "9835981335",
+      "createdAt": "2026-10-03T14:32:30.935Z",
+      "destCity": "Gaya",
+      "distanceKm": 195,
+      "estFareSedan": 2640,
+      "originCity": "Muzaffarpur",
+      "passengerName": "Tester from BSNL Broadband (Muzaffarpur)",
+      "phone": "+91 9835981335",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T14:32:30.935Z"
+    },
+    {
+      "id": "LEAD_1791037948748",
+      "bookingId": "OTB-2026-7409",
+      "cleanPhone": "9835234743",
+      "createdAt": "2026-10-03T14:32:28.748Z",
+      "destCity": "Patna",
+      "distanceKm": 104,
+      "estFareSedan": 2640,
+      "originCity": "Gaya",
+      "passengerName": "Tester from Airtel 5G (Gaya)",
+      "phone": "+91 9835234743",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T14:32:28.748Z"
+    },
+    {
+      "id": "LEAD_1791037946748",
+      "bookingId": "OTB-2026-7944",
+      "cleanPhone": "9835726432",
+      "createdAt": "2026-10-03T14:32:26.748Z",
+      "destCity": "Darbhanga",
+      "distanceKm": 142,
+      "estFareSedan": 2640,
+      "originCity": "Patna",
+      "passengerName": "Tester from Jio 4G Cellular (Patna)",
+      "phone": "+91 9835726432",
+      "pickupDate": "2026-10-25",
+      "pickupTime": "10:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T14:32:26.748Z"
+    },
+    {
+      "id": "LEAD_1791037385251",
+      "bookingId": "OTB-2026-1555",
+      "cleanPhone": "9835568738",
+      "createdAt": "2026-10-03T14:23:05.251Z",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "estFareSedan": 1875,
+      "originCity": "Patna",
+      "passengerName": "Real Customer 8738",
+      "phone": "+91 9835568738",
+      "pickupDate": "15/10/2026",
+      "pickupTime": "09:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T14:23:05.251Z"
+    },
     {
       "id": "LEAD_1791035871540",
       "bookingId": "OTB-2026-3022",
@@ -2215,6 +2827,94 @@
   ],
   "notifications": [
     {
+      "id": "NOTIF_BOOK_1791037954751",
+      "type": "NEW_BOOKING_REQUEST",
+      "title": "🚨 New Cab Booking: OTB-2026-1430",
+      "message": "Tester from Local Wi-Fi Subnet (+91 9835787623) requested Darbhanga ➔ Muzaffarpur (Prime Sedan). Total Fare: ₹2640.",
+      "bookingId": "OTB-2026-1430",
+      "createdAt": "2026-10-03T14:32:34.751Z"
+    },
+    {
+      "id": "NOTIF_BOOK_1791037952877",
+      "bookingId": "OTB-2026-8443",
+      "createdAt": "2026-10-03T14:32:32.877Z",
+      "message": "Tester from External Network (Delhi Gateway) (+91 9835101867) requested Bhagalpur ➔ Patna (Prime Sedan). Total Fare: ₹2640.",
+      "title": "🚨 New Cab Booking: OTB-2026-8443",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791037951929",
+      "createdAt": "2026-10-03T14:32:31.929Z",
+      "leadId": "LEAD_1791037951929_909",
+      "message": "Visitor (+91 9835101867) checked fare for Bhagalpur ➔ Patna (120 KM). Sedan Rate: ₹2640.",
+      "title": "⚡ New Route Inquiry: Bhagalpur ➔ Patna",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
+      "id": "NOTIF_BOOK_1791037950935",
+      "bookingId": "OTB-2026-8221",
+      "createdAt": "2026-10-03T14:32:30.935Z",
+      "message": "Tester from BSNL Broadband (Muzaffarpur) (+91 9835981335) requested Muzaffarpur ➔ Gaya (Prime Sedan). Total Fare: ₹2640.",
+      "title": "🚨 New Cab Booking: OTB-2026-8221",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791037949791",
+      "createdAt": "2026-10-03T14:32:29.791Z",
+      "leadId": "LEAD_1791037949791_235",
+      "message": "Visitor (+91 9835981335) checked fare for Muzaffarpur ➔ Gaya (120 KM). Sedan Rate: ₹2640.",
+      "title": "⚡ New Route Inquiry: Muzaffarpur ➔ Gaya",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
+      "id": "NOTIF_BOOK_1791037948748",
+      "bookingId": "OTB-2026-7409",
+      "createdAt": "2026-10-03T14:32:28.748Z",
+      "message": "Tester from Airtel 5G (Gaya) (+91 9835234743) requested Gaya ➔ Patna (Prime Sedan). Total Fare: ₹2640.",
+      "title": "🚨 New Cab Booking: OTB-2026-7409",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791037947965",
+      "createdAt": "2026-10-03T14:32:27.965Z",
+      "leadId": "LEAD_1791037947965_410",
+      "message": "Visitor (+91 9835234743) checked fare for Gaya ➔ Patna (120 KM). Sedan Rate: ₹2640.",
+      "title": "⚡ New Route Inquiry: Gaya ➔ Patna",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
+      "id": "NOTIF_BOOK_1791037946748",
+      "bookingId": "OTB-2026-7944",
+      "createdAt": "2026-10-03T14:32:26.748Z",
+      "message": "Tester from Jio 4G Cellular (Patna) (+91 9835726432) requested Patna ➔ Darbhanga (Prime Sedan). Total Fare: ₹2640.",
+      "title": "🚨 New Cab Booking: OTB-2026-7944",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791037945761",
+      "createdAt": "2026-10-03T14:32:25.761Z",
+      "leadId": "LEAD_1791037945761_72",
+      "message": "Visitor (+91 9835726432) checked fare for Patna ➔ Darbhanga (120 KM). Sedan Rate: ₹2640.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Darbhanga",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
+      "id": "NOTIF_BOOK_1791037385251",
+      "bookingId": "OTB-2026-1555",
+      "createdAt": "2026-10-03T14:23:05.251Z",
+      "message": "Real Customer 8738 (+91 9835568738) requested Patna ➔ Muzaffarpur (Prime Sedan). Total Fare: ₹1875.",
+      "title": "🚨 New Cab Booking: OTB-2026-1555",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791037384569",
+      "createdAt": "2026-10-03T14:23:04.569Z",
+      "leadId": "LEAD_1791037384569_611",
+      "message": "Visitor (+91 9835568738) checked fare for Patna ➔ Muzaffarpur (75 KM). Sedan Rate: ₹1875.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
       "id": "NOTIF_BOOK_1791035871540",
       "bookingId": "OTB-2026-3022",
       "createdAt": "2026-10-03T13:57:51.540Z",
@@ -2405,11 +3105,112 @@
       "usageCount": 6
     }
   ],
-  "audit_logs": [],
+  "audit_logs": [
+    {
+      "id": "AUD_1791037954751",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-1430",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 9835787623",
+      "details": "Darbhanga → Muzaffarpur for ₹2640 (Cash to Driver)",
+      "createdAt": "2026-10-03T14:32:34.751Z"
+    }
+  ],
   "sessions": [
     {
-      "token": "otb_sess_819bb4e7cb2155d9c54890a53a276b50",
-      "createdAt": "2026-09-29T14:09:07.644Z",
+      "token": "adm_sess_d46a78755c555e971d90df9af1f4f801",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-03T13:57:52.409Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_f9b44322367ecf2efd20e5a8c6bdeea2",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-03T13:51:43.573Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_5b5638750a4894ae3c9045cc0022f137",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-03T13:02:58.034Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_a7352ee4bc4738e50d0ea8a11f6c3262",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T18:53:18.459Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_d59c12fef340bdbdde821bb4a63005d1",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T18:45:50.223Z",
+      "role": "admin"
+    },
+    {
+      "token": "otb_sess_67982503bd8573b464790d181b698e9a",
+      "createdAt": "2026-10-01T18:21:19.875Z",
+      "phone": "+91 9835112233",
+      "role": "customer",
+      "userId": "usr_9835112233"
+    },
+    {
+      "token": "adm_sess_676c2463426529b3aec4bbfd57285d37",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T17:31:32.521Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_3484993b45c06ece6e52868a6005fb95",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T17:18:57.190Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_06897703e0170388cf9366a46bf472e9",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T16:58:44.977Z",
+      "role": "admin"
+    },
+    {
+      "token": "drv_sess_11f2cd898e491a089af7cd796628d072",
+      "createdAt": "2026-10-01T16:42:42.978Z",
+      "driverId": "drv_9876543299",
+      "role": "driver"
+    },
+    {
+      "token": "adm_sess_e035cfc2fb60733555c9e4cd9c8f6c2c",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-01T16:42:42.951Z",
+      "role": "admin"
+    },
+    {
+      "token": "drv_sess_9a6c2a6840bba70dfbfee845ad7b6dad",
+      "createdAt": "2026-09-29T16:40:32.814Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "drv_sess_f74a28a1c96df4eea628958aa87cfb42",
+      "createdAt": "2026-09-29T16:40:32.796Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "drv_sess_7c58dddbe8df8931257fdf16c75b73e1",
+      "createdAt": "2026-09-29T16:38:08.077Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "drv_sess_fd64acb0ecba3e9ef7ac59fadac6136a",
+      "createdAt": "2026-09-29T16:38:08.054Z",
+      "driverId": "drv_9876543210",
+      "role": "driver"
+    },
+    {
+      "token": "otb_sess_8a1732eed95bf49fa8d7ec8246131e0a",
+      "createdAt": "2026-09-29T15:30:36.759Z",
       "phone": "+91 6206494214",
       "role": "customer",
       "userId": "usr_6206494214"
@@ -2421,102 +3222,11 @@
       "role": "admin"
     },
     {
-      "token": "otb_sess_8a1732eed95bf49fa8d7ec8246131e0a",
-      "createdAt": "2026-09-29T15:30:36.759Z",
+      "token": "otb_sess_819bb4e7cb2155d9c54890a53a276b50",
+      "createdAt": "2026-09-29T14:09:07.644Z",
       "phone": "+91 6206494214",
       "role": "customer",
       "userId": "usr_6206494214"
-    },
-    {
-      "token": "drv_sess_fd64acb0ecba3e9ef7ac59fadac6136a",
-      "createdAt": "2026-09-29T16:38:08.054Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "drv_sess_7c58dddbe8df8931257fdf16c75b73e1",
-      "createdAt": "2026-09-29T16:38:08.077Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "drv_sess_f74a28a1c96df4eea628958aa87cfb42",
-      "createdAt": "2026-09-29T16:40:32.796Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "drv_sess_9a6c2a6840bba70dfbfee845ad7b6dad",
-      "createdAt": "2026-09-29T16:40:32.814Z",
-      "driverId": "drv_9876543210",
-      "role": "driver"
-    },
-    {
-      "token": "adm_sess_e035cfc2fb60733555c9e4cd9c8f6c2c",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T16:42:42.951Z",
-      "role": "admin"
-    },
-    {
-      "token": "drv_sess_11f2cd898e491a089af7cd796628d072",
-      "createdAt": "2026-10-01T16:42:42.978Z",
-      "driverId": "drv_9876543299",
-      "role": "driver"
-    },
-    {
-      "token": "adm_sess_06897703e0170388cf9366a46bf472e9",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T16:58:44.977Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_3484993b45c06ece6e52868a6005fb95",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T17:18:57.190Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_676c2463426529b3aec4bbfd57285d37",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T17:31:32.521Z",
-      "role": "admin"
-    },
-    {
-      "token": "otb_sess_67982503bd8573b464790d181b698e9a",
-      "createdAt": "2026-10-01T18:21:19.875Z",
-      "phone": "+91 9835112233",
-      "role": "customer",
-      "userId": "usr_9835112233"
-    },
-    {
-      "token": "adm_sess_d59c12fef340bdbdde821bb4a63005d1",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T18:45:50.223Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_a7352ee4bc4738e50d0ea8a11f6c3262",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-01T18:53:18.459Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_5b5638750a4894ae3c9045cc0022f137",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-03T13:02:58.034Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_f9b44322367ecf2efd20e5a8c6bdeea2",
-      "adminId": "adm_01",
-      "createdAt": "2026-10-03T13:51:43.573Z",
-      "role": "admin"
-    },
-    {
-      "token": "adm_sess_d46a78755c555e971d90df9af1f4f801",
-      "adminId": "adm_01",
-      "role": "admin",
-      "createdAt": "2026-10-03T13:57:52.409Z"
     }
   ],
   "settings": {
