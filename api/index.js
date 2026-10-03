@@ -354,11 +354,12 @@ module.exports = async (req, res) => {
     // -------------------------------------------------------------
     // 1. HEALTHCHECK
     // -------------------------------------------------------------
-    if (pathname === '/health' && method === 'GET') {
+    if ((pathname === '/health' || pathname === '/status' || pathname === '/' || pathname === '/index.js' || pathname === '') && method === 'GET') {
       return sendJson(200, {
         status: 'ONLINE',
         platform: 'OneWayTaxiBihar Production API',
         domain: 'onewaytaxibihar.com',
+        engine: 'MongoDB Atlas Active',
         time: new Date().toISOString(),
         helpline: '+91 80021 41816',
         whatsapp: '+91 72818 51011'

@@ -6,9 +6,9 @@
 
 class ApiClient {
   static cloudCandidates = [
-    "https://garmin-jerry-shoes-were.trycloudflare.com",
     "https://onewaytaxibihar.com",
-    "https://onewaytaxibihar-himanshudxin.vercel.app"
+    "https://onewaytaxibihar-himanshudxin.vercel.app",
+    "https://onewaytaxibihar.vercel.app"
   ];
 
   static baseUrl = (() => {
@@ -18,7 +18,7 @@ class ApiClient {
         return "http://localhost:8080";
       }
       // 2. If running on standard port 8080 or live web domain (Vercel, custom domain onewaytaxibihar.com)
-      if (window.location.port === "8080" || (!window.location.port && (window.location.hostname.includes("vercel.app") || window.location.hostname.includes("onewaytaxibihar") || window.location.hostname.includes("trycloudflare.com")))) {
+      if (window.location.port === "8080" || (!window.location.port && (window.location.hostname.includes("vercel.app") || window.location.hostname.includes("onewaytaxibihar")))) {
         return "";
       }
       // 3. If running on a local dev server (port 5500, 3000, 5173, etc.), route API calls to port 8080
