@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* ==========================================================================
-   1. LEAFLET EXECUTIVE GPS RADAR & TELEMETRY CONTROLLER FOR BIHAR
+   1. LEAFLET HIGHWAY ROUTE MAP CONTROLLER (SIMPLE & COMFORTABLE)
    ========================================================================== */
 class OneWayMapManager {
   constructor(containerId) {
@@ -39,11 +39,8 @@ class OneWayMapManager {
     this.originMarker = null;
     this.destMarker = null;
     this.routePolyline = null;
-    this.routeGlowPolyline = null;
-    this.fleetMarkers = [];
-    this.fleetAnimInterval = null;
     this.lastRouteSignature = null;
-    this.currentLayerType = "dark"; // "dark" | "voyager" | "satellite"
+    this.currentLayerType = "standard"; // "standard" | "satellite"
     this.tileLayers = {};
     this.routePoints = [];
     this.debounceTimer = null;
@@ -53,55 +50,34 @@ class OneWayMapManager {
     const el = document.getElementById(this.containerId);
     if (!el || typeof L === "undefined") return;
 
-    // Center of Bihar (Patna-Gaya-Muzaffarpur triangle)
+    // Default center of Bihar (Patna-Gaya corridor)
     this.map = L.map(this.containerId, {
       center: [25.5941, 85.1376],
       zoom: 8,
-      zoomControl: false,
+      zoomControl: true,
       attributionControl: false,
-      scrollWheelZoom: true,
-      fadeAnimation: true,
-      zoomAnimation: true
+      scrollWheelZoom: false, // Prevents page scrolling trap
+      smoothWheelZoom: true
     });
 
-    // Custom sleek zoom control top-right
-    L.control.zoom({ position: "topright" }).addTo(this.map);
-
-    // High-Resolution Tile Layers
-    this.tileLayers.dark = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    // Layer 1: Clean Standard Voyager Road Tiles
+    this.tileLayers.standard = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
       subdomains: "abcd",
       maxZoom: 19,
       attribution: '&copy; CartoDB &copy; OpenStreetMap'
     });
 
-    this.tileLayers.voyager = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      subdomains: "abcd",
-      maxZoom: 19,
-      attribution: '&copy; CartoDB &copy; OpenStreetMap'
-    });
-
+    // Layer 2: Satellite Imagery View
     this.tileLayers.satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 19,
       attribution: '&copy; Esri Satellite'
     });
 
-    // Determine initial tile layer from theme
-    const isDark = document.documentElement.getAttribute("data-theme") !== "light";
-    this.setLayer(isDark ? "dark" : "voyager");
+    // Add standard road map by default
+    this.tileLayers.standard.addTo(this.map);
 
-    // Listen to theme switch events
-    window.addEventListener("themeChanged", (e) => {
-      const mode = e.detail?.theme;
-      if (this.currentLayerType !== "satellite") {
-        this.setLayer(mode === "light" ? "voyager" : "dark");
-      }
-    });
-
-    // Bind HUD layer switchers & recenter button
-    this.bindHudControls();
-
-    // Default Bihar Corridor Overview
-    this.spawnDefaultCaptains();
+    // Setup map toggle buttons & center button
+    this.bindControls();
   }
 
   setLayer(type) {
@@ -112,8 +88,8 @@ class OneWayMapManager {
     this.tileLayers[type].addTo(this.map);
     this.currentLayerType = type;
 
-    // Update active class on buttons
-    const btns = document.querySelectorAll(".radar-layer-btn");
+    // Update active state in toggle buttons
+    const btns = document.querySelectorAll(".map-toggle-btn");
     btns.forEach((btn) => {
       if (btn.dataset.layer === type) {
         btn.classList.add("active");
@@ -123,8 +99,8 @@ class OneWayMapManager {
     });
   }
 
-  bindHudControls() {
-    const btns = document.querySelectorAll(".radar-layer-btn");
+  bindControls() {
+    const btns = document.querySelectorAll(".map-toggle-btn");
     btns.forEach((btn) => {
       btn.addEventListener("click", () => {
         const layerType = btn.dataset.layer;
@@ -145,13 +121,13 @@ class OneWayMapManager {
     if (this.routePoints && this.routePoints.length >= 2) {
       const bounds = L.latLngBounds(this.routePoints);
       this.map.flyToBounds(bounds, {
-        padding: [60, 60],
+        padding: [50, 50],
         maxZoom: 11,
-        duration: 1.2,
+        duration: 1.0,
         easeLinearity: 0.25
       });
     } else {
-      this.map.flyTo([25.5941, 85.1376], 8, { duration: 1.0 });
+      this.map.flyTo([25.5941, 85.1376], 8, { duration: 0.8 });
     }
   }
 
@@ -164,47 +140,46 @@ class OneWayMapManager {
   getHighwayCorridorName(originCity, destCity) {
     const o = (originCity.name || "").toLowerCase();
     const d = (destCity.name || "").toLowerCase();
-    const combined = `${o} ${d}`;
+    const combined = o + " " + d;
 
     if (combined.includes("gaya") || combined.includes("bodhgaya") || combined.includes("jehanabad")) {
-      return "NH-83 Patna-Gaya-Dobhi 4-Lane E-Way";
+      return "NH-83 Patna-Gaya 4-Lane E-Way";
     }
     if (combined.includes("muzaffarpur") || combined.includes("darbhanga") || combined.includes("madhubani") || combined.includes("sitamarhi")) {
-      return "NH-27 East-West Expressway & Gandhi Setu";
+      return "NH-27 East-West Expressway & Setu";
     }
-    if (combined.includes("bhagalpur") || combined.includes("munger") || combined.includes("begusarai") || combined.includes("khagaria")) {
-      return "NH-31 Mokama-Bhagalpur Ganga Corridor";
+    if (combined.includes("bhagalpur") || combined.includes("munger") || combined.includes("begusarai")) {
+      return "NH-31 Ganga Expressway Corridor";
     }
     if (combined.includes("chapra") || combined.includes("siwan") || combined.includes("gopalganj")) {
-      return "NH-531 JP Setu & Saran Expressway";
+      return "NH-531 Saran Highway & JP Setu";
     }
-    if (combined.includes("purnia") || combined.includes("katihar") || combined.includes("saharsa") || combined.includes("kishanganj")) {
-      return "NH-31 / NH-27 Kosi-Seemanchal E-Way";
+    if (combined.includes("purnia") || combined.includes("katihar") || combined.includes("saharsa")) {
+      return "NH-31 / NH-27 Kosi Expressway";
     }
-    if (combined.includes("sasaram") || combined.includes("buxar") || combined.includes("dehri") || combined.includes("aurangabad")) {
-      return "NH-922 / NH-19 Grand Trunk Expressway";
+    if (combined.includes("sasaram") || combined.includes("buxar") || combined.includes("dehri")) {
+      return "NH-922 / NH-19 GT Expressway";
     }
     if (combined.includes("airport")) {
-      return "Patna Airport Dedicated Fastag Corridor";
+      return "Patna Airport Fastag Express";
     }
-    return "Bihar NH State Highway Inter-District Grid";
+    return "Bihar State Highway Network";
   }
 
   updateRoute(originCity, destCity, distanceKm) {
     if (!this.map || typeof L === "undefined") return;
     if (!originCity || !destCity || !originCity.lat || !destCity.lat) return;
 
-    const signature = `${originCity.lat.toFixed(3)}_${originCity.lng.toFixed(3)}_${destCity.lat.toFixed(3)}_${destCity.lng.toFixed(3)}_${distanceKm}`;
+    const signature = originCity.lat.toFixed(3) + "_" + originCity.lng.toFixed(3) + "_" + destCity.lat.toFixed(3) + "_" + destCity.lng.toFixed(3) + "_" + distanceKm;
     if (this.lastRouteSignature === signature) {
-      // Avoid rapid zoom jitter if route did not change
-      return;
+      return; // No redundant recalculation
     }
     this.lastRouteSignature = signature;
 
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this._renderRoute(originCity, destCity, distanceKm);
-    }, 120);
+    }, 100);
   }
 
   _renderRoute(originCity, destCity, distanceKm) {
@@ -219,253 +194,92 @@ class OneWayMapManager {
     if (this.originMarker) this.map.removeLayer(this.originMarker);
     if (this.destMarker) this.map.removeLayer(this.destMarker);
     if (this.routePolyline) this.map.removeLayer(this.routePolyline);
-    if (this.routeGlowPolyline) this.map.removeLayer(this.routeGlowPolyline);
-    this.clearFleetMarkers();
 
-    // High-tech holographic Origin Marker (Emerald Pulse)
+    // Clean & Comfortable Pickup Marker (Green Pin)
     const originIcon = L.divIcon({
-      className: "radar-hologram-pin",
-      html: `
-        <div class="radar-origin-beacon">
-          <div class="beacon-sonar-wave"></div>
-          <div class="beacon-core-dot origin-dot">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>
-          </div>
-          <div class="beacon-pill origin-pill">
-            <span class="beacon-code">PICKUP</span>
-            <span class="beacon-city">${originCity.name}</span>
-          </div>
-        </div>
-      `,
-      iconSize: [44, 44],
-      iconAnchor: [22, 22]
+      className: "simple-map-marker-wrap",
+      html: '<div class="simple-marker-pin origin"><span class="marker-dot"></span><span class="marker-label">Pickup: ' + originCity.name + '</span></div>',
+      iconSize: [120, 32],
+      iconAnchor: [12, 16]
     });
 
-    // High-tech holographic Destination Marker (Cyan Beacon)
+    // Clean & Comfortable Drop Marker (Blue Pin)
     const destIcon = L.divIcon({
-      className: "radar-hologram-pin",
-      html: `
-        <div class="radar-dest-beacon">
-          <div class="beacon-sonar-wave dest-wave"></div>
-          <div class="beacon-core-dot dest-dot">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-          </div>
-          <div class="beacon-pill dest-pill">
-            <span class="beacon-code">DEST</span>
-            <span class="beacon-city">${destCity.name}</span>
-          </div>
-        </div>
-      `,
-      iconSize: [44, 44],
-      iconAnchor: [22, 22]
+      className: "simple-map-marker-wrap",
+      html: '<div class="simple-marker-pin dest"><span class="marker-dot"></span><span class="marker-label">Drop: ' + destCity.name + '</span></div>',
+      iconSize: [120, 32],
+      iconAnchor: [12, 16]
     });
 
     this.originMarker = L.marker([oLat, oLng], { icon: originIcon, zIndexOffset: 1000 })
       .addTo(this.map)
-      .bindPopup(`
-        <div class="radar-popup-card">
-          <div class="radar-popup-tag origin">PICKUP HUB</div>
-          <div class="radar-popup-title">${originCity.name} (${originCity.hindiName || ''})</div>
-          <div class="radar-popup-sub">${originCity.state || 'Bihar'} • Doorstep Chauffeur Pickup</div>
-        </div>
-      `);
+      .bindPopup('<b>Pickup: ' + originCity.name + ' (' + (originCity.hindiName || '') + ')</b><br>' + (originCity.state || 'Bihar'));
 
     this.destMarker = L.marker([dLat, dLng], { icon: destIcon, zIndexOffset: 1000 })
       .addTo(this.map)
-      .bindPopup(`
-        <div class="radar-popup-card">
-          <div class="radar-popup-tag dest">DROP TERMINAL</div>
-          <div class="radar-popup-title">${destCity.name} (${destCity.hindiName || ''})</div>
-          <div class="radar-popup-sub">${destCity.state || 'Bihar'} • Guaranteed One-Way Fare</div>
-        </div>
-      `);
+      .bindPopup('<b>Drop: ' + destCity.name + ' (' + (destCity.hindiName || '') + ')</b><br>' + (destCity.state || 'Bihar'));
 
-    // Smooth highway spline calculation
-    const pointsCount = 14;
+    // Smooth spline points for highway preview
+    const pointsCount = 10;
     const curvePoints = [];
     const dx = dLng - oLng;
     const dy = dLat - oLat;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const curveOffset = Math.sin(Math.atan2(dy, dx)) * 0.07 * (dist > 1.2 ? 1.1 : 0.6);
+    const curveOffset = Math.sin(Math.atan2(dy, dx)) * 0.05 * (dist > 1.2 ? 1 : 0.5);
 
     for (let i = 0; i <= pointsCount; i++) {
       const t = i / pointsCount;
       const curLat = oLat + dy * t + Math.sin(t * Math.PI) * curveOffset;
-      const curLng = oLng + dx * t + Math.sin(t * Math.PI) * (curveOffset * 0.55);
+      const curLng = oLng + dx * t + Math.sin(t * Math.PI) * (curveOffset * 0.5);
       curvePoints.push([curLat, curLng]);
     }
     this.routePoints = curvePoints;
 
-    // Outer Ambient Glow Polyline
-    this.routeGlowPolyline = L.polyline(curvePoints, {
-      color: "#00d2ff",
-      weight: 8,
-      opacity: 0.38,
-      lineCap: "round",
-      lineJoin: "round",
-      className: "radar-neon-route-glow"
-    }).addTo(this.map);
-
-    // High-Contrast Core Route Polyline
+    // Clean, crisp solid route line
     this.routePolyline = L.polyline(curvePoints, {
-      color: "#10b981",
-      weight: 3.5,
-      opacity: 0.95,
-      dashArray: "8, 10",
+      color: "#059669",
+      weight: 4.5,
+      opacity: 0.9,
       lineCap: "round",
-      className: "radar-neon-route-core"
+      lineJoin: "round"
     }).addTo(this.map);
 
-    // Smooth Cinematic Zoom FlyToBounds (Fixing jitter)
+    // Smooth, comfortable fly to bounds (never jarring)
     const bounds = L.latLngBounds(curvePoints);
     this.map.flyToBounds(bounds, {
-      padding: [65, 65],
+      padding: [50, 50],
       maxZoom: 11,
-      duration: 1.25,
+      duration: 1.1,
       easeLinearity: 0.25
     });
 
-    // Update HUD Metrics
-    this.updateHudTelemetry(originCity, destCity, distanceKm);
-
-    // Spawn and Animate Live Chauffeur Telemetry Blips
-    this.spawnCorridorChauffeurs(curvePoints);
+    // Update Quick Stats in header
+    this.updateStats(originCity, destCity, distanceKm);
   }
 
-  updateHudTelemetry(originCity, destCity, distanceKm) {
-    const titleEl = document.getElementById("radar-corridor-title");
-    const subEl = document.getElementById("radar-corridor-sub");
-    const highwayVal = document.getElementById("radar-val-highway");
-    const distVal = document.getElementById("radar-val-dist");
-    const timeVal = document.getElementById("radar-val-time");
-    const tollVal = document.getElementById("radar-val-toll");
-    const fleetVal = document.getElementById("radar-fleet-count");
+  updateStats(originCity, destCity, distanceKm) {
+    const titleEl = document.getElementById("map-simple-title");
+    const descEl = document.getElementById("map-simple-desc");
+    const highwayEl = document.getElementById("map-stat-highway");
+    const distEl = document.getElementById("map-stat-dist");
+    const timeEl = document.getElementById("map-stat-time");
+    const tollEl = document.getElementById("map-stat-toll");
 
     const highwayName = this.getHighwayCorridorName(originCity, destCity);
 
-    if (titleEl) titleEl.textContent = `${originCity.name} ➔ ${destCity.name} Corridor`;
-    if (subEl) subEl.textContent = `Express Telemetry • ${highwayName} • All 38 Bihar Districts Linked`;
-    if (highwayVal) highwayVal.textContent = highwayName.split(" ")[0] + " " + (highwayName.split(" ")[1] || "");
-    if (distVal) distVal.textContent = `${distanceKm || 120} KM`;
-    
-    // Estimate Duration
+    if (titleEl) titleEl.textContent = originCity.name + " to " + destCity.name + " Highway Route";
+    if (descEl) descEl.textContent = "Direct highway route along " + highwayName + " • Doorstep pickup & drop guaranteed.";
+    if (highwayEl) highwayEl.textContent = highwayName.split(" ")[0] + " " + (highwayName.split(" ")[1] || "");
+    if (distEl) distEl.textContent = (distanceKm || 120) + " KM";
+
     const estHours = Math.floor((distanceKm || 120) / 45);
     const estMins = Math.round((((distanceKm || 120) % 45) / 45) * 60);
-    const timeStr = `${estHours > 0 ? estHours + 'h ' : ''}${estMins}m`;
-    if (timeVal) timeVal.textContent = timeStr;
-
-    if (tollVal) tollVal.textContent = "FASTag Auto-Cleared";
-    if (fleetVal) fleetVal.textContent = `${Math.floor(Math.random() * 4) + 5} Verified Captains`;
-  }
-
-  clearFleetMarkers() {
-    if (this.fleetAnimInterval) {
-      clearInterval(this.fleetAnimInterval);
-      this.fleetAnimInterval = null;
-    }
-    this.fleetMarkers.forEach((m) => {
-      if (this.map && this.map.hasLayer(m)) {
-        this.map.removeLayer(m);
-      }
-    });
-    this.fleetMarkers = [];
-  }
-
-  spawnCorridorChauffeurs(curvePoints) {
-    this.clearFleetMarkers();
-    if (!curvePoints || curvePoints.length < 3) return;
-
-    const fleetProfiles = [
-      { name: "Captain Santosh", cab: "Swift Dzire", reg: "BR-01-PK", speed: 64, rating: "4.9★", t: 0.22, color: "#10b981" },
-      { name: "Captain Rajesh", cab: "Toyota Innova", reg: "BR-02-RX", speed: 68, rating: "4.8★", t: 0.52, color: "#00d2ff" },
-      { name: "Captain Manoj", cab: "Maruti Ertiga", reg: "BR-06-TC", speed: 72, rating: "4.9★", t: 0.78, color: "#f59e0b" }
-    ];
-
-    fleetProfiles.forEach((profile) => {
-      const idx = Math.min(curvePoints.length - 1, Math.floor(profile.t * (curvePoints.length - 1)));
-      const pt = curvePoints[idx];
-
-      const carIcon = L.divIcon({
-        className: "radar-chauffeur-blip",
-        html: `
-          <div class="radar-cab-pod" style="--pod-color: ${profile.color};">
-            <span class="pod-radar-pulse"></span>
-            <div class="pod-icon-box">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
-            </div>
-            <div class="pod-live-tag">
-              <span class="pod-cab-name">${profile.cab}</span>
-              <span class="pod-speed">${profile.speed} km/h</span>
-            </div>
-          </div>
-        `,
-        iconSize: [36, 36],
-        iconAnchor: [18, 18]
-      });
-
-      const marker = L.marker([pt[0], pt[1]], { icon: carIcon })
-        .addTo(this.map)
-        .bindPopup(`
-          <div class="radar-popup-card">
-            <div class="radar-popup-tag verified">5G VERIFIED CHAUFFEUR</div>
-            <div class="radar-popup-title">${profile.name} (${profile.rating})</div>
-            <div class="radar-popup-sub">${profile.cab} • ${profile.reg} • Speed: ${profile.speed} km/h</div>
-            <div class="radar-popup-badge">⚡ FASTag Monitored • SOS Protected</div>
-          </div>
-        `);
-
-      this.fleetMarkers.push(marker);
-    });
-
-    // Subtle smooth motion animation along highway spline (no camera jitter)
-    let step = 0;
-    this.fleetAnimInterval = setInterval(() => {
-      step++;
-      fleetProfiles.forEach((profile, i) => {
-        const marker = this.fleetMarkers[i];
-        if (!marker) return;
-        const currentT = (profile.t + (step * 0.004)) % 1;
-        const indexFloat = currentT * (curvePoints.length - 1);
-        const lowIdx = Math.floor(indexFloat);
-        const highIdx = Math.min(curvePoints.length - 1, lowIdx + 1);
-        const subT = indexFloat - lowIdx;
-        
-        const p1 = curvePoints[lowIdx];
-        const p2 = curvePoints[highIdx];
-        const lat = p1[0] + (p2[0] - p1[0]) * subT;
-        const lng = p1[1] + (p2[1] - p1[1]) * subT;
-        marker.setLatLng([lat, lng]);
-      });
-    }, 1800);
-  }
-
-  spawnDefaultCaptains() {
-    const hubPoints = [
-      { name: "Patna Central Chauffeur", cab: "Swift Dzire", lat: 25.60, lng: 85.14, speed: 58 },
-      { name: "Gaya Highway Chauffeur", cab: "Toyota Innova", lat: 24.79, lng: 85.00, speed: 65 },
-      { name: "Muzaffarpur Express Hub", cab: "Maruti Ertiga", lat: 26.12, lng: 85.39, speed: 62 }
-    ];
-
-    hubPoints.forEach((profile) => {
-      const carIcon = L.divIcon({
-        className: "radar-chauffeur-blip",
-        html: `
-          <div class="radar-cab-pod" style="--pod-color: #10b981;">
-            <span class="pod-radar-pulse"></span>
-            <div class="pod-icon-box">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
-            </div>
-          </div>
-        `,
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
-      });
-
-      const marker = L.marker([profile.lat, profile.lng], { icon: carIcon }).addTo(this.map);
-      this.fleetMarkers.push(marker);
-    });
+    const timeStr = (estHours > 0 ? estHours + "h " : "") + estMins + "m";
+    if (timeEl) timeEl.textContent = "~" + timeStr;
+    if (tollEl) tollEl.textContent = "Included";
   }
 }
+
 
 /* ==========================================================================
    2. AUTHENTICATION, WALLET & REFERRAL REWARDS CONTROLLER

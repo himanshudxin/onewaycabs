@@ -739,100 +739,82 @@
     </section>
 
     <!-- ======================================================================
-         3. EXECUTIVE LIVE HIGHWAY GPS RADAR & TELEMETRY COCKPIT
+         3. SIMPLE & COMFORTABLE HIGHWAY ROUTE MAP
          ====================================================================== -->
     <section class="app-section alt-bg fare-section-closed" id="route-map-section">
       <div class="container">
         
-        <div class="executive-radar-wrapper">
-          <!-- Radar Cockpit Header HUD -->
-          <div class="radar-cockpit-hud-header">
-            <div class="radar-hud-left">
-              <div class="radar-live-signal-badge">
-                <span class="radar-pulse-ring"></span>
-                <span class="radar-pulse-dot"></span>
-                <span class="radar-signal-text">5G LIVE GPS TELEMETRY ACTIVE</span>
-              </div>
-              <div class="radar-corridor-title-wrap">
-                <h2 class="radar-corridor-title" id="radar-corridor-title">Bihar Expressway Live GPS Radar</h2>
-                <div class="radar-corridor-sub" id="radar-corridor-sub">Real-time highway corridor telemetry, toll verification &amp; verified fleet radar</div>
-              </div>
+        <div class="route-map-simple-card">
+          <!-- Clean Header with Route Summary -->
+          <div class="map-simple-header">
+            <div class="map-header-left">
+              <span class="map-simple-pill">
+                <span class="live-dot-pulse"></span>
+                <span>Live Route Preview</span>
+              </span>
+              <h2 class="map-simple-title" id="map-simple-title">Highway Route &amp; Travel Distance</h2>
+              <p class="map-simple-desc" id="map-simple-desc">Verified inter-district route across Bihar with estimated driving time &amp; FASTag tolls included.</p>
             </div>
 
-            <!-- Telemetry HUD Chips (Highway, Distance, Duration, FASTag) -->
-            <div class="radar-hud-metrics">
-              <div class="radar-metric-chip">
-                <span class="radar-metric-icon">🛣️</span>
-                <div class="radar-metric-info">
-                  <span class="radar-metric-label">HIGHWAY</span>
-                  <span class="radar-metric-val" id="radar-val-highway">NH Express</span>
-                </div>
+            <!-- Route Quick Stats -->
+            <div class="map-quick-stats">
+              <div class="map-stat-box">
+                <span class="map-stat-label">Highway</span>
+                <span class="map-stat-value" id="map-stat-highway">NH Express</span>
               </div>
-              <div class="radar-metric-chip">
-                <span class="radar-metric-icon">📏</span>
-                <div class="radar-metric-info">
-                  <span class="radar-metric-label">CORRIDOR</span>
-                  <span class="radar-metric-val" id="radar-val-dist">-- KM</span>
-                </div>
+              <div class="map-stat-box">
+                <span class="map-stat-label">Distance</span>
+                <span class="map-stat-value highlight" id="map-stat-dist">-- KM</span>
               </div>
-              <div class="radar-metric-chip">
-                <span class="radar-metric-icon">⏱️</span>
-                <div class="radar-metric-info">
-                  <span class="radar-metric-label">EST. TIME</span>
-                  <span class="radar-metric-val" id="radar-val-time">-- hrs</span>
-                </div>
+              <div class="map-stat-box">
+                <span class="map-stat-label">Est. Time</span>
+                <span class="map-stat-value" id="map-stat-time">-- hrs</span>
               </div>
-              <div class="radar-metric-chip highlight-chip">
-                <span class="radar-metric-icon">⚡</span>
-                <div class="radar-metric-info">
-                  <span class="radar-metric-label">FASTAG &amp; TOLL</span>
-                  <span class="radar-metric-val" id="radar-val-toll">Auto-Included</span>
-                </div>
+              <div class="map-stat-box">
+                <span class="map-stat-label">Tolls &amp; FASTag</span>
+                <span class="map-stat-value green" id="map-stat-toll">Included</span>
               </div>
             </div>
           </div>
 
-          <!-- Radar Map Canvas Container with Floating Overlay Controls -->
-          <div class="radar-map-viewport-box">
-            <!-- Floating Glass Top Bar Controls -->
-            <div class="radar-floating-controls">
-              <div class="radar-layer-switchers">
-                <button type="button" class="radar-layer-btn active" data-layer="dark" title="Dark Cyber Radar">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 1 0 7 7"/></svg>
-                  <span>Cyber Radar</span>
+          <!-- Clean Map Viewport -->
+          <div class="map-simple-viewport">
+            <!-- Map Style Controls (Top Right) -->
+            <div class="map-simple-controls">
+              <div class="map-mode-toggle">
+                <button type="button" class="map-toggle-btn active" data-layer="standard" id="map-layer-std" title="Standard Road Map">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
+                  <span>Map</span>
                 </button>
-                <button type="button" class="radar-layer-btn" data-layer="voyager" title="Clean Highway Vector">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
-                  <span>Highway Vector</span>
-                </button>
-                <button type="button" class="radar-layer-btn" data-layer="satellite" title="Aerospace Satellite Recon">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                  <span>Satellite Recon</span>
+                <button type="button" class="map-toggle-btn" data-layer="satellite" id="map-layer-sat" title="Satellite View">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                  <span>Satellite</span>
                 </button>
               </div>
 
-              <button type="button" class="radar-recenter-btn" id="radar-recenter-btn" title="Recenter Route Corridor">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
-                <span>Focus Corridor</span>
+              <button type="button" class="map-focus-btn" id="radar-recenter-btn" title="Center Route">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+                <span>Center Route</span>
               </button>
             </div>
 
-            <!-- Leaflet Map Div -->
-            <div id="oneway-route-map" class="executive-radar-leaflet-map" style="height: 420px; width: 100%;"></div>
+            <!-- Leaflet Map Container -->
+            <div id="oneway-route-map" style="height: 380px; width: 100%;"></div>
 
-            <!-- Subtle Radar Scan Line Overlay -->
-            <div class="radar-scan-line"></div>
-
-            <!-- Floating Bottom Status Cockpit Pill -->
-            <div class="radar-floating-bottom-pill">
-              <span class="radar-live-fleet-tag">
-                <span class="fleet-green-dot"></span>
-                <strong id="radar-fleet-count">6 Verified Captains</strong> Online in Corridor
-              </span>
-              <span class="radar-separator">•</span>
-              <span class="radar-security-tag">🛡️ 24×7 GPS Dispatch Desk Active</span>
-              <span class="radar-separator">•</span>
-              <span class="radar-route-type-tag">Zero Return Fare Guaranteed</span>
+            <!-- Clean Bottom Trust Bar -->
+            <div class="map-simple-footer">
+              <div class="map-footer-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Zero Return Fare Guaranteed</span>
+              </div>
+              <div class="map-footer-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Toll &amp; FASTag Included</span>
+              </div>
+              <div class="map-footer-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>GPS Verified Chauffeur</span>
+              </div>
             </div>
           </div>
         </div>
