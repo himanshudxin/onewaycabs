@@ -131,7 +131,32 @@
   "payments": [],
   "wallet_ledger": [],
   "leads": [],
-  "notifications": [],
+  "notifications": [
+    {
+      "id": "NOTIF_LEAD_1791044715971",
+      "type": "NEW_ROUTE_INQUIRY",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "message": "Visitor (+91 6299375016) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "leadId": "LEAD_1791044715971_883",
+      "createdAt": "2026-10-03T16:25:15.971Z"
+    },
+    {
+      "id": "NOTIF_LEAD_1791044715957",
+      "type": "NEW_ROUTE_INQUIRY",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "message": "Visitor (+91 6299375016) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "leadId": "LEAD_1791044715957_865",
+      "createdAt": "2026-10-03T16:25:15.957Z"
+    },
+    {
+      "id": "NOTIF_LEAD_1791044714223",
+      "createdAt": "2026-10-03T16:25:14.223Z",
+      "leadId": "LEAD_1791044714223_602",
+      "message": "Visitor (+91 6299375016) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "type": "NEW_ROUTE_INQUIRY"
+    }
+  ],
   "coupons": [
     {
       "code": "FIRST100",
@@ -294,14 +319,6 @@
       "phone": "+91 6206494214",
       "role": "customer",
       "userId": "usr_6206494214"
-    },
-    {
-      "token": "adm_sess_c1c8201c17829bd6ffbaf88b6b6d3273",
-      "adminId": "adm_01",
-      "username": "admin",
-      "role": "admin",
-      "phone": "+91 6206494214",
-      "createdAt": "2026-10-03T16:07:15.123Z"
     }
   ],
   "settings": {

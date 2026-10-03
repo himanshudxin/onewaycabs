@@ -3,8 +3,12 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/index.js": {
-      "includeFiles": "data/**",
+    "api/**/*.js": {
+      "includeFiles": "{data/**,services/**}",
+      "maxDuration": 15
+    },
+    "api/*.js": {
+      "includeFiles": "{data/**,services/**}",
       "maxDuration": 15
     }
   },
