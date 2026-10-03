@@ -1127,9 +1127,20 @@ class BookingManager {
           if (isValid) {
             this.userPhone = val;
             this.passengerDetails.phone = `+91 ${val}`;
-            if (this.originCity && this.destCity) {
-              this.transferLeadToHelpdesk(val, true);
+            try { localStorage.setItem("oneway_fare_phone", val); } catch (e) {}
+
+            if (!this.originCity) {
+              const pickupInput = document.getElementById("input-pickup");
+              const pVal = (pickupInput?.value || "Patna").trim();
+              this.originCity = OTB_CITIES.find(c => c.name.toLowerCase() === pVal.toLowerCase() || c.id === pVal.toLowerCase()) || { id: "patna", name: pVal || "Patna" };
             }
+            if (!this.destCity) {
+              const dropInput = document.getElementById("input-drop");
+              const dVal = (dropInput?.value || "Gaya").trim();
+              this.destCity = OTB_CITIES.find(c => c.name.toLowerCase() === dVal.toLowerCase() || c.id === dVal.toLowerCase()) || { id: "gaya", name: dVal || "Gaya" };
+            }
+
+            this.transferLeadToHelpdesk(val, true, { source: "Homepage Phone Entered" });
           }
         }
         this.updateCheckFareButtonState();
