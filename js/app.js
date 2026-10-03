@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* ==========================================================================
-   1. LEAFLET HIGHWAY ROUTE MAP CONTROLLER (SIMPLE & COMFORTABLE)
+   1. LEAFLET HIGHWAY ROUTE MAP CONTROLLER (PROFESSIONAL & CLEAN)
    ========================================================================== */
 class OneWayMapManager {
   constructor(containerId) {
@@ -39,9 +39,8 @@ class OneWayMapManager {
     this.originMarker = null;
     this.destMarker = null;
     this.routePolyline = null;
+    this.routeCasingPolyline = null;
     this.lastRouteSignature = null;
-    this.currentLayerType = "standard"; // "standard" | "satellite"
-    this.tileLayers = {};
     this.routePoints = [];
     this.debounceTimer = null;
   }
@@ -50,85 +49,21 @@ class OneWayMapManager {
     const el = document.getElementById(this.containerId);
     if (!el || typeof L === "undefined") return;
 
-    // Default center of Bihar (Patna-Gaya corridor)
+    // Default center of Bihar (Patna region)
     this.map = L.map(this.containerId, {
       center: [25.5941, 85.1376],
       zoom: 8,
       zoomControl: true,
       attributionControl: false,
-      scrollWheelZoom: false, // Prevents page scrolling trap
-      smoothWheelZoom: true
+      scrollWheelZoom: false
     });
 
-    // Layer 1: Clean Standard Voyager Road Tiles
-    this.tileLayers.standard = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+    // Clean, high-density, professional CartoDB Voyager tiles
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
       subdomains: "abcd",
       maxZoom: 19,
       attribution: '&copy; CartoDB &copy; OpenStreetMap'
-    });
-
-    // Layer 2: Satellite Imagery View
-    this.tileLayers.satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-      maxZoom: 19,
-      attribution: '&copy; Esri Satellite'
-    });
-
-    // Add standard road map by default
-    this.tileLayers.standard.addTo(this.map);
-
-    // Setup map toggle buttons & center button
-    this.bindControls();
-  }
-
-  setLayer(type) {
-    if (!this.map || !this.tileLayers[type]) return;
-    Object.values(this.tileLayers).forEach((layer) => {
-      if (this.map.hasLayer(layer)) this.map.removeLayer(layer);
-    });
-    this.tileLayers[type].addTo(this.map);
-    this.currentLayerType = type;
-
-    // Update active state in toggle buttons
-    const btns = document.querySelectorAll(".map-toggle-btn");
-    btns.forEach((btn) => {
-      if (btn.dataset.layer === type) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-    });
-  }
-
-  bindControls() {
-    const btns = document.querySelectorAll(".map-toggle-btn");
-    btns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const layerType = btn.dataset.layer;
-        if (layerType) this.setLayer(layerType);
-      });
-    });
-
-    const recenterBtn = document.getElementById("radar-recenter-btn");
-    if (recenterBtn) {
-      recenterBtn.addEventListener("click", () => {
-        this.focusCurrentRoute();
-      });
-    }
-  }
-
-  focusCurrentRoute() {
-    if (!this.map) return;
-    if (this.routePoints && this.routePoints.length >= 2) {
-      const bounds = L.latLngBounds(this.routePoints);
-      this.map.flyToBounds(bounds, {
-        padding: [50, 50],
-        maxZoom: 11,
-        duration: 1.0,
-        easeLinearity: 0.25
-      });
-    } else {
-      this.map.flyTo([25.5941, 85.1376], 8, { duration: 0.8 });
-    }
+    }).addTo(this.map);
   }
 
   refreshSize() {
@@ -143,25 +78,25 @@ class OneWayMapManager {
     const combined = o + " " + d;
 
     if (combined.includes("gaya") || combined.includes("bodhgaya") || combined.includes("jehanabad")) {
-      return "NH-83 Patna-Gaya 4-Lane E-Way";
+      return "NH-83 4-Lane Expressway";
     }
     if (combined.includes("muzaffarpur") || combined.includes("darbhanga") || combined.includes("madhubani") || combined.includes("sitamarhi")) {
-      return "NH-27 East-West Expressway & Setu";
+      return "NH-27 East-West Expressway";
     }
     if (combined.includes("bhagalpur") || combined.includes("munger") || combined.includes("begusarai")) {
-      return "NH-31 Ganga Expressway Corridor";
+      return "NH-31 Ganga Expressway";
     }
     if (combined.includes("chapra") || combined.includes("siwan") || combined.includes("gopalganj")) {
-      return "NH-531 Saran Highway & JP Setu";
+      return "NH-531 Saran Highway & Setu";
     }
     if (combined.includes("purnia") || combined.includes("katihar") || combined.includes("saharsa")) {
-      return "NH-31 / NH-27 Kosi Expressway";
+      return "NH-31 / NH-27 Kosi Corridor";
     }
     if (combined.includes("sasaram") || combined.includes("buxar") || combined.includes("dehri")) {
       return "NH-922 / NH-19 GT Expressway";
     }
     if (combined.includes("airport")) {
-      return "Patna Airport Fastag Express";
+      return "Patna Airport Express Road";
     }
     return "Bihar State Highway Network";
   }
@@ -172,14 +107,14 @@ class OneWayMapManager {
 
     const signature = originCity.lat.toFixed(3) + "_" + originCity.lng.toFixed(3) + "_" + destCity.lat.toFixed(3) + "_" + destCity.lng.toFixed(3) + "_" + distanceKm;
     if (this.lastRouteSignature === signature) {
-      return; // No redundant recalculation
+      return; // Route did not change
     }
     this.lastRouteSignature = signature;
 
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
       this._renderRoute(originCity, destCity, distanceKm);
-    }, 100);
+    }, 80);
   }
 
   _renderRoute(originCity, destCity, distanceKm) {
@@ -194,38 +129,39 @@ class OneWayMapManager {
     if (this.originMarker) this.map.removeLayer(this.originMarker);
     if (this.destMarker) this.map.removeLayer(this.destMarker);
     if (this.routePolyline) this.map.removeLayer(this.routePolyline);
+    if (this.routeCasingPolyline) this.map.removeLayer(this.routeCasingPolyline);
 
-    // Clean & Comfortable Pickup Marker (Green Pin)
+    // Clean Minimalist Origin Marker (Green Halo Ring)
     const originIcon = L.divIcon({
-      className: "simple-map-marker-wrap",
-      html: '<div class="simple-marker-pin origin"><span class="marker-dot"></span><span class="marker-label">Pickup: ' + originCity.name + '</span></div>',
-      iconSize: [120, 32],
-      iconAnchor: [12, 16]
+      className: "clean-origin-pin",
+      html: '<div style="width: 14px; height: 14px; border-radius: 50%; background: #10b981; border: 2.5px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
     });
 
-    // Clean & Comfortable Drop Marker (Blue Pin)
+    // Clean Minimalist Destination Marker (Red Location Pin)
     const destIcon = L.divIcon({
-      className: "simple-map-marker-wrap",
-      html: '<div class="simple-marker-pin dest"><span class="marker-dot"></span><span class="marker-label">Drop: ' + destCity.name + '</span></div>',
-      iconSize: [120, 32],
-      iconAnchor: [12, 16]
+      className: "clean-dest-pin",
+      html: '<svg width="22" height="28" viewBox="0 0 24 24" fill="#ef4444" style="filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>',
+      iconSize: [22, 28],
+      iconAnchor: [11, 28]
     });
 
     this.originMarker = L.marker([oLat, oLng], { icon: originIcon, zIndexOffset: 1000 })
       .addTo(this.map)
-      .bindPopup('<b>Pickup: ' + originCity.name + ' (' + (originCity.hindiName || '') + ')</b><br>' + (originCity.state || 'Bihar'));
+      .bindPopup('<b>Pickup: ' + originCity.name + '</b><br>' + (originCity.state || 'Bihar'));
 
     this.destMarker = L.marker([dLat, dLng], { icon: destIcon, zIndexOffset: 1000 })
       .addTo(this.map)
-      .bindPopup('<b>Drop: ' + destCity.name + ' (' + (destCity.hindiName || '') + ')</b><br>' + (destCity.state || 'Bihar'));
+      .bindPopup('<b>Drop: ' + destCity.name + '</b><br>' + (destCity.state || 'Bihar'));
 
-    // Smooth spline points for highway preview
+    // Smooth highway spline points
     const pointsCount = 10;
     const curvePoints = [];
     const dx = dLng - oLng;
     const dy = dLat - oLat;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    const curveOffset = Math.sin(Math.atan2(dy, dx)) * 0.05 * (dist > 1.2 ? 1 : 0.5);
+    const curveOffset = Math.sin(Math.atan2(dy, dx)) * 0.04 * (dist > 1.2 ? 1 : 0.5);
 
     for (let i = 0; i <= pointsCount; i++) {
       const t = i / pointsCount;
@@ -235,48 +171,53 @@ class OneWayMapManager {
     }
     this.routePoints = curvePoints;
 
-    // Clean, crisp solid route line
-    this.routePolyline = L.polyline(curvePoints, {
-      color: "#059669",
-      weight: 4.5,
-      opacity: 0.9,
+    // Professional Route Line: Casing + Primary Blue Core
+    this.routeCasingPolyline = L.polyline(curvePoints, {
+      color: "#1e3a8a",
+      weight: 6,
+      opacity: 0.25,
       lineCap: "round",
       lineJoin: "round"
     }).addTo(this.map);
 
-    // Smooth, comfortable fly to bounds (never jarring)
+    this.routePolyline = L.polyline(curvePoints, {
+      color: "#2563eb",
+      weight: 4,
+      opacity: 0.95,
+      lineCap: "round",
+      lineJoin: "round"
+    }).addTo(this.map);
+
+    // Steady, smooth single fit bounds
     const bounds = L.latLngBounds(curvePoints);
-    this.map.flyToBounds(bounds, {
-      padding: [50, 50],
+    this.map.fitBounds(bounds, {
+      padding: [40, 40],
       maxZoom: 11,
-      duration: 1.1,
-      easeLinearity: 0.25
+      animate: false
     });
 
-    // Update Quick Stats in header
+    // Update Header Text Values
     this.updateStats(originCity, destCity, distanceKm);
   }
 
   updateStats(originCity, destCity, distanceKm) {
-    const titleEl = document.getElementById("map-simple-title");
-    const descEl = document.getElementById("map-simple-desc");
-    const highwayEl = document.getElementById("map-stat-highway");
+    const originEl = document.getElementById("route-text-origin");
+    const destEl = document.getElementById("route-text-dest");
+    const highwayEl = document.getElementById("route-text-highway");
     const distEl = document.getElementById("map-stat-dist");
     const timeEl = document.getElementById("map-stat-time");
-    const tollEl = document.getElementById("map-stat-toll");
 
     const highwayName = this.getHighwayCorridorName(originCity, destCity);
 
-    if (titleEl) titleEl.textContent = originCity.name + " to " + destCity.name + " Highway Route";
-    if (descEl) descEl.textContent = "Direct highway route along " + highwayName + " • Doorstep pickup & drop guaranteed.";
-    if (highwayEl) highwayEl.textContent = highwayName.split(" ")[0] + " " + (highwayName.split(" ")[1] || "");
-    if (distEl) distEl.textContent = (distanceKm || 120) + " KM";
+    if (originEl) originEl.textContent = originCity.name;
+    if (destEl) destEl.textContent = destCity.name;
+    if (highwayEl) highwayEl.textContent = "via " + highwayName;
+    if (distEl) distEl.textContent = (distanceKm || 120) + " km";
 
     const estHours = Math.floor((distanceKm || 120) / 45);
     const estMins = Math.round((((distanceKm || 120) % 45) / 45) * 60);
     const timeStr = (estHours > 0 ? estHours + "h " : "") + estMins + "m";
     if (timeEl) timeEl.textContent = "~" + timeStr;
-    if (tollEl) tollEl.textContent = "Included";
   }
 }
 

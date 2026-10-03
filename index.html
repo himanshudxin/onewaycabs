@@ -739,83 +739,44 @@
     </section>
 
     <!-- ======================================================================
-         3. SIMPLE & COMFORTABLE HIGHWAY ROUTE MAP
+         3. VERIFIED HIGHWAY ROUTE PREVIEW
          ====================================================================== -->
     <section class="app-section alt-bg fare-section-closed" id="route-map-section">
       <div class="container">
         
-        <div class="route-map-simple-card">
-          <!-- Clean Header with Route Summary -->
-          <div class="map-simple-header">
-            <div class="map-header-left">
-              <span class="map-simple-pill">
-                <span class="live-dot-pulse"></span>
-                <span>Live Route Preview</span>
-              </span>
-              <h2 class="map-simple-title" id="map-simple-title">Highway Route &amp; Travel Distance</h2>
-              <p class="map-simple-desc" id="map-simple-desc">Verified inter-district route across Bihar with estimated driving time &amp; FASTag tolls included.</p>
+        <div class="route-overview-card">
+          <!-- Top Info Bar: Clean, Corporate, Clear -->
+          <div class="route-overview-header">
+            <div class="route-header-main">
+              <div class="route-timeline-strip">
+                <span class="route-dot origin"></span>
+                <span class="route-city-name" id="route-text-origin">Pickup</span>
+                <span class="route-arrow">➔</span>
+                <span class="route-dot dest"></span>
+                <span class="route-city-name" id="route-text-dest">Drop-off</span>
+              </div>
+              <div class="route-corridor-highway" id="route-text-highway">National Highway Express Corridor</div>
             </div>
 
-            <!-- Route Quick Stats -->
-            <div class="map-quick-stats">
-              <div class="map-stat-box">
-                <span class="map-stat-label">Highway</span>
-                <span class="map-stat-value" id="map-stat-highway">NH Express</span>
+            <div class="route-metrics-bar">
+              <div class="route-metric-pill">
+                <span class="metric-title">Distance:</span>
+                <strong id="map-stat-dist">-- km</strong>
               </div>
-              <div class="map-stat-box">
-                <span class="map-stat-label">Distance</span>
-                <span class="map-stat-value highlight" id="map-stat-dist">-- KM</span>
+              <div class="route-metric-pill">
+                <span class="metric-title">Est. Duration:</span>
+                <strong id="map-stat-time">-- hrs</strong>
               </div>
-              <div class="map-stat-box">
-                <span class="map-stat-label">Est. Time</span>
-                <span class="map-stat-value" id="map-stat-time">-- hrs</span>
-              </div>
-              <div class="map-stat-box">
-                <span class="map-stat-label">Tolls &amp; FASTag</span>
-                <span class="map-stat-value green" id="map-stat-toll">Included</span>
+              <div class="route-metric-pill success">
+                <span class="metric-title">Toll &amp; State Tax:</span>
+                <strong>Zero Return • Included</strong>
               </div>
             </div>
           </div>
 
-          <!-- Clean Map Viewport -->
-          <div class="map-simple-viewport">
-            <!-- Map Style Controls (Top Right) -->
-            <div class="map-simple-controls">
-              <div class="map-mode-toggle">
-                <button type="button" class="map-toggle-btn active" data-layer="standard" id="map-layer-std" title="Standard Road Map">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
-                  <span>Map</span>
-                </button>
-                <button type="button" class="map-toggle-btn" data-layer="satellite" id="map-layer-sat" title="Satellite View">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                  <span>Satellite</span>
-                </button>
-              </div>
-
-              <button type="button" class="map-focus-btn" id="radar-recenter-btn" title="Center Route">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
-                <span>Center Route</span>
-              </button>
-            </div>
-
-            <!-- Leaflet Map Container -->
-            <div id="oneway-route-map" style="height: 380px; width: 100%;"></div>
-
-            <!-- Clean Bottom Trust Bar -->
-            <div class="map-simple-footer">
-              <div class="map-footer-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Zero Return Fare Guaranteed</span>
-              </div>
-              <div class="map-footer-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>Toll &amp; FASTag Included</span>
-              </div>
-              <div class="map-footer-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                <span>GPS Verified Chauffeur</span>
-              </div>
-            </div>
+          <!-- Map Viewport -->
+          <div class="route-map-frame">
+            <div id="oneway-route-map" style="height: 300px; width: 100%;"></div>
           </div>
         </div>
 
