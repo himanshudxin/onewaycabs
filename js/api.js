@@ -541,7 +541,8 @@ class ApiClient {
   static async adminLogin(username, password) {
     const cleanUser = (username || "").trim().toLowerCase();
     const cleanPass = (password || "").trim();
-    const validPasswords = ["admin123", "BiharTaxi@2026", "admin", "Admin@123", "admin@2026", "123456"];
+    const validAdmins = ["admin", "admin1", "admin2", "admin3", "admin4", "admin5"];
+    const validPasswords = ["harharmahadev@3", "admin123", "BiharTaxi@2026", "Admin@123"];
 
     // 1. Try server endpoint
     const res = await this.request("/api/admin/login", {
@@ -556,17 +557,20 @@ class ApiClient {
 
     // 2. Resilient Fallback: If network error or static hosting without backend,
     // verify standard admin credentials directly so dispatchers are NEVER locked out!
-    if (cleanUser === "admin" && validPasswords.includes(cleanPass)) {
+    if (validAdmins.includes(cleanUser) && validPasswords.includes(cleanPass)) {
       const localAdminToken = `adm_sess_local_${Date.now()}`;
       localStorage.setItem("otb_admin_token", localAdminToken);
       return {
         success: true,
         token: localAdminToken,
-        admin: { username: "admin", name: "Patna Central Dispatch" }
+        admin: {
+          username: cleanUser,
+          name: `Dispatch Operator (${cleanUser.toUpperCase()})`
+        }
       };
     }
 
-    return res || { success: false, message: "Invalid credentials. Use admin / admin123" };
+    return res || { success: false, message: "Invalid admin credentials. Please enter your authorized Admin Username and Password." };
   }
 
   static async adminSendWhatsAppOtp(phone = "6206494214", username = "admin", password = "") {

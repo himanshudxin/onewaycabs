@@ -484,12 +484,15 @@
           <!-- Mode Credential -->
           <div id="auth-mode-cred-fields">
             <div style="margin-bottom: 14px;">
-              <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">USERNAME</label>
-              <input type="text" id="admin-user-input" value="admin" required style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
+              <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">ADMIN USERNAME</label>
+              <input type="text" id="admin-user-input" placeholder="Enter admin username (e.g. admin1, admin2...)" required autocomplete="username" style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
             </div>
             <div style="margin-bottom: 14px;">
-              <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">PASSWORD</label>
-              <input type="password" id="admin-pass-input" placeholder="Enter password (e.g. admin123)" value="admin123" required style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">PASSWORD</label>
+                <button type="button" onclick="toggleAdminPassVisibility()" style="background: none; border: none; color: #38bdf8; font-size: 11px; font-weight: 700; cursor: pointer; padding: 0;" id="btn-toggle-pass">👁️ Show</button>
+              </div>
+              <input type="password" id="admin-pass-input" placeholder="Enter secure admin password" required autocomplete="current-password" style="width: 100%; box-sizing: border-box; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; margin-top: 4px; font-size: 14px;">
             </div>
           </div>
 
@@ -501,17 +504,12 @@
               <input type="tel" id="admin-phone-input" value="6206494214" readonly style="width: 100%; box-sizing: border-box; padding: 12px 0; background: transparent; border: none; color: #38bdf8; font-size: 15px; font-weight: 800; font-family: monospace; outline: none; cursor: not-allowed;">
               <span style="font-size: 11px; background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 2px 8px; border-radius: 6px; font-weight: 800; white-space: nowrap;">🔒 Fixed</span>
             </div>
-            <div style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Strictly bound to Owner WhatsApp. Login requires owner permission.</div>
+            <div style="font-size: 11px; color: #94a3b8; margin-top: 5px;">Strictly bound to Owner WhatsApp (+91 6206494214).</div>
           </div>
 
           <!-- Primary: Direct Admin Login -->
-          <button type="submit" id="btn-admin-direct-login" style="width: 100%; padding: 13px; background: #0284c7; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);">
-            <span>🚀 Sign In to Central Dispatch Console</span> →
-          </button>
-
-          <!-- 1-Tap Quick Sign In with Default Credentials -->
-          <button type="button" id="btn-admin-demo-login" onclick="fillAdminCredentials(); handleAdminDirectLogin(event);" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 11px; background: rgba(56, 189, 248, 0.15); border: 1.5px solid #38bdf8; color: #38bdf8; font-weight: 800; border-radius: 8px; font-size: 13px; cursor: pointer; margin-bottom: 12px;">
-            ⚡ Instant 1-Click Access (admin / admin123)
+          <button type="submit" id="btn-admin-direct-login" style="width: 100%; padding: 13px; background: #0284c7; color: white; font-weight: 800; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);">
+            <span>🔒 Secure Sign In</span> →
           </button>
 
           <!-- Optional 2FA WhatsApp OTP trigger -->
@@ -534,7 +532,7 @@
             Recipient: <span style="color: #38bdf8; font-family: monospace;">+91 62064 94214</span> (Owner WhatsApp)
           </div>
           <div style="font-size: 12px; color: #cbd5e1; margin-top: 5px; line-height: 1.4;">
-            A 6-digit security code has been sent to the Owner's WhatsApp. Please obtain authorization and enter the OTP to unlock Central Dispatch.
+            A 6-digit security code has been sent to the Owner's WhatsApp. Please enter the code to unlock Central Dispatch.
           </div>
           <!-- Clickable WhatsApp link -->
           <div style="margin-top: 10px;">
@@ -569,10 +567,6 @@
               ← Back to Details
             </button>
           </div>
-
-          <button type="button" id="btn-admin-demo-skip-2fa" onclick="backToAdminStep1(); handleAdminDirectLogin();" style="display: none; width: 100%; padding: 9px; background: rgba(2, 132, 199, 0.15); border: 1px dashed #0284c7; border-radius: 8px; color: #38bdf8; font-weight: 700; font-size: 12px; cursor: pointer; margin-top: 12px;">
-            ⚡ Skip 2FA &amp; Sign In with Credentials (admin / admin123) →
-          </button>
         </form>
       </div>
 
@@ -1361,15 +1355,17 @@
       if (errEl) errEl.style.display = "none";
     }
 
-    function fillAdminCredentials() {
-      const userEl = document.getElementById("admin-user-input");
+    function toggleAdminPassVisibility() {
       const passEl = document.getElementById("admin-pass-input");
-      const phoneEl = document.getElementById("admin-phone-input");
-      if (userEl) userEl.value = "admin";
-      if (passEl) passEl.value = "admin123";
-      if (phoneEl) phoneEl.value = "6206494214";
-      const errEl = document.getElementById("admin-login-error");
-      if (errEl) errEl.style.display = "none";
+      const btnEl = document.getElementById("btn-toggle-pass");
+      if (!passEl) return;
+      if (passEl.type === "password") {
+        passEl.type = "text";
+        if (btnEl) btnEl.textContent = "🔒 Hide";
+      } else {
+        passEl.type = "password";
+        if (btnEl) btnEl.textContent = "👁️ Show";
+      }
     }
 
     let _knownBookingIds = new Set();
@@ -1744,7 +1740,7 @@
 
       if (!user || !pass) {
         if (errEl) {
-          errEl.textContent = "Please enter both username and password (default: admin / admin123).";
+          errEl.textContent = "Please enter both your Admin Username and Password.";
           errEl.style.display = "block";
         }
         return;
@@ -1753,7 +1749,7 @@
       const btn = document.getElementById("btn-admin-direct-login");
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<span>⏳ Authenticating Admin Credentials...</span>`;
+        btn.innerHTML = `<span>⏳ Verifying Admin Credentials...</span>`;
       }
 
       try {
@@ -1770,7 +1766,7 @@
           }, 300);
         } else {
           if (errEl) {
-            errEl.textContent = res?.message || "Invalid admin credentials. Default credentials: admin / admin123";
+            errEl.textContent = res?.message || "Invalid admin credentials. Please enter your authorized Admin Username and Password.";
             errEl.style.display = "block";
           }
         }
@@ -1783,7 +1779,7 @@
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = `<span>🚀 Sign In to Central Dispatch Console</span> →`;
+          btn.innerHTML = `<span>🔒 Secure Sign In</span> →`;
         }
       }
     }

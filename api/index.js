@@ -1279,29 +1279,37 @@ module.exports = async (req, res) => {
     if (pathname === '/admin/login' && method === 'POST') {
       const username = (body.username || '').trim().toLowerCase();
       const password = (body.password || '').trim();
-      const validPasswords = ['admin123', 'BiharTaxi@2026', 'admin', 'Admin@123', 'admin@2026', '123456'];
-      
-      const passHash = hashPassword(password);
-      const admin = (db.admins || []).find(a => (a.username || '').toLowerCase() === username && (a.passwordHash === passHash || validPasswords.includes(password)));
+      const validAdmins = ['admin', 'admin1', 'admin2', 'admin3', 'admin4', 'admin5'];
+      const validPasswords = ['harharmahadev@3', 'admin123', 'BiharTaxi@2026', 'Admin@123'];
 
-      if (!admin && !(username === 'admin' && validPasswords.includes(password))) {
-        return sendJson(401, { success: false, message: 'Invalid admin credentials. Use admin / admin123' });
+      const passHash = hashPassword(password);
+      const dbAdmin = (db.admins || []).find(a => (a.username || '').toLowerCase() === username && (a.passwordHash === passHash || validPasswords.includes(password)));
+
+      if (!dbAdmin && !(validAdmins.includes(username) && validPasswords.includes(password))) {
+        return sendJson(401, { success: false, message: 'Invalid admin credentials. Please enter your authorized Admin Username and Password.' });
       }
 
       const token = generateToken('adm_sess');
       if (!db.sessions) db.sessions = [];
-      db.sessions.push({
+      const sessionObj = {
         token,
-        adminId: admin ? admin.id : 'adm_01',
+        adminId: dbAdmin ? dbAdmin.id : `adm_${username}`,
+        username: username,
         role: 'admin',
+        phone: '+91 6206494214',
         createdAt: new Date().toISOString()
-      });
+      };
+      db.sessions.push(sessionObj);
       await saveDb(db);
 
       return sendJson(200, {
         success: true,
         token,
-        admin: { id: admin ? admin.id : 'adm_01', username: 'admin', name: admin ? admin.name : 'Patna Central Dispatch' }
+        admin: {
+          id: dbAdmin ? dbAdmin.id : `adm_${username}`,
+          username: username,
+          name: dbAdmin ? dbAdmin.name : `Dispatch Operator (${username.toUpperCase()})`
+        }
       });
     }
 
@@ -1573,20 +1581,21 @@ module.exports = async (req, res) => {
     // 9a. ADMIN DIRECT LOGIN & 2FA WHATSAPP OTP ENDPOINTS
     // -------------------------------------------------------------
     if (pathname === '/admin/login' && method === 'POST') {
-      const username = (body.username || 'admin').trim().toLowerCase();
+      const username = (body.username || '').trim().toLowerCase();
       const password = (body.password || '').trim();
-      const validPasswords = ['admin123', 'BiharTaxi@2026', 'admin', 'Admin@123', 'admin@2026', '123456'];
+      const validAdmins = ['admin', 'admin1', 'admin2', 'admin3', 'admin4', 'admin5'];
+      const validPasswords = ['harharmahadev@3', 'admin123', 'BiharTaxi@2026', 'Admin@123'];
 
-      if (!validPasswords.includes(password) && password !== '') {
-        return sendJson(401, { success: false, message: 'Invalid admin credentials. Default credentials: admin / admin123' });
+      if (!validAdmins.includes(username) || !validPasswords.includes(password)) {
+        return sendJson(401, { success: false, message: 'Invalid admin credentials. Please enter your authorized Admin Username and Password.' });
       }
 
       const token = generateToken('adm_sess');
       if (!db.sessions) db.sessions = [];
       const sessionObj = {
         token,
-        adminId: 'adm_01',
-        username: username || 'admin',
+        adminId: `adm_${username}`,
+        username: username,
         role: 'admin',
         phone: '+91 6206494214',
         createdAt: new Date().toISOString()
@@ -1597,8 +1606,8 @@ module.exports = async (req, res) => {
       db.audit_logs.push({
         id: `AUD_${Date.now()}`,
         action: 'ADMIN_LOGIN_SUCCESS',
-        actor: username || 'admin',
-        details: 'Admin signed in to Central Dispatch Console',
+        actor: username,
+        details: `Admin operator ${username} signed in to Central Dispatch Console`,
         timestamp: new Date().toISOString()
       });
 
@@ -1608,11 +1617,11 @@ module.exports = async (req, res) => {
         success: true,
         token,
         admin: {
-          id: 'adm_01',
-          username: username || 'admin',
-          name: 'Patna Central Dispatch',
+          id: `adm_${username}`,
+          username: username,
+          name: `Dispatch Operator (${username.toUpperCase()})`,
           phone: '+91 6206494214',
-          helpline: '6206494214'
+          helpline: '+91 80021 41816'
         },
         message: 'Admin authenticated successfully'
       });
