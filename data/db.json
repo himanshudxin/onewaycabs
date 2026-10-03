@@ -296,10 +296,12 @@
       "userId": "usr_6206494214"
     },
     {
-      "token": "adm_sess_94332bcd406913e343d5579f3a0f688c",
+      "token": "adm_sess_c1c8201c17829bd6ffbaf88b6b6d3273",
       "adminId": "adm_01",
+      "username": "admin",
       "role": "admin",
-      "createdAt": "2026-10-03T15:58:17.084Z"
+      "phone": "+91 6206494214",
+      "createdAt": "2026-10-03T16:07:15.123Z"
     }
   ],
   "settings": {

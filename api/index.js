@@ -683,11 +683,19 @@ module.exports = async (req, res) => {
     // -------------------------------------------------------------
     // 4. SERVER-SIDE FARE CALCULATION
     // -------------------------------------------------------------
-    if (pathname === '/fares/calculate' && method === 'POST') {
-      const { origin, dest, cabTier, tripType } = body;
+    if ((pathname === '/fares/calculate' || pathname === '/fare/calculate') && method === 'POST') {
+      const origin = body.origin || body.originCity;
+      const dest = body.dest || body.destCity;
+      const cabTier = body.cabTier || 'sedan';
+      const tripType = body.tripType || 'oneway';
       const distanceKm = getRouteDistance(origin, dest);
       const fareData = calculateServerFare(distanceKm, cabTier, tripType);
-      return sendJson(200, { success: true, fare: fareData });
+      return sendJson(200, { success: true, distanceKm, fare: fareData, fares: {
+        hatchback: calculateServerFare(distanceKm, 'hatchback', tripType),
+        sedan: calculateServerFare(distanceKm, 'sedan', tripType),
+        suv: calculateServerFare(distanceKm, 'suv', tripType),
+        innova: calculateServerFare(distanceKm, 'innova', tripType)
+      }});
     }
 
     // -------------------------------------------------------------
