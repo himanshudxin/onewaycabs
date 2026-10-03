@@ -5,7 +5,11 @@
  */
 
 class ApiClient {
-  static cloudFallbackUrl = "https://onewaytaxibihar.com";
+  static cloudCandidates = [
+    "https://garmin-jerry-shoes-were.trycloudflare.com",
+    "https://onewaytaxibihar.com",
+    "https://onewaytaxibihar-himanshudxin.vercel.app"
+  ];
 
   static baseUrl = (() => {
     if (typeof window !== "undefined") {
@@ -14,7 +18,7 @@ class ApiClient {
         return "http://localhost:8080";
       }
       // 2. If running on standard port 8080 or live web domain (Vercel, custom domain onewaytaxibihar.com)
-      if (window.location.port === "8080" || (!window.location.port && (window.location.hostname.includes("vercel.app") || window.location.hostname.includes("onewaytaxibihar")))) {
+      if (window.location.port === "8080" || (!window.location.port && (window.location.hostname.includes("vercel.app") || window.location.hostname.includes("onewaytaxibihar") || window.location.hostname.includes("trycloudflare.com")))) {
         return "";
       }
       // 3. If running on a local dev server (port 5500, 3000, 5173, etc.), route API calls to port 8080
@@ -41,71 +45,53 @@ class ApiClient {
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     };
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers: {
-          ...defaultHeaders,
-          ...(options.headers || {})
-        }
-      });
-
-      const data = await response.json().catch(() => null);
-
-      if (response.ok && data) {
-        return data;
-      }
-
-      // If local server or static host returned 404/error, try live cloud fallback
-      if (this.cloudFallbackUrl && (!response.ok || response.status === 404)) {
-        try {
-          const cloudUrl = `${this.cloudFallbackUrl}${endpoint}`;
-          const cloudRes = await fetch(cloudUrl, {
-            ...options,
-            headers: {
-              ...defaultHeaders,
-              ...(options.headers || {})
-            }
-          });
-          const cloudData = await cloudRes.json().catch(() => null);
-          if (cloudRes.ok && cloudData) {
-            return cloudData;
+    const fetchJson = async (targetUrl) => {
+      try {
+        const response = await fetch(targetUrl, {
+          ...options,
+          headers: {
+            ...defaultHeaders,
+            ...(options.headers || {})
           }
-        } catch (cErr) {}
-      }
-
-      if (!response.ok) {
-        const errorMsg = data?.message || `HTTP ${response.status}: ${response.statusText}`;
-        console.warn(`[ApiClient] ${endpoint} returned error:`, errorMsg);
-        return { success: false, status: response.status, message: errorMsg, data };
-      }
-
-      return data;
-    } catch (err) {
-      console.warn(`[ApiClient] Primary request failed for ${endpoint}:`, err);
-
-      // Dual-stage fallback: Try live cloud backend directly
-      if (this.cloudFallbackUrl) {
-        try {
-          const cloudUrl = `${this.cloudFallbackUrl}${endpoint}`;
-          const cloudRes = await fetch(cloudUrl, {
-            ...options,
-            headers: {
-              ...defaultHeaders,
-              ...(options.headers || {})
-            }
-          });
-          const cloudData = await cloudRes.json().catch(() => null);
-          if (cloudRes.ok && cloudData) {
-            return cloudData;
-          }
-        } catch (cErr) {
-          console.warn(`[ApiClient] Cloud fallback request failed for ${endpoint}:`, cErr);
+        });
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.includes("application/json") && !contentType.includes("json")) {
+          return null; // Not valid JSON (e.g. HTML login wall or 404 page)
         }
-      }
+        const data = await response.json().catch(() => null);
+        if (response.ok && data && typeof data === "object") {
+          return data;
+        }
+        if (data && typeof data === "object") {
+          return data; // Server error response in JSON format
+        }
+      } catch (err) {}
+      return null;
+    };
 
-      return { success: false, networkError: true, message: "Network connection error. Please try again." };
+    // 1. Primary Request
+    const primaryData = await fetchJson(url);
+    if (primaryData && (primaryData.success !== false || primaryData.bookings || primaryData.leads || primaryData.status === "ONLINE")) {
+      return primaryData;
     }
+
+    // 2. Multi-Tier Candidate Fallback
+    const currentOrigin = typeof window !== "undefined" ? window.location.origin : "";
+    for (const candidate of this.cloudCandidates) {
+      if (candidate && candidate !== currentOrigin) {
+        const fallbackUrl = `${candidate}${endpoint}`;
+        const fallbackData = await fetchJson(fallbackUrl);
+        if (fallbackData && (fallbackData.success !== false || fallbackData.bookings || fallbackData.leads || fallbackData.status === "ONLINE")) {
+          return fallbackData;
+        }
+      }
+    }
+
+    if (primaryData) {
+      return primaryData;
+    }
+
+    return { success: false, networkError: true, message: "Network connection error. Please check internet connection." };
   }
 
   // Health check
