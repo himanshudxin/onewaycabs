@@ -1,6 +1,124 @@
 {
   "bookings": [
     {
+      "bookingId": "OTB-2026-3022",
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T13:57:51.540Z",
+      "customerId": "usr_9835167017",
+      "destCity": "Gaya",
+      "distanceKm": 104,
+      "driverDetails": null,
+      "dropAddress": "Station Road Gaya",
+      "duration": "2h 18m",
+      "fareBreakdown": {
+        "distanceKm": 104,
+        "duration": "2h 18m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 2600,
+        "extraKm": 89,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 82,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2600
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 2198,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Himanshu Mobile Test",
+      "passengerPhone": "+91 9835167017",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791035871540_2212",
+      "pickupAddress": "Boring Road Patna",
+      "pickupDate": "2026-10-20",
+      "pickupTime": "10:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T13:57:51.540Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 2198,
+      "tripOtp": "1816",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-3022%0A*Passenger%3A*%20Himanshu%20Mobile%20Test%20(%2B91%209835167017)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92198",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-3022\n*Passenger:* Himanshu Mobile Test (+91 9835167017)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-10-20 at 10:00 AM\n*Total Fare:* ₹2198 (Advance: ₹0, Balance Due: ₹2198)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
+      "bookingId": "OTB-2026-5185",
+      "advancePaid": 0,
+      "balanceDue": 1875,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T13:51:42.901Z",
+      "customerId": "usr_9835670250",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "driverDetails": null,
+      "dropAddress": "Muzaffarpur Collectorate Chowk",
+      "duration": "1h 39m",
+      "fareBreakdown": {
+        "distanceKm": 75,
+        "duration": "1h 39m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 1875,
+        "extraKm": 60,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 59,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 1875,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Real Customer 0250",
+      "passengerPhone": "+91 9835670250",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791035502900_9868",
+      "pickupAddress": "Patna Junction Railway Station",
+      "pickupDate": "2026-10-15",
+      "pickupTime": "09:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T13:51:42.900Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 1875,
+      "tripOtp": "5881",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-5185%0A*Passenger%3A*%20Real%20Customer%200250%20(%2B91%209835670250)%0A*Route%3A*%20Patna%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B91875",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-5185\n*Passenger:* Real Customer 0250 (+91 9835670250)\n*Route:* Patna ➔ Muzaffarpur (75 KM)\n*Schedule:* 2026-10-15 at 09:00 AM\n*Total Fare:* ₹1875 (Advance: ₹0, Balance Due: ₹1875)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
       "bookingId": "OTB-2026-2841",
       "advancePaid": 0,
       "balanceDue": 1875,
@@ -1429,6 +1547,22 @@
       "name": "Real Customer 8881",
       "phone": "+91 9835378881",
       "walletBalance": 100
+    },
+    {
+      "id": "usr_9835670250",
+      "createdAt": "2026-10-03T13:51:42.900Z",
+      "email": "",
+      "name": "Real Customer 0250",
+      "phone": "+91 9835670250",
+      "walletBalance": 100
+    },
+    {
+      "id": "usr_9835167017",
+      "createdAt": "2026-10-03T13:57:51.540Z",
+      "email": "",
+      "name": "Himanshu Mobile Test",
+      "phone": "+91 9835167017",
+      "walletBalance": 100
     }
   ],
   "vehicles": [
@@ -1498,6 +1632,42 @@
     }
   ],
   "payments": [
+    {
+      "id": "TXN_1791035871540_2212",
+      "advancePaid": 0,
+      "amount": 2198,
+      "balanceDue": 2198,
+      "bookingId": "OTB-2026-3022",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T13:57:51.540Z",
+      "customerId": "usr_9835167017",
+      "method": "Cash to Driver",
+      "originalAmount": 2198,
+      "passengerPhone": "+91 9835167017",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
+    {
+      "id": "TXN_1791035502900_9868",
+      "advancePaid": 0,
+      "amount": 1875,
+      "balanceDue": 1875,
+      "bookingId": "OTB-2026-5185",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T13:51:42.900Z",
+      "customerId": "usr_9835670250",
+      "method": "Cash to Driver",
+      "originalAmount": 1875,
+      "passengerPhone": "+91 9835670250",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
     {
       "id": "TXN_1791032577084_7692",
       "advancePaid": 0,
@@ -1788,6 +1958,40 @@
   ],
   "leads": [
     {
+      "id": "LEAD_1791035871540",
+      "bookingId": "OTB-2026-3022",
+      "cleanPhone": "9835167017",
+      "createdAt": "2026-10-03T13:57:51.540Z",
+      "destCity": "Gaya",
+      "distanceKm": 104,
+      "estFareSedan": 2198,
+      "originCity": "Patna",
+      "passengerName": "Himanshu Mobile Test",
+      "phone": "+91 9835167017",
+      "pickupDate": "2026-10-20",
+      "pickupTime": "10:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T13:57:51.540Z"
+    },
+    {
+      "id": "LEAD_1791035502901",
+      "bookingId": "OTB-2026-5185",
+      "cleanPhone": "9835670250",
+      "createdAt": "2026-10-03T13:51:42.901Z",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "estFareSedan": 1875,
+      "originCity": "Patna",
+      "passengerName": "Real Customer 0250",
+      "phone": "+91 9835670250",
+      "pickupDate": "15/10/2026",
+      "pickupTime": "09:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T13:51:42.901Z"
+    },
+    {
       "id": "LEAD_1791032577084",
       "bookingId": "OTB-2026-2841",
       "cleanPhone": "9835378881",
@@ -2010,6 +2214,38 @@
     }
   ],
   "notifications": [
+    {
+      "id": "NOTIF_BOOK_1791035871540",
+      "bookingId": "OTB-2026-3022",
+      "createdAt": "2026-10-03T13:57:51.540Z",
+      "message": "Himanshu Mobile Test (+91 9835167017) requested Patna ➔ Gaya (Prime Sedan). Total Fare: ₹2198.",
+      "title": "🚨 New Cab Booking: OTB-2026-3022",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791035870757",
+      "createdAt": "2026-10-03T13:57:50.757Z",
+      "leadId": "LEAD_1791035870757_109",
+      "message": "Visitor (+91 9835167017) checked fare for Patna ➔ Gaya (100 KM). Sedan Rate: ₹2198.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Gaya",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
+    {
+      "id": "NOTIF_BOOK_1791035502901",
+      "bookingId": "OTB-2026-5185",
+      "createdAt": "2026-10-03T13:51:42.901Z",
+      "message": "Real Customer 0250 (+91 9835670250) requested Patna ➔ Muzaffarpur (Prime Sedan). Total Fare: ₹1875.",
+      "title": "🚨 New Cab Booking: OTB-2026-5185",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791035501648",
+      "createdAt": "2026-10-03T13:51:41.648Z",
+      "leadId": "LEAD_1791035501636_360",
+      "message": "Visitor (+91 9835670250) checked fare for Patna ➔ Muzaffarpur (75 KM). Sedan Rate: ₹1875.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
     {
       "id": "NOTIF_BOOK_1791032577084",
       "bookingId": "OTB-2026-2841",
@@ -2267,8 +2503,20 @@
     {
       "token": "adm_sess_5b5638750a4894ae3c9045cc0022f137",
       "adminId": "adm_01",
+      "createdAt": "2026-10-03T13:02:58.034Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_f9b44322367ecf2efd20e5a8c6bdeea2",
+      "adminId": "adm_01",
+      "createdAt": "2026-10-03T13:51:43.573Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_d46a78755c555e971d90df9af1f4f801",
+      "adminId": "adm_01",
       "role": "admin",
-      "createdAt": "2026-10-03T13:02:58.034Z"
+      "createdAt": "2026-10-03T13:57:52.409Z"
     }
   ],
   "settings": {
