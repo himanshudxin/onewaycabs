@@ -1,7 +1,7 @@
 /**
  * OneWayTaxiBihar (onewaytaxibihar.com)
- * Cross-Platform Production Node.js Server
- * Serves static web assets and routes /api/* to api/index.js
+ * Cross-Platform High-Performance Production Node.js Server
+ * Built with Native HTTP/Gzip Compression & Zero-Lag Serverless REST Routing
  */
 
 try { require('dotenv').config(); } catch (e) {}
@@ -9,6 +9,7 @@ try { require('dotenv').config(); } catch (e) {}
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 const apiHandler = require('./api/index.js');
 
 const PORT = parseInt(process.env.PORT || '8080', 10);
@@ -32,11 +33,13 @@ const MIME_TYPES = {
   '.xml': 'application/xml; charset=utf-8'
 };
 
+const COMPRESSIBLE_EXTS = new Set(['.html', '.css', '.js', '.json', '.svg', '.txt', '.xml']);
+
 const server = http.createServer(async (req, res) => {
   // CORS & Security Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-XSS-Protection', '1; mode=block');
@@ -50,12 +53,12 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = url.pathname;
 
-  // 1. API Route Handler
+  // 1. API Route Handler (High Performance Serverless Handler)
   if (pathname === '/api' || pathname.startsWith('/api/')) {
     return apiHandler(req, res);
   }
 
-  // 2. Static File Serving
+  // 2. Static File Serving with Gzip Compression
   let filePath = pathname === '/' ? '/index.html' : pathname;
   let safePath = path.normalize(path.join(WORKSPACE_DIR, filePath));
 
@@ -80,10 +83,21 @@ const server = http.createServer(async (req, res) => {
     // Static asset caching
     if (ext === '.css' || ext === '.js') {
       res.setHeader('Cache-Control', 'no-cache, must-revalidate');
-    } else if (['.svg', '.png', '.jpg', '.webp', '.ico'].includes(ext)) {
+    } else if (['.svg', '.png', '.jpg', '.webp', '.ico', '.woff2'].includes(ext)) {
       res.setHeader('Cache-Control', 'public, max-age=2592000');
     } else {
       res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    }
+
+    const acceptEncoding = req.headers['accept-encoding'] || '';
+    const shouldGzip = COMPRESSIBLE_EXTS.has(ext) && acceptEncoding.includes('gzip');
+
+    if (shouldGzip) {
+      res.setHeader('Content-Encoding', 'gzip');
+      res.setHeader('Vary', 'Accept-Encoding');
+      const rawStream = fs.createReadStream(safePath);
+      const gzipStream = zlib.createGzip({ level: 6 });
+      return rawStream.pipe(gzipStream).pipe(res);
     }
 
     const stream = fs.createReadStream(safePath);
@@ -105,7 +119,7 @@ const server = http.createServer(async (req, res) => {
 
 if (require.main === module) {
   server.listen(PORT, '0.0.0.0', () => {
-    console.log(`[OneWayTaxiBihar] Universal Node.js server running on http://0.0.0.0:${PORT}`);
+    console.log(`[OneWayTaxiBihar] 🚀 High-Performance HTTP server running on http://0.0.0.0:${PORT}`);
   });
 }
 
