@@ -5,7 +5,7 @@
  */
 
 class ApiClient {
-  static cloudFallbackUrl = "https://onewaytaxibihar.vercel.app";
+  static cloudFallbackUrl = "https://onewaytaxibihar.com";
 
   static baseUrl = (() => {
     if (typeof window !== "undefined") {
@@ -13,7 +13,7 @@ class ApiClient {
       if (window.location.protocol === "file:") {
         return "http://localhost:8080";
       }
-      // 2. If running on standard port 8080 or live web domain (Vercel, custom domain)
+      // 2. If running on standard port 8080 or live web domain (Vercel, custom domain onewaytaxibihar.com)
       if (window.location.port === "8080" || (!window.location.port && (window.location.hostname.includes("vercel.app") || window.location.hostname.includes("onewaytaxibihar")))) {
         return "";
       }
