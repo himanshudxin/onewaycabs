@@ -1,5 +1,65 @@
 {
-  "bookings": [],
+  "bookings": [
+    {
+      "bookingId": "OTB-2026-6560",
+      "tripOtp": "7639",
+      "customerId": "usr_9835111222",
+      "paymentTxnId": "TXN_1791047250068_9639",
+      "passengerName": "Simulated Phone Passenger",
+      "passengerPhone": "+91 9835111222",
+      "passengerEmail": "",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "pickupAddress": "Patna Junction",
+      "dropAddress": "Gaya Station",
+      "pickupDate": "2026-10-18",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 104,
+      "duration": "2h 18m",
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "fareBreakdown": {
+        "distanceKm": 104,
+        "duration": "2h 18m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 2600,
+        "extraKm": 89,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 82,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2600
+      },
+      "totalFare": 2198,
+      "originalFare": 2198,
+      "walletUsed": 0,
+      "couponCode": "",
+      "couponDiscount": 0,
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "bookingStatus": "REQUESTED",
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "driverDetails": null,
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T17:07:30.068Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-6560\n*Passenger:* Simulated Phone Passenger (+91 9835111222)\n*Route:* Patna ➔ Gaya (104 KM)\n*Schedule:* 2026-10-18 at 10:00 AM\n*Total Fare:* ₹2198 (Advance: ₹0, Balance Due: ₹2198)\n*Status:* REQUESTED / CONFIRMED",
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-6560%0A*Passenger%3A*%20Simulated%20Phone%20Passenger%20(%2B91%209835111222)%0A*Route%3A*%20Patna%20%E2%9E%94%20Gaya%0A*Total%20Fare%3A*%20%E2%82%B92198",
+      "createdAt": "2026-10-03T17:07:30.068Z"
+    }
+  ],
   "drivers": [
     {
       "id": "drv_101",
@@ -60,6 +120,14 @@
       "name": "aman kumar",
       "phone": "+91 6206494214",
       "walletBalance": 0
+    },
+    {
+      "id": "usr_9835111222",
+      "name": "Simulated Phone Passenger",
+      "phone": "+91 9835111222",
+      "email": "",
+      "walletBalance": 100,
+      "createdAt": "2026-10-03T17:07:30.068Z"
     }
   ],
   "vehicles": [
@@ -128,25 +196,70 @@
       "status": "ACTIVE"
     }
   ],
-  "payments": [],
+  "payments": [
+    {
+      "id": "TXN_1791047250068_9639",
+      "bookingId": "OTB-2026-6560",
+      "customerId": "usr_9835111222",
+      "passengerPhone": "+91 9835111222",
+      "amount": 2198,
+      "advancePaid": 0,
+      "balanceDue": 2198,
+      "originalAmount": 2198,
+      "walletDeducted": 0,
+      "couponDiscount": 0,
+      "method": "Cash to Driver",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedBy": null,
+      "verifiedAt": null,
+      "createdAt": "2026-10-03T17:07:30.068Z"
+    }
+  ],
   "wallet_ledger": [],
-  "leads": [],
+  "leads": [
+    {
+      "id": "LEAD_1791047250068",
+      "phone": "+91 9835111222",
+      "cleanPhone": "9835111222",
+      "passengerName": "Simulated Phone Passenger",
+      "originCity": "Patna",
+      "destCity": "Gaya",
+      "tripType": "oneway",
+      "pickupDate": "2026-10-18",
+      "pickupTime": "10:00 AM",
+      "distanceKm": 104,
+      "estFareSedan": 2198,
+      "status": "CONVERTED",
+      "bookingId": "OTB-2026-6560",
+      "createdAt": "2026-10-03T17:07:30.068Z",
+      "updatedAt": "2026-10-03T17:07:30.068Z"
+    }
+  ],
   "notifications": [
     {
+      "id": "NOTIF_BOOK_1791047250068",
+      "type": "NEW_BOOKING_REQUEST",
+      "title": "🚨 New Cab Booking: OTB-2026-6560",
+      "message": "Simulated Phone Passenger (+91 9835111222) requested Patna ➔ Gaya (Prime Sedan). Total Fare: ₹2198.",
+      "bookingId": "OTB-2026-6560",
+      "createdAt": "2026-10-03T17:07:30.068Z"
+    },
+    {
       "id": "NOTIF_LEAD_1791045148563",
-      "type": "NEW_ROUTE_INQUIRY",
-      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
-      "message": "Visitor (+91 9876768785) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "createdAt": "2026-10-03T16:32:28.563Z",
       "leadId": "LEAD_1791045148563_832",
-      "createdAt": "2026-10-03T16:32:28.563Z"
+      "message": "Visitor (+91 9876768785) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "type": "NEW_ROUTE_INQUIRY"
     },
     {
       "id": "NOTIF_LEAD_1791045148530",
-      "type": "NEW_ROUTE_INQUIRY",
-      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
-      "message": "Visitor (+91 9876768785) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "createdAt": "2026-10-03T16:32:28.530Z",
       "leadId": "LEAD_1791045148530_281",
-      "createdAt": "2026-10-03T16:32:28.530Z"
+      "message": "Visitor (+91 9876768785) checked fare for Patna ➔ Muzaffarpur (78 KM). Sedan Rate: ₹2198.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "type": "NEW_ROUTE_INQUIRY"
     },
     {
       "id": "NOTIF_LEAD_1791045130175",
@@ -239,7 +352,17 @@
       "usageCount": 6
     }
   ],
-  "audit_logs": [],
+  "audit_logs": [
+    {
+      "id": "AUD_1791047250068",
+      "entity": "BOOKING",
+      "entityId": "OTB-2026-6560",
+      "action": "CREATE_REQUEST",
+      "actor": "+91 9835111222",
+      "details": "Patna → Gaya for ₹2198 (Cash to Driver)",
+      "createdAt": "2026-10-03T17:07:30.068Z"
+    }
+  ],
   "sessions": [
     {
       "token": "adm_sess_d46a78755c555e971d90df9af1f4f801",
