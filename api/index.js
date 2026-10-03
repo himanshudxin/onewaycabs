@@ -964,19 +964,22 @@ module.exports = async (req, res) => {
         useWallet
       } = body;
 
-      const cleanPhone = (passengerPhone || '').replace(/\D/g, '').slice(-10);
-      if (!cleanPhone || cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
-        return sendJson(400, { success: false, message: 'Valid 10-digit Indian mobile number starting with 6-9 required' });
+      const cleanPhone = (passengerPhone || body.phone || '').replace(/\D/g, '').slice(-10);
+      if (!cleanPhone || cleanPhone.length !== 10) {
+        return sendJson(400, { success: false, message: 'Valid 10-digit Indian mobile number required' });
       }
-      if (!passengerName || passengerName.trim().length < 2 || passengerName.trim().length > 60) {
-        return sendJson(400, { success: false, message: 'Passenger name required (2 to 60 characters)' });
-      }
+      const safePassengerName = (passengerName || body.name || 'Valued Passenger').trim().slice(0, 80);
 
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-      if (pickupDate && pickupDate < yesterdayStr) {
-        return sendJson(400, { success: false, message: 'Pickup date cannot be in the past' });
+      let safePickupDate = pickupDate;
+      if (pickupDate && typeof pickupDate === 'string') {
+        if (/^\d{2}[-/]\d{2}[-/]\d{4}$/.test(pickupDate.trim())) {
+          const parts = pickupDate.trim().split(/[-/]/);
+          safePickupDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+      }
+      if (!safePickupDate) {
+        const today = new Date();
+        safePickupDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       }
 
       // Concurrency & double-tap deduplication protection (15 seconds)
@@ -1010,7 +1013,7 @@ module.exports = async (req, res) => {
       if (!user) {
         user = {
           id: `usr_${cleanPhone}`,
-          name: passengerName.trim(),
+          name: safePassengerName,
           phone: `+91 ${cleanPhone}`,
           email: passengerEmail || '',
           walletBalance: 100,
@@ -1100,14 +1103,14 @@ module.exports = async (req, res) => {
         tripOtp,
         customerId: user.id,
         paymentTxnId: txnId,
-        passengerName: passengerName.trim(),
+        passengerName: safePassengerName,
         passengerPhone: `+91 ${cleanPhone}`,
         passengerEmail: passengerEmail || '',
         originCity: originCity || 'Patna',
         destCity: destCity || 'Gaya',
         pickupAddress: pickupAddress || `${originCity || 'Patna'} City`,
         dropAddress: dropAddress || `${destCity || 'Gaya'} City`,
-        pickupDate: pickupDate || new Date().toISOString().split('T')[0],
+        pickupDate: safePickupDate,
         pickupTime: pickupTime || '10:00 AM',
         distanceKm,
         duration: serverFare.duration,
@@ -1134,8 +1137,8 @@ module.exports = async (req, res) => {
             note: 'Booking request placed. Agent call in 5 mins.'
           }
         ],
-        whatsappMessage: `🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* ${bookingId}\n*Passenger:* ${passengerName.trim()} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'} (${distanceKm} KM)\n*Schedule:* ${pickupDate || new Date().toISOString().split('T')[0]} at ${pickupTime || '10:00 AM'}\n*Total Fare:* ₹${finalPayable} (Advance: ₹${advancePaid}, Balance Due: ₹${balanceDue})\n*Status:* REQUESTED / CONFIRMED`,
-        whatsappDispatchUrl: `https://wa.me/917281851011?text=${encodeURIComponent(`🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n*Booking ID:* ${bookingId}\n*Passenger:* ${passengerName.trim()} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'}\n*Total Fare:* ₹${finalPayable}`)}`,
+        whatsappMessage: `🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* ${bookingId}\n*Passenger:* ${safePassengerName} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'} (${distanceKm} KM)\n*Schedule:* ${safePickupDate} at ${pickupTime || '10:00 AM'}\n*Total Fare:* ₹${finalPayable} (Advance: ₹${advancePaid}, Balance Due: ₹${balanceDue})\n*Status:* REQUESTED / CONFIRMED`,
+        whatsappDispatchUrl: `https://wa.me/917281851011?text=${encodeURIComponent(`🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n*Booking ID:* ${bookingId}\n*Passenger:* ${safePassengerName} (+91 ${cleanPhone})\n*Route:* ${originCity || 'Patna'} ➔ ${destCity || 'Gaya'}\n*Total Fare:* ₹${finalPayable}`)}`,
         createdAt: new Date().toISOString()
       };
 

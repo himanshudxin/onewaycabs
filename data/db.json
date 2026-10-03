@@ -1,6 +1,65 @@
 {
   "bookings": [
     {
+      "bookingId": "OTB-2026-2841",
+      "advancePaid": 0,
+      "balanceDue": 1875,
+      "bookingStatus": "REQUESTED",
+      "couponCode": "",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T13:02:57.084Z",
+      "customerId": "usr_9835378881",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "driverDetails": null,
+      "dropAddress": "Muzaffarpur Collectorate Chowk",
+      "duration": "1h 39m",
+      "fareBreakdown": {
+        "distanceKm": 75,
+        "duration": "1h 39m",
+        "tierId": "sedan",
+        "tierName": "Prime Sedan",
+        "tierModel": "Dzire, Etios, Amaze",
+        "baseFare": 2198,
+        "distanceCharge": 1875,
+        "extraKm": 60,
+        "perKmRate": 25,
+        "roundTripDiscount": 0,
+        "tollFastag": 59,
+        "parking": 0,
+        "driverAllowance": 0,
+        "gst": 0,
+        "totalFare": 2198
+      },
+      "fleetClass": "Prime Sedan",
+      "fleetModel": "Dzire, Etios, Amaze",
+      "originCity": "Patna",
+      "originalFare": 1875,
+      "partnerNotice": "Our partner/driver or agent will call you in 5 minutes to confirm booking.",
+      "passengerEmail": "",
+      "passengerName": "Real Customer 8881",
+      "passengerPhone": "+91 9835378881",
+      "paymentMethod": "Cash to Driver",
+      "paymentStatus": "PAYABLE TO DRIVER",
+      "paymentTxnId": "TXN_1791032577084_7692",
+      "pickupAddress": "Patna Junction Railway Station",
+      "pickupDate": "2026-10-15",
+      "pickupTime": "09:00 AM",
+      "statusHistory": [
+        {
+          "status": "REQUESTED",
+          "timestamp": "2026-10-03T13:02:57.084Z",
+          "actor": "Customer",
+          "note": "Booking request placed. Agent call in 5 mins."
+        }
+      ],
+      "totalFare": 1875,
+      "tripOtp": "8762",
+      "walletUsed": 0,
+      "whatsappDispatchUrl": "https://wa.me/917281851011?text=%F0%9F%9A%95%20*NEW%20BOOKING%20CONFIRMED%20-%20OneWayTaxiBihar*%0A*Booking%20ID%3A*%20OTB-2026-2841%0A*Passenger%3A*%20Real%20Customer%208881%20(%2B91%209835378881)%0A*Route%3A*%20Patna%20%E2%9E%94%20Muzaffarpur%0A*Total%20Fare%3A*%20%E2%82%B91875",
+      "whatsappMessage": "🚕 *NEW BOOKING CONFIRMED - OneWayTaxiBihar*\n━━━━━━━━━━━━━━━━━━━━━━\n*Booking ID:* OTB-2026-2841\n*Passenger:* Real Customer 8881 (+91 9835378881)\n*Route:* Patna ➔ Muzaffarpur (75 KM)\n*Schedule:* 2026-10-15 at 09:00 AM\n*Total Fare:* ₹1875 (Advance: ₹0, Balance Due: ₹1875)\n*Status:* REQUESTED / CONFIRMED"
+    },
+    {
       "bookingId": "OTB-2026-1164",
       "advancePaid": 0,
       "balanceDue": 2420,
@@ -1362,6 +1421,14 @@
       "name": "Real Test Customer",
       "phone": "+91 9835336755",
       "walletBalance": 100
+    },
+    {
+      "id": "usr_9835378881",
+      "createdAt": "2026-10-03T13:02:57.084Z",
+      "email": "",
+      "name": "Real Customer 8881",
+      "phone": "+91 9835378881",
+      "walletBalance": 100
     }
   ],
   "vehicles": [
@@ -1431,6 +1498,24 @@
     }
   ],
   "payments": [
+    {
+      "id": "TXN_1791032577084_7692",
+      "advancePaid": 0,
+      "amount": 1875,
+      "balanceDue": 1875,
+      "bookingId": "OTB-2026-2841",
+      "couponDiscount": 0,
+      "createdAt": "2026-10-03T13:02:57.084Z",
+      "customerId": "usr_9835378881",
+      "method": "Cash to Driver",
+      "originalAmount": 1875,
+      "passengerPhone": "+91 9835378881",
+      "status": "PAYABLE TO DRIVER",
+      "upiUtr": "",
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "walletDeducted": 0
+    },
     {
       "id": "TXN_1790880797574_9036",
       "advancePaid": 0,
@@ -1703,6 +1788,23 @@
   ],
   "leads": [
     {
+      "id": "LEAD_1791032577084",
+      "bookingId": "OTB-2026-2841",
+      "cleanPhone": "9835378881",
+      "createdAt": "2026-10-03T13:02:57.084Z",
+      "destCity": "Muzaffarpur",
+      "distanceKm": 75,
+      "estFareSedan": 1875,
+      "originCity": "Patna",
+      "passengerName": "Real Customer 8881",
+      "phone": "+91 9835378881",
+      "pickupDate": "15/10/2026",
+      "pickupTime": "09:00 AM",
+      "status": "CONVERTED",
+      "tripType": "oneway",
+      "updatedAt": "2026-10-03T13:02:57.084Z"
+    },
+    {
       "id": "LEAD_1790880797574",
       "bookingId": "OTB-2026-1164",
       "cleanPhone": "9835336755",
@@ -1908,6 +2010,22 @@
     }
   ],
   "notifications": [
+    {
+      "id": "NOTIF_BOOK_1791032577084",
+      "bookingId": "OTB-2026-2841",
+      "createdAt": "2026-10-03T13:02:57.084Z",
+      "message": "Real Customer 8881 (+91 9835378881) requested Patna ➔ Muzaffarpur (Prime Sedan). Total Fare: ₹1875.",
+      "title": "🚨 New Cab Booking: OTB-2026-2841",
+      "type": "NEW_BOOKING_REQUEST"
+    },
+    {
+      "id": "NOTIF_LEAD_1791032575950",
+      "createdAt": "2026-10-03T13:02:55.950Z",
+      "leadId": "LEAD_1791032575949_621",
+      "message": "Visitor (+91 9835378881) checked fare for Patna ➔ Muzaffarpur (75 KM). Sedan Rate: ₹1875.",
+      "title": "⚡ New Route Inquiry: Patna ➔ Muzaffarpur",
+      "type": "NEW_ROUTE_INQUIRY"
+    },
     {
       "id": "NOTIF_BOOK_1790880797574",
       "bookingId": "OTB-2026-1164",
@@ -2143,8 +2261,14 @@
     {
       "token": "adm_sess_a7352ee4bc4738e50d0ea8a11f6c3262",
       "adminId": "adm_01",
+      "createdAt": "2026-10-01T18:53:18.459Z",
+      "role": "admin"
+    },
+    {
+      "token": "adm_sess_5b5638750a4894ae3c9045cc0022f137",
+      "adminId": "adm_01",
       "role": "admin",
-      "createdAt": "2026-10-01T18:53:18.459Z"
+      "createdAt": "2026-10-03T13:02:58.034Z"
     }
   ],
   "settings": {

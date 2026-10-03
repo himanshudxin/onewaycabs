@@ -603,6 +603,16 @@
         </button>
       </div>
       <div class="admin-nav-actions">
+        <!-- Live Database Status Pill -->
+        <div id="admin-db-status-badge" style="display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; background: rgba(16, 185, 129, 0.15); border: 1px solid #059669; color: #34d399;" title="Live MongoDB Cloud Sync Status">
+          <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981;"></span>
+          <span id="txt-db-status">MongoDB: Live Cloud</span>
+        </div>
+
+        <button type="button" onclick="loadBookings(); loadLeads(); checkLiveDbStatus();" style="background: #334155; color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; cursor: pointer;" title="Force refresh live database">
+          🔄 Sync Now
+        </button>
+
         <!-- Live Real-Time Device Notifications Control -->
         <button type="button" id="btn-device-alerts" onclick="toggleDeviceNotifications()" class="nav-alert-btn active" title="Toggle native device notifications (works even when tab is backgrounded)">
           <span class="hud-indicator hud-pulse-booking"></span>
@@ -1681,9 +1691,45 @@
         if (_isFirstLoad) {
           _isFirstLoad = false;
         }
+
+        // Periodically check DB status
+        checkLiveDbStatus();
       } catch (err) {
         console.warn("Polling notice:", err);
       }
+    }
+
+    async function checkLiveDbStatus() {
+      try {
+        const res = await ApiClient.request("/api/admin/system-status");
+        const badge = document.getElementById("admin-db-status-badge");
+        const txt = document.getElementById("txt-db-status");
+        if (res && res.success && res.database) {
+          const dbInfo = res.database;
+          if (dbInfo.engine === "mongodb" && dbInfo.connected) {
+            if (badge) {
+              badge.style.background = "rgba(16, 185, 129, 0.15)";
+              badge.style.borderColor = "#059669";
+              badge.style.color = "#34d399";
+            }
+            if (txt) txt.textContent = "MongoDB: Live Cloud";
+          } else if (dbInfo.engine === "postgres" && dbInfo.connected) {
+            if (badge) {
+              badge.style.background = "rgba(56, 189, 248, 0.15)";
+              badge.style.borderColor = "#0284c7";
+              badge.style.color = "#38bdf8";
+            }
+            if (txt) txt.textContent = "PostgreSQL: Connected";
+          } else {
+            if (badge) {
+              badge.style.background = "rgba(245, 158, 11, 0.15)";
+              badge.style.borderColor = "#d97706";
+              badge.style.color = "#fbbf24";
+            }
+            if (txt) txt.textContent = "DB: Local Cache";
+          }
+        }
+      } catch (e) {}
     }
 
     async function handleAdminDirectLogin(e) {
