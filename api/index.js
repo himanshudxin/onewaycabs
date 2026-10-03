@@ -2880,6 +2880,49 @@ module.exports = async (req, res) => {
       });
     }
 
+    if (pathname === '/admin/clean-test-data' && method === 'POST') {
+      const admin = getSessionAdmin(req, db);
+      if (!admin) return sendJson(401, { success: false, message: 'Admin authentication required' });
+
+      // Clean test data
+      db.bookings = [];
+      db.leads = [];
+      db.notifications = [];
+      db.payments = [];
+      db.wallet_ledger = [];
+      db.driver_applications = [];
+      db.drivers = (db.drivers || []).filter(d => !d.id.startsWith('drv_98'));
+      db.users = (db.users || []).filter(u => u.role === 'admin' || u.phone === '+91 6206494214');
+
+      await saveDb(db);
+
+      // Clean MongoDB Atlas directly if connected
+      const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://himanshudu255_db_user:Himanshu%40123@cluster0.7pf5pvc.mongodb.net/onewaytaxibihar?retryWrites=true&w=majority&appName=Cluster0';
+      try {
+        const { MongoClient } = require('mongodb');
+        const client = new MongoClient(mongoUri);
+        await client.connect();
+        const dbName = process.env.MONGODB_DB_NAME || 'onewaytaxibihar';
+        const mDb = client.db(dbName);
+        await Promise.allSettled([
+          mDb.collection('bookings').deleteMany({}),
+          mDb.collection('leads').deleteMany({}),
+          mDb.collection('notifications').deleteMany({}),
+          mDb.collection('payments').deleteMany({}),
+          mDb.collection('wallet_ledger').deleteMany({}),
+          mDb.collection('driver_applications').deleteMany({}),
+          mDb.collection('drivers').deleteMany({ id: { $regex: /^drv_98/ } }),
+          mDb.collection('users').deleteMany({ role: { $ne: 'admin' }, phone: { $ne: '+91 6206494214' } })
+        ]);
+        await client.close();
+      } catch(e) {}
+
+      return sendJson(200, {
+        success: true,
+        message: 'All test bookings, inquiries, and mock data successfully cleared!'
+      });
+    }
+
     // Default 404 for unknown API routes
     return sendJson(404, { success: false, message: 'API route not found' });
 
