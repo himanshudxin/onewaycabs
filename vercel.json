@@ -1,44 +1,49 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "functions": {
-    "api/**/*.js": {
-      "includeFiles": "{data/**,services/**}",
-      "maxDuration": 15
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["data/**", "services/**"] }
     },
-    "api/*.js": {
-      "includeFiles": "{data/**,services/**}",
-      "maxDuration": 15
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["data/**", "services/**"] }
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "js/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "img/**",
+      "use": "@vercel/static"
     }
-  },
-  "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/driver", "destination": "/driver.html" },
-    { "source": "/404", "destination": "/404.html" },
-    { "source": "/500", "destination": "/500.html" }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
-      ]
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
-      "source": "/(css|js)/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
-      ]
+      "src": "/admin",
+      "dest": "/admin.html"
     },
     {
-      "source": "/(.*)\\.(ico|svg|png|jpg|webp)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000" }
-      ]
+      "src": "/driver",
+      "dest": "/driver.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
